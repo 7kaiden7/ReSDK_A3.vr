@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2023 the ReSDK_A3 project
+// Copyright (c) 2017-2024 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -54,6 +54,7 @@ function(fileWatcher_guardSafeRebuild)
 function(fileWatcher_onFrame)
 {
 	if (!isGameFocused) exitwith {};
+	if (call isDisplayOpened) exitWith {};
 
 	if (tickTime >= fileWatcher_internal_lastTickTime) then {
 		fileWatcher_internal_lastTickTime = tickTime + fileWatcher_internal_const_updateDelay;
