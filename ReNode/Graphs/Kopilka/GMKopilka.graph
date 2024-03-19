@@ -28,6 +28,16 @@
           "systemname":"Boss",
           "reprType":"bool (Булево)",
           "reprDataType":"value (Значение)"
+        },
+        "0x1cd054ab300_202422614830478425":{
+          "name":"WorkerBad",
+          "type":"bool",
+          "value":false,
+          "category":"classvar",
+          "group":"",
+          "systemname":"WorkerBad",
+          "reprType":"bool (Булево)",
+          "reprDataType":"value (Значение)"
         }
       }
     },
@@ -39,28 +49,39 @@
       "desc":"",
       "path":".Пользовательские.kopilka",
       "props":{
-        "fields":{},
+        "fields":{
+          "name":"Завод Копилка",
+          "canAddAspect":false
+        },
         "methods":{
           "_getRolesWrapper":[
-            "RBosszavod"
+            "RBosszavod",
+            "RKaznacheizavod",
+            "RSecuirtybosszavod",
+            "RSecurity",
+            "RWorkerzavod",
+            "RBrigadirzavod",
+            "RDoctorzavod",
+            "RTestzavod",
+            "RRevizorzavod"
           ],
           "getMapName":"kopilka"
         }
       },
-      "compiledGUID":"938e0645-dcc0-4efd-ad0a-c75a3133f98e",
-      "compileStatus":"Warnings",
+      "compiledGUID":"b0da1f8b-a2f3-4d51-8465-6bee2bd01fa5",
+      "compileStatus":"NotCompiled",
       "graphVersion":1
     },
     "mpos":[
-      1643.7063193048148,
-      226.40949104127287,
-      688.6667357422936,
-      648.156927757452
+      221.8929402612887,
+      603.152307523558,
+      775.0964830784554,
+      729.5025723091333
     ],
-    "mzoom":0.0
+    "mzoom":-0.05
   },
   "nodes":{
-    "0x27c9cc73730":{
+    "0x25ca2f18b50":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_Blueprint_Event_16x",
       "name":"При выборе режима",
@@ -87,15 +108,15 @@
       "width":284.0,
       "height":108.55000000000001,
       "pos":[
-        -697.6352848814971,
-        945.2907655370581
+        -715.017145482877,
+        971.363556439128
       ],
       "layout_direction":0,
       "port_deletion_allowed":false,
       "subgraph_session":{},
       "class_":"methods.ScriptedGamemode.preSetup_0"
     },
-    "0x27c9cc8d2d0":{
+    "0x25ca2ea5210":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_Blueprint_Event_16x",
       "name":"При начале раунда",
@@ -130,7 +151,7 @@
       "subgraph_session":{},
       "class_":"methods.ScriptedGamemode.postSetup_0"
     },
-    "0x27c9cc8d480":{
+    "0x25ca2f29510":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_Blueprint_Event_16x",
       "name":"В каждую секунду",
@@ -165,7 +186,7 @@
       "subgraph_session":{},
       "class_":"methods.ScriptedGamemode.onTick_0"
     },
-    "0x27c9cc8d630":{
+    "0x25ca2f2a150":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_Blueprint_Event_16x",
       "name":"Проверка конца раунда",
@@ -200,7 +221,7 @@
       "subgraph_session":{},
       "class_":"methods.ScriptedGamemode._checkFinishWrapper_0"
     },
-    "0x27c9cc8d7e0":{
+    "0x25ca2f2ad90":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_Blueprint_Event_16x",
       "name":"При завершении раунда",
@@ -235,7 +256,7 @@
       "subgraph_session":{},
       "class_":"methods.ScriptedGamemode._onFinishWrapper_0"
     },
-    "0x27c9cc8d990":{
+    "0x25ca2f2aa50":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_Blueprint_Event_16x",
       "name":"Условие запуска раунда",
@@ -270,7 +291,7 @@
       "subgraph_session":{},
       "class_":"methods.ScriptedGamemode._conditionToStartWrapper_0"
     },
-    "0x27c9cc8db40":{
+    "0x25ca2f2b0d0":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\node_base.png",
       "name":"Заметка",
@@ -296,7 +317,7 @@
       "selected":false,
       "visible":true,
       "width":268.0,
-      "height":73.1,
+      "height":77.30000000000001,
       "pos":[
         36.133617754297916,
         210.58345628741654
@@ -309,7 +330,7 @@
       },
       "class_":"internal.sticker"
     },
-    "0x27c9cca55a0":{
+    "0x25ca2f2b850":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_Blueprint_Branch_16x",
       "name":"Ветка",
@@ -334,8 +355,8 @@
       "disabled":false,
       "selected":false,
       "visible":true,
-      "width":160,
-      "height":87.80000000000001,
+      "width":162.0,
+      "height":92.0,
       "pos":[
         260.4714310119773,
         528.0083413296996
@@ -348,7 +369,7 @@
       },
       "class_":"operators.if_branch"
     },
-    "0x27c9cca59c0":{
+    "0x25ca2f44450":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_BluePrintEditor_Function_16px",
       "name":"Завершить раунд",
@@ -373,10 +394,10 @@
       "selected":false,
       "visible":true,
       "width":325.0,
-      "height":211.45000000000002,
+      "height":248.20000000000002,
       "pos":[
-        690.3916573656115,
-        390.4800968778651
+        691.9242198170058,
+        349.100910690222
       ],
       "layout_direction":0,
       "port_deletion_allowed":false,
@@ -384,11 +405,11 @@
       "custom":{
         "Цель":"Этот kopilka",
         "Исход":1,
-        "Описание":"Многие погибли"
+        "Описание":"Жизнь на заводе иссякла и остались лишь единицы."
       },
       "class_":"methods.ScriptedGamemode.setEndgameScriptedMode_0"
     },
-    "0x27c9cca7ca0":{
+    "0x25ca2f452d0":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_Blueprint_Branch_16x",
       "name":"Ветка",
@@ -413,8 +434,8 @@
       "disabled":false,
       "selected":false,
       "visible":true,
-      "width":160,
-      "height":87.80000000000001,
+      "width":162.0,
+      "height":92.0,
       "pos":[
         666.5275854563905,
         695.6824357071617
@@ -427,7 +448,7 @@
       },
       "class_":"operators.if_branch"
     },
-    "0x27c9ccac160":{
+    "0x25ca2f46b90":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\node_base.png",
       "name":"&gt;=",
@@ -452,8 +473,8 @@
       "disabled":false,
       "selected":false,
       "visible":true,
-      "width":184.0,
-      "height":92.3,
+      "width":198.0,
+      "height":100.7,
       "pos":[
         239.767734699279,
         649.5673538156767
@@ -517,11 +538,11 @@
           ]
         },
         "Число 1":0.0,
-        "Число 2":5.0
+        "Число 2":7.0
       },
       "class_":"math.greaterthanorequalnum"
     },
-    "0x27c9ccadde0":{
+    "0x25ca2f48e50":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":[
         "data\\icons\\pill_16x.png",
@@ -563,7 +584,7 @@
       },
       "class_":"fields.ScriptedGamemode.countDead_0.get"
     },
-    "0x27c9ccae500":{
+    "0x25ca2f48b50":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_BluePrintEditor_Function_16px",
       "name":"Завершить раунд",
@@ -588,7 +609,7 @@
       "selected":false,
       "visible":true,
       "width":325.0,
-      "height":271.3,
+      "height":296.5,
       "pos":[
         694.059727348814,
         884.8648686013373
@@ -603,7 +624,7 @@
       },
       "class_":"methods.ScriptedGamemode.setEndgameScriptedMode_0"
     },
-    "0x27c9ccaeb00":{
+    "0x25ca2f49dd0":{
       "type_":"nodeGraphQt.nodes.BackdropNode",
       "icon":null,
       "name":"Проверка на смерть роли (начальник завода)",
@@ -642,7 +663,7 @@
       },
       "class_":"internal.backdrop"
     },
-    "0x27c9ccaebf0":{
+    "0x25ca2f47d10":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_Blueprint_MakeStruct_16x",
       "name":"Создать Условие запуска",
@@ -668,7 +689,7 @@
       "selected":false,
       "visible":true,
       "width":383.0,
-      "height":113.0,
+      "height":121.4,
       "pos":[
         312.59437515207134,
         -25.55514994029012
@@ -682,7 +703,7 @@
       },
       "class_":"structHelper.struct.ConditionToStartGamemode_make"
     },
-    "0x27c9ccaf070":{
+    "0x25ca2f4ae50":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_Blueprint_Node_16x",
       "name":"Вернуть значение",
@@ -762,7 +783,7 @@
       },
       "class_":"control.return"
     },
-    "0x27c9ccaf2e0":{
+    "0x25ca3f24bd0":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\node_base.png",
       "name":"&gt;=",
@@ -787,8 +808,8 @@
       "disabled":false,
       "selected":false,
       "visible":true,
-      "width":184.0,
-      "height":92.3,
+      "width":198.0,
+      "height":100.7,
       "pos":[
         12.935399793008628,
         -40.168595904113204
@@ -852,11 +873,11 @@
           ]
         },
         "Число 1":0.0,
-        "Число 2":1.0
+        "Число 2":0.0
       },
       "class_":"math.greaterthanorequalnum"
     },
-    "0x27c9ccaf850":{
+    "0x25ca3f25d50":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\FIB_VarGet",
       "name":"Кандидаты на роль",
@@ -881,7 +902,7 @@
       "selected":false,
       "visible":true,
       "width":355.0,
-      "height":135.85000000000002,
+      "height":144.25,
       "pos":[
         -393.9710922772943,
         111.50778801080048
@@ -895,7 +916,7 @@
       },
       "class_":"methods.ScriptedGamemode.getCandidatesCount_0"
     },
-    "0x27c9ccafe20":{
+    "0x25ca3f8d450":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":[
         "data\\icons\\pill_16x.png",
@@ -923,7 +944,7 @@
       "disabled":false,
       "selected":false,
       "visible":true,
-      "width":196.0,
+      "width":198.0,
       "height":112.75,
       "pos":[
         345.48334645778476,
@@ -937,7 +958,7 @@
       },
       "class_":"fields.GMKopilka.Boss_0.get"
     },
-    "0x27c9ffc8580":{
+    "0x25ca3f8d490":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_BluePrintEditor_Function_16px",
       "name":"Объект по ссылке",
@@ -962,7 +983,7 @@
       "selected":false,
       "visible":true,
       "width":327.0,
-      "height":106.7,
+      "height":110.9,
       "pos":[
         1233.8253959073104,
         419.7297536961901
@@ -975,7 +996,7 @@
       },
       "class_":"func.getObjectByRef"
     },
-    "0x27c9fe6e1a0":{
+    "0x25ca3f8f5d0":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\node_base.png",
       "name":"&lt;=",
@@ -1000,8 +1021,8 @@
       "disabled":false,
       "selected":false,
       "visible":true,
-      "width":184.0,
-      "height":92.3,
+      "width":198.0,
+      "height":100.7,
       "pos":[
         2082.9553531426786,
         601.3535306293328
@@ -1069,7 +1090,7 @@
       },
       "class_":"math.lessthanorequalnum"
     },
-    "0x27c9fe6f490":{
+    "0x25ca3f9c950":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_BluePrintEditor_Function_16px",
       "name":"Завершить раунд",
@@ -1094,7 +1115,7 @@
       "selected":false,
       "visible":true,
       "width":325.0,
-      "height":231.4,
+      "height":248.20000000000002,
       "pos":[
         2168.432484271694,
         819.4935377620566
@@ -1109,7 +1130,7 @@
       },
       "class_":"methods.ScriptedGamemode.setEndgameScriptedMode_0"
     },
-    "0x27c9fe1c2e0":{
+    "0x25ca3f9c450":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\FIB_VarGet",
       "name":"В мире",
@@ -1147,7 +1168,7 @@
       },
       "class_":"methods.GameObject.isInWorld_0"
     },
-    "0x27c9fe1c7f0":{
+    "0x25ca3f9e1d0":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\FIB_VarGet",
       "name":"Дистанция до",
@@ -1172,7 +1193,7 @@
       "selected":false,
       "visible":true,
       "width":256.0,
-      "height":147.4,
+      "height":155.8,
       "pos":[
         1732.0571013723866,
         519.7332501336246
@@ -1186,7 +1207,7 @@
       },
       "class_":"methods.GameObject.getDistanceTo_0"
     },
-    "0x27c9fe1cfa0":{
+    "0x25ca3f9ebd0":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_BluePrintEditor_Function_16px",
       "name":"Объект по ссылке",
@@ -1211,7 +1232,7 @@
       "selected":false,
       "visible":true,
       "width":327.0,
-      "height":106.7,
+      "height":110.9,
       "pos":[
         1221.4750586158884,
         542.2250957396041
@@ -1224,7 +1245,7 @@
       },
       "class_":"func.getObjectByRef"
     },
-    "0x27c9fe6f400":{
+    "0x25ca3f9fb50":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_Blueprint_Branch_16x",
       "name":"Ветка",
@@ -1249,8 +1270,8 @@
       "disabled":false,
       "selected":false,
       "visible":true,
-      "width":160,
-      "height":87.80000000000001,
+      "width":162.0,
+      "height":92.0,
       "pos":[
         1887.602828462842,
         893.4239242260953
@@ -1263,7 +1284,7 @@
       },
       "class_":"operators.if_branch"
     },
-    "0x27c9b249b10":{
+    "0x25ca3fa8990":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\node_base.png",
       "name":"И",
@@ -1289,7 +1310,7 @@
       "selected":false,
       "visible":true,
       "width":160,
-      "height":62.900000000000006,
+      "height":71.3,
       "pos":[
         2382.3402748061694,
         498.3581028071817
@@ -1302,227 +1323,310 @@
         "Значение 2":false
       },
       "class_":"math.logical.boolAnd"
+    },
+    "0x25ca3fa96d0":{
+      "type_":"runtime_domain.RuntimeNode",
+      "icon":"data\\icons\\icon_Blueprint_Event_16x",
+      "name":"Обработчик скрытых антагонистов",
+      "color":[
+        255,
+        0,
+        0
+      ],
+      "border_color":[
+        74,
+        84,
+        85,
+        255
+      ],
+      "text_color":[
+        255,
+        255,
+        255,
+        180
+      ],
+      "disabled":false,
+      "selected":false,
+      "visible":true,
+      "width":336.0,
+      "height":157.5,
+      "pos":[
+        -506.57528512378775,
+        -508.8068943093551
+      ],
+      "layout_direction":0,
+      "port_deletion_allowed":false,
+      "subgraph_session":{},
+      "class_":"methods.ScriptedGamemode.handleAntagRoleHidden_0"
+    },
+    "0x25ca3faa610":{
+      "type_":"runtime_domain.RuntimeNode",
+      "icon":"data\\icons\\FIB_VarGet",
+      "name":"Получить моба",
+      "color":[
+        37,
+        136,
+        143
+      ],
+      "border_color":[
+        74,
+        84,
+        85,
+        255
+      ],
+      "text_color":[
+        255,
+        255,
+        255,
+        180
+      ],
+      "disabled":false,
+      "selected":false,
+      "visible":true,
+      "width":264.0,
+      "height":86.1,
+      "pos":[
+        -71.45991965979852,
+        -512.3103707417456
+      ],
+      "layout_direction":0,
+      "port_deletion_allowed":false,
+      "subgraph_session":{},
+      "custom":{
+        "Цель":"Этот kopilka"
+      },
+      "class_":"methods.ServerClient.getActorMob_0"
     }
   },
   "connections":[
     {
       "out":[
-        "0x27c9cc8d630",
+        "0x25ca2f2a150",
         "Выход"
       ],
       "in":[
-        "0x27c9cca55a0",
+        "0x25ca2f2b850",
         "Вход"
       ]
     },
     {
       "out":[
-        "0x27c9cc8d990",
+        "0x25ca2f2aa50",
         "Выход"
       ],
       "in":[
-        "0x27c9ccaf070",
+        "0x25ca2f4ae50",
         "Вход"
       ]
     },
     {
       "in":[
-        "0x27c9cca55a0",
+        "0x25ca2f2b850",
         "Условие"
       ],
       "out":[
-        "0x27c9ccac160",
+        "0x25ca2f46b90",
         "Результат"
       ]
     },
     {
       "out":[
-        "0x27c9cca55a0",
+        "0x25ca2f2b850",
         "Истина"
       ],
       "in":[
-        "0x27c9cca59c0",
+        "0x25ca2f44450",
         "Вход"
       ]
     },
     {
       "out":[
-        "0x27c9cca55a0",
+        "0x25ca2f2b850",
         "Ложь"
       ],
       "in":[
-        "0x27c9cca7ca0",
+        "0x25ca2f452d0",
         "Вход"
       ]
     },
     {
       "in":[
-        "0x27c9cca7ca0",
+        "0x25ca2f452d0",
         "Условие"
       ],
       "out":[
-        "0x27c9ccafe20",
+        "0x25ca3f8d450",
         "Значение"
       ]
     },
     {
       "out":[
-        "0x27c9cca7ca0",
+        "0x25ca2f452d0",
         "Истина"
       ],
       "in":[
-        "0x27c9ccae500",
+        "0x25ca2f48b50",
         "Вход"
       ]
     },
     {
       "out":[
-        "0x27c9cca7ca0",
+        "0x25ca2f452d0",
         "Ложь"
       ],
       "in":[
-        "0x27c9ffc8580",
+        "0x25ca3f8d490",
         "Вход"
       ]
     },
     {
       "in":[
-        "0x27c9ccac160",
+        "0x25ca2f46b90",
         "Число 1"
       ],
       "out":[
-        "0x27c9ccadde0",
+        "0x25ca2f48e50",
         "Значение"
       ]
     },
     {
       "in":[
-        "0x27c9ccaebf0",
+        "0x25ca2f47d10",
         "Запуск"
       ],
       "out":[
-        "0x27c9ccaf2e0",
+        "0x25ca3f24bd0",
         "Результат"
       ]
     },
     {
       "out":[
-        "0x27c9ccaebf0",
+        "0x25ca2f47d10",
         "Условие запуска"
       ],
       "in":[
-        "0x27c9ccaf070",
+        "0x25ca2f4ae50",
         "Возвращаемое значение"
       ]
     },
     {
       "in":[
-        "0x27c9ccaf2e0",
+        "0x25ca3f24bd0",
         "Число 1"
       ],
       "out":[
-        "0x27c9ccaf850",
+        "0x25ca3f25d50",
         "Результат"
       ]
     },
     {
       "out":[
-        "0x27c9ffc8580",
+        "0x25ca3f8d490",
         "Выход"
       ],
       "in":[
-        "0x27c9fe1cfa0",
+        "0x25ca3f9ebd0",
         "Вход"
       ]
     },
     {
       "out":[
-        "0x27c9ffc8580",
+        "0x25ca3f8d490",
         "Объект"
       ],
       "in":[
-        "0x27c9fe1c2e0",
+        "0x25ca3f9c450",
         "Цель"
       ]
     },
     {
       "out":[
-        "0x27c9ffc8580",
+        "0x25ca3f8d490",
         "Объект"
       ],
       "in":[
-        "0x27c9fe1c7f0",
+        "0x25ca3f9e1d0",
         "Объект-цель"
       ]
     },
     {
       "in":[
-        "0x27c9fe6e1a0",
+        "0x25ca3f8f5d0",
         "Число 1"
       ],
       "out":[
-        "0x27c9fe1c7f0",
+        "0x25ca3f9e1d0",
         "Результат"
       ]
     },
     {
       "out":[
-        "0x27c9fe6e1a0",
+        "0x25ca3f8f5d0",
         "Результат"
       ],
       "in":[
-        "0x27c9b249b10",
+        "0x25ca3fa8990",
         "Значение 2"
       ]
     },
     {
       "in":[
-        "0x27c9fe6f490",
+        "0x25ca3f9c950",
         "Вход"
       ],
       "out":[
-        "0x27c9fe6f400",
+        "0x25ca3f9fb50",
         "Истина"
       ]
     },
     {
       "out":[
-        "0x27c9fe1c2e0",
+        "0x25ca3f9c450",
         "Результат"
       ],
       "in":[
-        "0x27c9b249b10",
+        "0x25ca3fa8990",
         "Значение 1"
       ]
     },
     {
       "in":[
-        "0x27c9fe1c7f0",
+        "0x25ca3f9e1d0",
         "Цель"
       ],
       "out":[
-        "0x27c9fe1cfa0",
+        "0x25ca3f9ebd0",
         "Объект"
       ]
     },
     {
       "out":[
-        "0x27c9fe1cfa0",
+        "0x25ca3f9ebd0",
         "Выход"
       ],
       "in":[
-        "0x27c9fe6f400",
+        "0x25ca3f9fb50",
         "Вход"
       ]
     },
     {
       "in":[
-        "0x27c9fe6f400",
+        "0x25ca3f9fb50",
         "Условие"
       ],
       "out":[
-        "0x27c9b249b10",
+        "0x25ca3fa8990",
         "Результат"
+      ]
+    },
+    {
+      "out":[
+        "0x25ca3fa96d0",
+        "Клиент"
+      ],
+      "in":[
+        "0x25ca3faa610",
+        "Цель"
       ]
     }
   ]
