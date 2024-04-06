@@ -23,20 +23,20 @@
           "_canTakeInLobbyConst":false
         }
       },
-      "compiledGUID":"5ae3a911-826e-4cff-b792-c8e0b5d1938d",
+      "compiledGUID":"67e49999-3b8a-4129-bf0f-65e54e811e99",
       "compileStatus":"Compiled",
       "graphVersion":2
     },
     "mpos":[
-      655.4221993328376,
-      480.7049645412658,
-      730.5415171026684,
-      687.5684866848644
+      569.1897470542974,
+      407.7857586300447,
+      915.5706810734202,
+      861.7135821867486
     ],
-    "mzoom":-0.35
+    "mzoom":-0.33
   },
   "nodes":{
-    "0x24155e61c50":{
+    "0x202ba23efd0":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_Blueprint_Event_16x",
       "name":"Выдача снаряжения",
@@ -71,7 +71,7 @@
       "subgraph_session":{},
       "class_":"methods.ScriptedRole.getEquipment_0"
     },
-    "0x24159ab4990":{
+    "0x202ba7c1ad0":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_Blueprint_Event_16x",
       "name":"При смерти за роль",
@@ -106,7 +106,7 @@
       "subgraph_session":{},
       "class_":"methods.ScriptedRole._onDeadBasicWrapper_0"
     },
-    "0x24159c15f90":{
+    "0x202ba7c2910":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_Blueprint_OverrideableFunction_16x",
       "name":"Вызов базового метода",
@@ -187,7 +187,7 @@
       },
       "class_":"control.supercall"
     },
-    "0x24159c36a10":{
+    "0x202ba7c3cd0":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_BluePrintEditor_Function_16px",
       "name":"Создать предмет в инвентаре",
@@ -211,8 +211,8 @@
       "disabled":false,
       "selected":false,
       "visible":true,
-      "width":306.0,
-      "height":159.20000000000002,
+      "width":426.0,
+      "height":178.1,
       "pos":[
         1400.5356085778492,
         188.34441440763916
@@ -226,7 +226,7 @@
       },
       "class_":"func.createItemInInventory"
     },
-    "0x2415b9423d0":{
+    "0x202bbc0c450":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":[
         "data\\icons\\pill_16x.png",
@@ -268,7 +268,7 @@
       },
       "class_":"fields.Mob.activeHand_0.get"
     },
-    "0x2415b943550":{
+    "0x202bbc0d5d0":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_Blueprint_Cast_16x",
       "name":"Преобразовать тип",
@@ -294,7 +294,7 @@
       "selected":false,
       "visible":true,
       "width":324.0,
-      "height":118.25,
+      "height":127.7,
       "pos":[
         628.2934207766959,
         139.81719422922464
@@ -307,7 +307,7 @@
       },
       "class_":"control.castto"
     },
-    "0x2415b9a7310":{
+    "0x202bbc71890":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\node_base.png",
       "name":"Заметка",
@@ -333,7 +333,7 @@
       "selected":false,
       "visible":true,
       "width":268.0,
-      "height":97.25,
+      "height":173.9,
       "pos":[
         1078.4339787587949,
         -82.95493409495258
@@ -346,7 +346,7 @@
       },
       "class_":"internal.sticker"
     },
-    "0x2415b9a7d90":{
+    "0x202bbc72410":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\Icon_Sequencer_Key_Part_24x",
       "name":"Получить текущий режим",
@@ -368,9 +368,9 @@
         180
       ],
       "disabled":false,
-      "selected":true,
+      "selected":false,
       "visible":true,
-      "width":366.0,
+      "width":459.0,
       "height":86.1,
       "pos":[
         455.81599873495884,
@@ -384,7 +384,7 @@
       },
       "class_":"methods.ScriptedRole.getCurrentGamemode_0"
     },
-    "0x2415b9a7790":{
+    "0x202bbc73290":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":[
         "data\\icons\\pill_16x.png",
@@ -413,7 +413,7 @@
       "selected":false,
       "visible":true,
       "width":399.0,
-      "height":123.9,
+      "height":142.8,
       "pos":[
         1281.543437906887,
         832.4686217631148
@@ -427,7 +427,7 @@
       },
       "class_":"fields.GMTemplateScripted.Pogib_pozdniy_priklyuchenets_0.set"
     },
-    "0x24159803e50":{
+    "0x202bbc732d0":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_Blueprint_Cast_16x",
       "name":"Преобразовать тип",
@@ -453,7 +453,7 @@
       "selected":false,
       "visible":true,
       "width":331.0,
-      "height":118.25,
+      "height":127.7,
       "pos":[
         859.4606083560805,
         868.6691148741814
@@ -470,111 +470,111 @@
   "connections":[
     {
       "out":[
-        "0x24155e61c50",
+        "0x202ba23efd0",
         "Выход"
       ],
       "in":[
-        "0x2415b943550",
+        "0x202bbc0d5d0",
         "Вход"
       ]
     },
     {
       "out":[
-        "0x24155e61c50",
+        "0x202ba23efd0",
         "Моб"
       ],
       "in":[
-        "0x2415b943550",
+        "0x202bbc0d5d0",
         "Входной объект"
       ]
     },
     {
       "out":[
-        "0x24159ab4990",
+        "0x202ba7c1ad0",
         "Выход"
       ],
       "in":[
-        "0x24159803e50",
+        "0x202bbc732d0",
         "Вход"
       ]
     },
     {
       "in":[
-        "0x24159c15f90",
+        "0x202ba7c2910",
         "Вход"
       ],
       "out":[
-        "0x2415b943550",
+        "0x202bbc0d5d0",
         "Успешное преобразование"
       ]
     },
     {
       "out":[
-        "0x24159c15f90",
+        "0x202ba7c2910",
         "Выход"
       ],
       "in":[
-        "0x24159c36a10",
+        "0x202ba7c3cd0",
         "Вход"
       ]
     },
     {
       "in":[
-        "0x24159c36a10",
+        "0x202ba7c3cd0",
         "Персонаж"
       ],
       "out":[
-        "0x2415b943550",
+        "0x202bbc0d5d0",
         "Объект"
       ]
     },
     {
       "in":[
-        "0x24159c36a10",
+        "0x202ba7c3cd0",
         "Слот"
       ],
       "out":[
-        "0x2415b9423d0",
+        "0x202bbc0c450",
         "Значение"
       ]
     },
     {
       "in":[
-        "0x2415b9423d0",
+        "0x202bbc0c450",
         "Цель"
       ],
       "out":[
-        "0x2415b943550",
+        "0x202bbc0d5d0",
         "Объект"
       ]
     },
     {
       "out":[
-        "0x2415b9a7d90",
+        "0x202bbc72410",
         "Результат"
       ],
       "in":[
-        "0x24159803e50",
+        "0x202bbc732d0",
         "Входной объект"
       ]
     },
     {
       "in":[
-        "0x2415b9a7790",
+        "0x202bbc73290",
         "Вход"
       ],
       "out":[
-        "0x24159803e50",
+        "0x202bbc732d0",
         "Успешное преобразование"
       ]
     },
     {
       "in":[
-        "0x2415b9a7790",
+        "0x202bbc73290",
         "Цель"
       ],
       "out":[
-        "0x24159803e50",
+        "0x202bbc732d0",
         "Объект"
       ]
     }

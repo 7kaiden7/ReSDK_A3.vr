@@ -47,20 +47,20 @@
         },
         "methods":{}
       },
-      "compiledGUID":"6d71d25a-fc14-4415-a6bd-cf98eec6398f",
-      "compileStatus":"Warnings",
-      "graphVersion":1
+      "compiledGUID":"228135a8-5bad-4e22-8e41-5dde16aace0c",
+      "compileStatus":"Compiled",
+      "graphVersion":2
     },
     "mpos":[
-      1703.648258289999,
-      -28.911390500587018,
-      681.5526104412718,
-      641.4612804153152
+      2440.8632331283497,
+      -474.2951982883137,
+      1016.2298523343403,
+      956.4516257264386
     ],
-    "mzoom":-0.02
+    "mzoom":-0.3
   },
   "nodes":{
-    "0x18c2436ddd0":{
+    "0x209a844da10":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_Blueprint_Event_16x",
       "name":"Выдача снаряжения",
@@ -95,112 +95,7 @@
       "subgraph_session":{},
       "class_":"methods.ScriptedRole.getEquipment_0"
     },
-    "0x18c2436d290":{
-      "type_":"runtime_domain.RuntimeNode",
-      "icon":"data\\icons\\icon_Blueprint_Event_16x",
-      "name":"При назначении",
-      "color":[
-        255,
-        0,
-        0
-      ],
-      "border_color":[
-        74,
-        84,
-        85,
-        255
-      ],
-      "text_color":[
-        255,
-        255,
-        255,
-        180
-      ],
-      "disabled":false,
-      "selected":false,
-      "visible":true,
-      "width":243.0,
-      "height":147.4,
-      "pos":[
-        367.01843742597305,
-        407.8314966131224
-      ],
-      "layout_direction":0,
-      "port_deletion_allowed":false,
-      "subgraph_session":{},
-      "class_":"methods.ScriptedRole._onAssignedWrapper_0"
-    },
-    "0x18c2436cb10":{
-      "type_":"runtime_domain.RuntimeNode",
-      "icon":"data\\icons\\icon_Blueprint_Event_16x",
-      "name":"При конце раунда за роль",
-      "color":[
-        255,
-        0,
-        0
-      ],
-      "border_color":[
-        74,
-        84,
-        85,
-        255
-      ],
-      "text_color":[
-        255,
-        255,
-        255,
-        180
-      ],
-      "disabled":false,
-      "selected":false,
-      "visible":true,
-      "width":295.0,
-      "height":111.3,
-      "pos":[
-        367.01843742597305,
-        602.8314966131225
-      ],
-      "layout_direction":0,
-      "port_deletion_allowed":false,
-      "subgraph_session":{},
-      "class_":"methods.ScriptedRole.onEndgameBasic_0"
-    },
-    "0x18c24302a10":{
-      "type_":"runtime_domain.RuntimeNode",
-      "icon":"data\\icons\\icon_Blueprint_Event_16x",
-      "name":"При смерти за роль",
-      "color":[
-        255,
-        0,
-        0
-      ],
-      "border_color":[
-        74,
-        84,
-        85,
-        255
-      ],
-      "text_color":[
-        255,
-        255,
-        255,
-        180
-      ],
-      "disabled":false,
-      "selected":false,
-      "visible":true,
-      "width":243.0,
-      "height":124.3,
-      "pos":[
-        367.01843742597305,
-        792.7814966131224
-      ],
-      "layout_direction":0,
-      "port_deletion_allowed":false,
-      "subgraph_session":{},
-      "class_":"methods.ScriptedRole._onDeadBasicWrapper_0"
-    },
-    "0x18c1a70e310":{
+    "0x209adb260d0":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":[
         "data\\icons\\pill_16x.png",
@@ -238,93 +133,12 @@
       "port_deletion_allowed":false,
       "subgraph_session":{},
       "custom":{
-        "Цель":"Этот KaznacheiZavod",
+        "Цель":"Объект GameObject",
         "Значение":"Ключ казначея"
       },
       "class_":"fields.GameObject.name_0.set"
     },
-    "0x18c1a70f510":{
-      "type_":"runtime_domain.RuntimeNode",
-      "icon":"data\\icons\\pill_16x.png",
-      "name":"Создать строку",
-      "color":[
-        52,
-        107,
-        43,
-        255
-      ],
-      "border_color":[
-        74,
-        84,
-        85,
-        255
-      ],
-      "text_color":[
-        255,
-        255,
-        255,
-        180
-      ],
-      "disabled":false,
-      "selected":false,
-      "visible":true,
-      "width":335.0,
-      "height":157.1,
-      "pos":[
-        3416.863385665125,
-        -69.07854743785093
-      ],
-      "layout_direction":0,
-      "port_deletion_allowed":true,
-      "subgraph_session":{},
-      "input_ports":[
-        {
-          "name":"Строка 1",
-          "multi_connection":false,
-          "display_name":true,
-          "color":[
-            255,
-            0,
-            255,
-            255
-          ],
-          "type":"string"
-        },
-        {
-          "name":"Строка 2",
-          "multi_connection":false,
-          "display_name":false,
-          "color":[
-            255,
-            0,
-            255,
-            255
-          ],
-          "type":"string"
-        }
-      ],
-      "output_ports":[
-        {
-          "name":"Строка",
-          "multi_connection":true,
-          "display_name":true,
-          "color":[
-            255,
-            0,
-            255,
-            255
-          ],
-          "type":"string"
-        }
-      ],
-      "custom":{
-        "autoportdata":{},
-        "makeport_in":"",
-        "Строка 1":"Звяки"
-      },
-      "class_":"string.stringMake"
-    },
-    "0x18c24407e10":{
+    "0x209adb312d0":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_BluePrintEditor_Function_16px",
       "name":"Создать предмет в инвентаре",
@@ -363,7 +177,7 @@
       },
       "class_":"func.createItemInInventory"
     },
-    "0x18c2441b910":{
+    "0x209ade0df90":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_Blueprint_Cast_16x",
       "name":"Преобразовать тип",
@@ -402,7 +216,7 @@
       },
       "class_":"control.castto"
     },
-    "0x18c243e7b90":{
+    "0x209ade77210":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\node_base.png",
       "name":"RandInt",
@@ -430,8 +244,8 @@
       "width":198.0,
       "height":100.7,
       "pos":[
-        2491.889171465795,
-        -115.050959487376
+        2907.115176646434,
+        251.493376120361
       ],
       "layout_direction":0,
       "port_deletion_allowed":true,
@@ -478,12 +292,12 @@
       ],
       "custom":{
         "autoportdata":{},
-        "Число 1":1.0,
-        "Число 2":3.0
+        "Число 1":3.0,
+        "Число 2":6.0
       },
       "class_":"math.randomInt"
     },
-    "0x18c243ed050":{
+    "0x209ade78650":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_BluePrintEditor_Function_16px",
       "name":"Создать предмет в контейнере",
@@ -521,87 +335,7 @@
       },
       "class_":"func.createItemInContainer"
     },
-    "0x18c1e030fd0":{
-      "type_":"runtime_domain.RuntimeNode",
-      "icon":"data\\icons\\node_base.png",
-      "name":"В строку",
-      "color":[
-        13,
-        18,
-        23,
-        255
-      ],
-      "border_color":[
-        74,
-        84,
-        85,
-        255
-      ],
-      "text_color":[
-        255,
-        255,
-        255,
-        180
-      ],
-      "disabled":false,
-      "selected":false,
-      "visible":true,
-      "width":160,
-      "height":60,
-      "pos":[
-        3165.291484330295,
-        5.669594625989944
-      ],
-      "layout_direction":0,
-      "port_deletion_allowed":true,
-      "subgraph_session":{},
-      "input_ports":[
-        {
-          "name":"Значение",
-          "multi_connection":false,
-          "display_name":false,
-          "color":[
-            46,
-            139,
-            87,
-            255
-          ],
-          "type":"int"
-        }
-      ],
-      "output_ports":[
-        {
-          "name":"Строка",
-          "multi_connection":true,
-          "display_name":false,
-          "color":[
-            255,
-            0,
-            255,
-            255
-          ],
-          "type":"string"
-        }
-      ],
-      "custom":{
-        "autoportdata":{
-          "color":[
-            255,
-            255,
-            255,
-            255
-          ],
-          "border_color":[
-            255,
-            255,
-            255,
-            255
-          ]
-        }
-      },
-      "class_":"conversion.valueToString"
-    },
-    "0x18c1e030f50":{
+    "0x209adedc9d0":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":[
         "data\\icons\\pill_16x.png",
@@ -639,52 +373,12 @@
       "port_deletion_allowed":false,
       "subgraph_session":{},
       "custom":{
-        "Цель":"Этот KaznacheiZavod",
+        "Цель":"Объект GameObject",
         "Значение":"Форма казначея"
       },
       "class_":"fields.GameObject.name_0.set"
     },
-    "0x18c1e0332d0":{
-      "type_":"runtime_domain.RuntimeNode",
-      "icon":"data\\icons\\icon_Blueprint_Loop_16x",
-      "name":"Цикл в диапазоне",
-      "color":[
-        119,
-        119,
-        119,
-        255
-      ],
-      "border_color":[
-        74,
-        84,
-        85,
-        255
-      ],
-      "text_color":[
-        255,
-        255,
-        255,
-        180
-      ],
-      "disabled":false,
-      "selected":false,
-      "visible":true,
-      "width":253.0,
-      "height":156.05,
-      "pos":[
-        2763.9303460946066,
-        -194.60994969352464
-      ],
-      "layout_direction":0,
-      "port_deletion_allowed":false,
-      "subgraph_session":{},
-      "custom":{
-        "Первый индекс":1,
-        "Последний индекс":3
-      },
-      "class_":"operators.for_loop"
-    },
-    "0x18c1e032990":{
+    "0x209adef4b10":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_Blueprint_Sequence_16x",
       "name":"Последовательность",
@@ -780,7 +474,7 @@
       },
       "class_":"operators.sequence"
     },
-    "0x18c1e021110":{
+    "0x209adef54d0":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_BluePrintEditor_Function_16px",
       "name":"Создать предмет в инвентаре",
@@ -819,7 +513,7 @@
       },
       "class_":"func.createItemInInventory"
     },
-    "0x18c1dfc8790":{
+    "0x209adf557d0":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_BluePrintEditor_Function_16px",
       "name":"Задать типы ключа",
@@ -853,12 +547,12 @@
       "port_deletion_allowed":false,
       "subgraph_session":{},
       "custom":{
-        "Цель":"Этот KaznacheiZavod",
+        "Цель":"Объект Key",
         "Типы":"Kaznachei"
       },
       "class_":"methods.Key._setKeyOwnerWrapper_0"
     },
-    "0x18c1dfca010":{
+    "0x209adf56fd0":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_BluePrintEditor_Function_16px",
       "name":"Создать предмет в контейнере",
@@ -895,217 +589,246 @@
         "Тип предмета":"Zvak"
       },
       "class_":"func.createItemInContainer"
+    },
+    "0x209ae1f2d10":{
+      "type_":"runtime_domain.RuntimeNode",
+      "icon":"data\\icons\\icon_BluePrintEditor_Function_16px",
+      "name":"Задать количество в стаке",
+      "color":[
+        0,
+        69,
+        104
+      ],
+      "border_color":[
+        74,
+        84,
+        85,
+        255
+      ],
+      "text_color":[
+        255,
+        255,
+        255,
+        180
+      ],
+      "disabled":false,
+      "selected":false,
+      "visible":true,
+      "width":256.0,
+      "height":157.5,
+      "pos":[
+        3174.693906835555,
+        107.59991661832558
+      ],
+      "layout_direction":0,
+      "port_deletion_allowed":false,
+      "subgraph_session":{},
+      "custom":{
+        "Цель":"Объект Stack",
+        "Количество":10
+      },
+      "class_":"methods.Stack.setStackCount_0"
     }
   },
   "connections":[
     {
       "out":[
-        "0x18c2436ddd0",
+        "0x209a844da10",
         "Выход"
       ],
       "in":[
-        "0x18c2441b910",
+        "0x209ade0df90",
         "Вход"
       ]
     },
     {
       "out":[
-        "0x18c2436ddd0",
+        "0x209a844da10",
         "Моб"
       ],
       "in":[
-        "0x18c2441b910",
+        "0x209ade0df90",
         "Входной объект"
       ]
     },
     {
       "in":[
-        "0x18c1a70e310",
+        "0x209adb260d0",
         "Вход"
       ],
       "out":[
-        "0x18c1dfc8790",
+        "0x209adf557d0",
         "Выход"
       ]
     },
     {
       "in":[
-        "0x18c1a70e310",
+        "0x209adb260d0",
         "Цель"
       ],
       "out":[
-        "0x18c243ed050",
+        "0x209ade78650",
         "Предмет"
       ]
     },
     {
       "in":[
-        "0x18c1a70f510",
-        "Строка 2"
-      ],
-      "out":[
-        "0x18c1e030fd0",
-        "Строка"
-      ]
-    },
-    {
-      "in":[
-        "0x18c24407e10",
+        "0x209adb312d0",
         "Вход"
       ],
       "out":[
-        "0x18c1e032990",
+        "0x209adef4b10",
         "Действие 1"
       ]
     },
     {
       "in":[
-        "0x18c24407e10",
+        "0x209adb312d0",
         "Персонаж"
       ],
       "out":[
-        "0x18c2441b910",
+        "0x209ade0df90",
         "Объект"
       ]
     },
     {
       "out":[
-        "0x18c24407e10",
+        "0x209adb312d0",
         "Выход"
       ],
       "in":[
-        "0x18c1e030f50",
+        "0x209adedc9d0",
         "Вход"
       ]
     },
     {
       "out":[
-        "0x18c24407e10",
+        "0x209adb312d0",
         "Предмет"
       ],
       "in":[
-        "0x18c243ed050",
+        "0x209ade78650",
         "Контейнер"
       ]
     },
     {
       "out":[
-        "0x18c24407e10",
+        "0x209adb312d0",
         "Предмет"
       ],
       "in":[
-        "0x18c1e030f50",
+        "0x209adedc9d0",
         "Цель"
       ]
     },
     {
       "out":[
-        "0x18c24407e10",
+        "0x209adb312d0",
         "Предмет"
       ],
       "in":[
-        "0x18c1dfca010",
+        "0x209adf56fd0",
         "Контейнер"
       ]
     },
     {
       "out":[
-        "0x18c2441b910",
+        "0x209ade0df90",
         "Успешное преобразование"
       ],
       "in":[
-        "0x18c1e032990",
+        "0x209adef4b10",
         "Вход"
       ]
     },
     {
       "out":[
-        "0x18c2441b910",
+        "0x209ade0df90",
         "Объект"
       ],
       "in":[
-        "0x18c1e021110",
+        "0x209adef54d0",
         "Персонаж"
       ]
     },
     {
       "out":[
-        "0x18c243e7b90",
+        "0x209ade77210",
         "Результат"
       ],
       "in":[
-        "0x18c1e0332d0",
-        "Последний индекс"
+        "0x209ae1f2d10",
+        "Количество"
       ]
     },
     {
       "in":[
-        "0x18c243ed050",
+        "0x209ade78650",
         "Вход"
       ],
       "out":[
-        "0x18c1e032990",
+        "0x209adef4b10",
         "Действие 2"
       ]
     },
     {
       "out":[
-        "0x18c243ed050",
+        "0x209ade78650",
         "Выход"
       ],
       "in":[
-        "0x18c1dfc8790",
+        "0x209adf557d0",
         "Вход"
       ]
     },
     {
       "out":[
-        "0x18c243ed050",
+        "0x209ade78650",
         "Предмет"
       ],
       "in":[
-        "0x18c1dfc8790",
+        "0x209adf557d0",
         "Цель"
       ]
     },
     {
-      "in":[
-        "0x18c1e030fd0",
-        "Значение"
-      ],
       "out":[
-        "0x18c1e0332d0",
-        "Индекс"
-      ]
-    },
-    {
-      "out":[
-        "0x18c1e030f50",
+        "0x209adedc9d0",
         "Выход"
       ],
       "in":[
-        "0x18c1e0332d0",
+        "0x209adf56fd0",
         "Вход"
       ]
     },
     {
       "out":[
-        "0x18c1e0332d0",
-        "Тело цикла"
-      ],
-      "in":[
-        "0x18c1dfca010",
-        "Вход"
-      ]
-    },
-    {
-      "out":[
-        "0x18c1e032990",
+        "0x209adef4b10",
         "Действие 3"
       ],
       "in":[
-        "0x18c1e021110",
+        "0x209adef54d0",
         "Вход"
+      ]
+    },
+    {
+      "out":[
+        "0x209adf56fd0",
+        "Выход"
+      ],
+      "in":[
+        "0x209ae1f2d10",
+        "Вход"
+      ]
+    },
+    {
+      "out":[
+        "0x209adf56fd0",
+        "Предмет"
+      ],
+      "in":[
+        "0x209ae1f2d10",
+        "Цель"
       ]
     }
   ]

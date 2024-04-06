@@ -24,20 +24,20 @@
         },
         "methods":{}
       },
-      "compiledGUID":"cd6f1167-4391-498d-a6d9-09c68063d9cf",
-      "compileStatus":"Warnings",
-      "graphVersion":1
+      "compiledGUID":"1ca3d139-5e60-43a6-b183-4b243a249496",
+      "compileStatus":"Compiled",
+      "graphVersion":2
     },
     "mpos":[
-      762.560110441753,
-      -349.94400209384025,
-      1241.647168916794,
-      1168.6091001569828
+      820.8720018485557,
+      -295.06222194626116,
+      1125.0233861031886,
+      1058.8455398618246
     ],
     "mzoom":-0.46
   },
   "nodes":{
-    "0x1cd00ab7fd0":{
+    "0x202bd9f7fd0":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_Blueprint_Event_16x",
       "name":"Выдача снаряжения",
@@ -72,7 +72,7 @@
       "subgraph_session":{},
       "class_":"methods.ScriptedRole.getEquipment_0"
     },
-    "0x1cd078b5c90":{
+    "0x202bdf1c0d0":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_Blueprint_Event_16x",
       "name":"При назначении",
@@ -107,7 +107,7 @@
       "subgraph_session":{},
       "class_":"methods.ScriptedRole._onAssignedWrapper_0"
     },
-    "0x1cd00703790":{
+    "0x202bdf1d050":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_Blueprint_Event_16x",
       "name":"При конце раунда за роль",
@@ -142,7 +142,7 @@
       "subgraph_session":{},
       "class_":"methods.ScriptedRole.onEndgameBasic_0"
     },
-    "0x1cd05479050":{
+    "0x202bdf1de90":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_Blueprint_Event_16x",
       "name":"При смерти за роль",
@@ -177,7 +177,7 @@
       "subgraph_session":{},
       "class_":"methods.ScriptedRole._onDeadBasicWrapper_0"
     },
-    "0x1cd07a005d0":{
+    "0x202bdf1ecd0":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_Blueprint_FlipFlop_16x",
       "name":"Переключатель",
@@ -213,7 +213,7 @@
       "subgraph_session":{},
       "class_":"operators.flipflop"
     },
-    "0x1cd05345510":{
+    "0x202bdf1ea50":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_BluePrintEditor_Function_16px",
       "name":"Создать предмет в инвентаре",
@@ -252,7 +252,7 @@
       },
       "class_":"func.createItemInInventory"
     },
-    "0x1cd041984d0":{
+    "0x202bdf87e90":{
       "type_":"runtime_domain.RuntimeNode",
       "icon":"data\\icons\\icon_Blueprint_Cast_16x",
       "name":"Преобразовать тип",
@@ -295,51 +295,51 @@
   "connections":[
     {
       "out":[
-        "0x1cd00ab7fd0",
+        "0x202bd9f7fd0",
         "Выход"
       ],
       "in":[
-        "0x1cd041984d0",
+        "0x202bdf87e90",
         "Вход"
       ]
     },
     {
       "out":[
-        "0x1cd00ab7fd0",
+        "0x202bd9f7fd0",
         "Моб"
       ],
       "in":[
-        "0x1cd041984d0",
+        "0x202bdf87e90",
         "Входной объект"
       ]
     },
     {
       "in":[
-        "0x1cd07a005d0",
+        "0x202bdf1ecd0",
         "Вход"
       ],
       "out":[
-        "0x1cd041984d0",
+        "0x202bdf87e90",
         "Успешное преобразование"
       ]
     },
     {
       "out":[
-        "0x1cd07a005d0",
+        "0x202bdf1ecd0",
         "A"
       ],
       "in":[
-        "0x1cd05345510",
+        "0x202bdf1ea50",
         "Вход"
       ]
     },
     {
       "in":[
-        "0x1cd05345510",
+        "0x202bdf1ea50",
         "Персонаж"
       ],
       "out":[
-        "0x1cd041984d0",
+        "0x202bdf87e90",
         "Объект"
       ]
     }
