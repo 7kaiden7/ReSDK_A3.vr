@@ -115,6 +115,15 @@ node_enum
 ]
 node_enum
 
+#include "..\Namings\FaceList_categories.h"
+["Nation",face_list_category apply {format["%1:%2:",_x select 3,_x select 0]},
+	"name:Национальность
+	desc:Перечисление национальностей. Содержит все типы национальностей для людей.
+	enumtype:string
+	"
+]
+node_enum
+
 #include "..\GameObjects\ConstantAndDefines\Mobs.h"
 ["DirectionSide",NODE_DIR_LIST_ALL,
 	"name:Направление
@@ -148,6 +157,12 @@ node_enum
 		desc:Перечисление состояний освещённости объектов.
 	"
 ] node_enum
+
+["VisibilityMode",NODE_VISIBILITY_MODE_LIST_ALL,
+"
+	name:Видимость
+	desc:Видимость физического тела. Используется в проверках возможности видимости объектов.
+"] node_enum
 
 #include "..\GameObjects\GameConstants.hpp"
 ["SideIndex",NODE_SIDE_LIST_ALL,
