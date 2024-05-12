@@ -293,6 +293,7 @@ _onInteractInventoryWith = {
 		_withItem = callFunc(_withItem,rewriteSystemItem);
 	};
 
+	//emplace item into container
 	if callFunc(_item,isContainer) then {
 		callFuncParams(_item,onInteractWith,_withItem arg this);
 	};
@@ -560,6 +561,12 @@ _onStrafeCatch = {
 		};
 	};
 }; rpcAdd("onStrafeCatch",_onStrafeCatch);
+
+__resetCustomAnim = {
+	params ["_mobObj"];
+	unrefObject(this,_mobObj,errorformat("Mob object has no exists virtual object - %1",_mobObj));
+	callSelfParams(setCustomAnimState,CUSTOM_ANIM_NONE arg true);
+}; rpcAdd("__resetCustomAnim",__resetCustomAnim);
 
 /**************************************************************************
 |					ONE SYNC SERVER EVENTS								  |

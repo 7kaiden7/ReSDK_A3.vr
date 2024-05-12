@@ -2,7 +2,7 @@
 Count modules: 31
  - [client](client//client.md) - 2 files
  - [Chat](client//Chat.md) - 6 files
- - [ClientData](client//ClientData.md) - 13 files
+ - [ClientData](client//ClientData.md) - 14 files
  - [ClientInit](client//ClientInit.md) - 1 files
  - [ClientMenus](client//ClientMenus.md) - 1 files
  - [ClientRpc](client//ClientRpc.md) - 2 files
@@ -49,7 +49,7 @@ Count modules: 49
  - [FaithSystem](host//FaithSystem.md) - 3 files
  - [Family](host//Family.md) - 2 files
  - [GameEvents](host//GameEvents.md) - 4 files
- - [GamemodeManager](host//GamemodeManager.md) - 11 files
+ - [GamemodeManager](host//GamemodeManager.md) - 10 files
  - [GameModes](host//GameModes.md) - 40 files
  - [GameObjects](host//GameObjects.md) - 140 files
  - [Gender](host//Gender.md) - 1 files

@@ -193,7 +193,7 @@ func(Die)
 	};
 };
 
-func(__postDieCheckAnim)
+func(__postDieCheckAnim) //very bad code... refactoring needed
 {
 	objParams();
 	if !callSelf(isInUnconsciousAnim) then {
@@ -388,6 +388,8 @@ region(Status effects)
 		if callSelf(isConnected) exitWith {};
 		if !callSelf(isActive) exitWith {};
 		
+		callSelfParams(setCustomAnimState,CUSTOM_ANIM_NONE);
+
 		//Положить моба и заблокировать управление
 		if (callSelf(getStance) != STANCE_DOWN) then {
 			//error("KNOCK DOWN - switchAction is not MP-func");
@@ -614,8 +616,11 @@ region(Status effects)
 
 			callSelf(closeOpenedNetDisplay);
 
+			//disable custom anim
+			callSelfParams(setCustomAnimState,CUSTOM_ANIM_NONE);
+
 			//switch off combat mode
-			//callSelfParams(setCombatMode,false);
+			callSelfParams(setCombatMode,false);
 
 			//callSelfParams(setCloseEyes,true);
 			callSelfParams(setUnconsciousAnim,true);
@@ -629,12 +634,25 @@ region(Status effects)
 	};
 
 	
-	getter_func(isInUnconsciousAnim,callSelf(getAnimation) in (UNC_ANIM_LIST apply {tolower _x}));
+	func(isInUnconsciousAnim)
+	{
+		objParams();
+		if callSelf(isConnected) exitWith {
+			private _uInd = getVar(getSelf(connectedTo),seatListOwners) find this;
+			if (_uInd==-1) exitWith {};
+			private _rplObj = getVar(getSelf(connectedTo),_seatListDummy) select _uInd;
+			if isNullReference(_rplObj) exitWith {};
+			equals(_rplObj getvariable "__posSeatUnc",_rplObj getvariable "__posSeat")
+		};
+		callSelf(getAnimation) in (UNC_ANIM_LIST apply {tolower _x})
+	};
 	func(setUnconsciousAnim)
 	{
 		objParams_1(_mode);
 
-		if callSelf(isConnected) exitWith {};
+		if callSelf(isConnected) exitWith {
+			callFuncParams(getSelf(connectedTo),seatApplySeatAnim,this arg true);
+		};
 
 		if (_mode) then {
 			callSelfParams(applyGlobalAnim, "switchmove" arg pick UNC_ANIM_LIST);
@@ -652,6 +670,7 @@ region(Status effects)
 		if callSelf(isUnconscious) then {
 			private _old = getSelf(unconscious);
 			DEC(_old);
+			setSelf(unconscious,_old max 0); //сначала ставим значение так как ниже в setUnconsciousAnim проверка смены анимации на стуле
 			if (_old <= 0) then {
 				callSelfParams(setUnconsciousAnim,false);
 				callSelfParams(changeVisionBlock,-1 arg "deunc");
@@ -659,7 +678,6 @@ region(Status effects)
 
 				callFunc(getSelf(_internalEquipmentND),closeNDisplayForAllMobs);
 			};
-			setSelf(unconscious,_old max 0);
 		};
 	};
 
@@ -2454,7 +2472,7 @@ region(Handle pain)
 	var(agonyLastTime,0);
 	getter_func(hasPain,getSelf(painAmount) > 0);
 	//с подавлением боли не будет срабатывать
-	getter_func(hasPainWithSuppress,if callSelf(canFeelPain) then {callSelf(hasPain)} else {0});
+	getter_func(hasPainWithSuppress,if callSelf(canFeelPain) then {callSelf(hasPain)} else {false});
 	getter_func(canRegenPain,callSelf(isSleep));
 	func(handle_pain)
 	{
