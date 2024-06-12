@@ -652,6 +652,7 @@ region(Connect control events)
 		callSelfParams(sendInfo, "onPrepareClient" arg [callSelf(getInitialPos) arg getSelf(visionBlock)]);
 		
 		callSelfParams(localEffectUpdate,"GenericAmbSound");
+
 	};
 	// Вызывается при отключении клиента от моба
 	func(onDisconnected)
@@ -1507,6 +1508,11 @@ region(Animator)
 	_anim = {
 		(_this select 0) switchmove (_this select 1)
 	}; rpcAdd("switchMove",_anim);
+	
+	_anim = {
+		(_this select 0) switchmove (_this select 1);
+		(_this select 0) playMoveNow (_this select 1); //fix force switchmove for fuckedup animations configs
+	}; rpcAdd("switchMove_force",_anim);
 
 	_anim = {
 		(_this select 0) switchmove (_this select 1)
@@ -1531,21 +1537,22 @@ region(Animator)
 		//changed after 0.4.75
 		if (_method == "switchmove" || _method == "switchmove_force") then {
 			
-			
 			//На сервере тоже вызываем метод
 			rpcCall(_method,[_mob arg _type]);
 
 			{
 				rpcSendToObject(_x,_method,[_mob arg _type]);
+
 			} foreach allPlayers;
 			
 			//Отладочная информация. Будет убрано после отлова ошибки синхронизации
-			["[applyGlobalAnim]: local - %1; Count: %2; Serversync: %3; Owner: %4; State %5",
-				isPlayer _mob,
+			["[applyGlobalAnim]: local - %1 (player=%6); Count: %2; Serversync: %3; Owner: %4; State %5;",
+				local _mob,
 				count allPlayers,
 				animationState _mob == _type,
 				owner _mob,
-				_type
+				_type,
+				isPlayer _mob
 			] call logInfo;
 
 			// //Тестовое исправление синхронизации по сети
@@ -1997,6 +2004,37 @@ region(banned combat setting)
 			callSelfParams(Stun,_timer arg true arg true);
 			callSelfParams(adjustPain,BP_INDEX_TORSO arg randInt(200,500));
 		};
+	};
+
+region(Step sounds component)
+
+	func(handleStepSounds)
+	{
+		objParams_1(_obj);
+		private _matObj = getVar(_obj,material);
+		private _defaultReturn = {
+			callSelfParams(sendInfo,"os_gs" arg vec2(getVar(_obj,pointer),-1));
+		};
+
+		if (isNullVar(_matObj) || {not_equalTypes(_matObj,nullPtr)}) exitWith _defaultReturn;
+		if isNullReference(_matObj) exitWith _defaultReturn;
+
+		private _kStep = callFunc(_matObj,getStepDataKey);
+		callSelfParams(sendInfo,"os_gs" arg vec2(getVar(_obj,pointer),_kStep));
+	};
+
+	var(__enabledStepSoundSys,false);
+	
+	getter_func(isStepSoundSystemEnabled,getSelf(__enabledStepSoundSys));
+
+	func(setStepSoundSystem)
+	{
+		objParams_1(_mode);
+		if equals(callSelf(isStepSoundSystemEnabled),_mode) exitWith {false};
+		if (_mode) then {
+			assert_str(!isNullReference(getSelf(owner)),"Mob::setStepSoundSystem() - owner must be not null");
+		};
+		setSelf(__enabledStepSoundSys,_mode);
 	};
 
 endclass

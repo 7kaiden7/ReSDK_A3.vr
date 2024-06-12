@@ -205,6 +205,9 @@ class(Mob) extends(BasicMob)
 	{
 		objParams_1(_linked);
 		super();
+		
+		callSelfParams(setStepSoundSystem,true);//step system
+
 		#ifdef TEXTCHAT
 			callSelf(initializeVoice);
 		#endif
@@ -314,6 +317,9 @@ region(Connect control events)
 
 		callSelfParams(loadActions,null);
 
+		//хандлер звуков шагов
+		callSelfParams(fastSendInfo,"os_steps_canUseRequests" arg callSelf(isStepSoundSystemEnabled));
+
 		callSelfParams(onChangeAttackType,"sync"); //синхронизируем основные статистики
 
 		callSelfParams(sendInfo, "onPrepareClient" arg
@@ -350,6 +356,8 @@ region(Connect control events)
 		if callSelf(hasOpenedContainer) then {
 			callFuncParams(getSelf(openedContainer),onContainerClose,this);
 		};
+
+		callSelfParams(setCustomActionState,CUSTOM_ANIM_ACTION_NONE arg true);
 		
 		callSelfParams(sendInfo, "strafeLock" arg [false]);
 	};

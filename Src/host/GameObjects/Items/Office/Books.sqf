@@ -21,6 +21,10 @@
 
 editor_attribute("InterfaceClass")
 class(IPaperItemBase) extends(Item)
+	var(material,"MatPaper");
+	var(weight,gramm(10));
+	var(size,ITEM_SIZE_SMALL);
+	
 	func(doBurn)
 	{
 		objParams_2(_srcFire,_usr);
@@ -67,6 +71,8 @@ class(IWritableContentItem) extends(IPaperItemBase)
 	" node_var
 	var(content,""); //text in book
 
+	#define __CONST_WRITABLE_ITEM_CONTENT_MAX_LEN__ 1024*3
+
 	"
 		name:Максимальная длина текста
 		desc:Максимальная допустимая длина текста в книге или листке бумаги. На данный момент константна и равна 3072 символам.
@@ -74,7 +80,7 @@ class(IWritableContentItem) extends(IPaperItemBase)
 		lockoverride:1
 		return:int:Максимальная длина текста
 	" node_met
-	getterconst_func(getMaxLen,1024*3);
+	getterconst_func(getMaxLen,__CONST_WRITABLE_ITEM_CONTENT_MAX_LEN__);
 
 	"
 		name:Можно записать
@@ -141,6 +147,23 @@ class(IWritableContentItem) extends(IPaperItemBase)
 		callSelf(updateNDisplay);
 	};
 
+	//editor paper data
+	editor_attribute("alias" arg "Содержимое")
+	editor_attribute("Tooltip" arg "Данные записанные в объекте, способном хранить текст.")
+	editor_attribute("EditorVisible" arg "type:string" arg "stringmaxsize:"+str(__CONST_WRITABLE_ITEM_CONTENT_MAX_LEN__))
+	var(preinit@__content,""); //системная переменная для установки ключей через редактор
+
+	func(__handlePreInitVars__)
+	{
+		objParams();
+		super();
+		private _ct = getSelf(preinit@__content);
+		if (_ct!="") then {
+			callSelfParams(appendText,_ct);
+			setSelf(preinit@__content,null);
+		};
+	};
+
 endclass
 
 class(Book) extends(IWritableContentItem)
@@ -152,6 +175,10 @@ class(Book) extends(IWritableContentItem)
 	var(name,"Книга");
 	var(ndName,"Book");
 	var(model,"relicta_models\models\interier\props\book6.p3d");
+
+	var(size,ITEM_SIZE_MEDIUM);
+	var(weight,gramm(350));
+	var(dr,2);
 
 	//getterconst_func(onePaperSize,256); //length one piper size
 
@@ -178,6 +205,7 @@ class(Paper) extends(IWritableContentItem)
 	var(ndName,"Paper");
 	var_exprval(ndInteractDistance,INTERACT_DISTANCE);
 	var(weight,gramm(5));
+	var(size,ITEM_SIZE_SMALL);
 
 	getter_func(getPickupSound,vec2("updown\paper_up"+str randInt(1,3),getRandomPitchInRange(.85,1.3)));
 	getter_func(getDropSound,vec2("updown\paper_down"+str randInt(1,2),getRandomPitchInRange(.85,1.3)));
@@ -330,11 +358,16 @@ endclass
 class(Notepad) extends(Paper)
 	var(model,"a3\structures_f\items\documents\notepad_f.p3d")
 	var(name,"Блокнот");
+	var(dr,1);
+	var(size,ITEM_SIZE_SMALL);
+	var(weight,gramm(100));
 endclass
 
 class(Documents) extends(Paper)
 	var(model,"a3\structures_f\items\documents\file2_f.p3d")
 	var(name,"Документы");
+	var(size,ITEM_SIZE_SMALL);
+	var(weight,gramm(170));
 endclass
 
 class(Documents1) extends(Paper)
@@ -344,6 +377,9 @@ endclass
 
 class(Folder) extends(Book)
 	var(name,"Папка");
+	var(weight,gramm(220));
+	var(size,ITEM_SIZE_MEDIUM);
+	var(dr,1);
 endclass
 
 
@@ -351,7 +387,16 @@ class(PaperHolder) extends(IPaperItemBase)
 	var(model,"a3\weapons_f_orange\ammo\leaflet_05_stack_f.p3d")
 	var(name,"Стопка бумаги");
 	var(countBlanks,20);
-	var(weight,0);
+	var(weight,0.5);
+	var(size,ITEM_SIZE_MEDIUM);
+	getter_func(objectHealthType,OBJECT_TYPE_COMPLEX);
+
+	func(constructor)
+	{
+		objParams();
+		setSelf(weight,getFieldBaseValue("Paper","weight") * getSelf(countBlanks));
+		callSelf(generateObjectHP);
+	};
 
 	func(getWeight)
 	{

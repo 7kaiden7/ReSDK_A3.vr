@@ -565,7 +565,7 @@ _onStrafeCatch = {
 __resetCustomAnim = {
 	params ["_mobObj"];
 	unrefObject(this,_mobObj,errorformat("Mob object has no exists virtual object - %1",_mobObj));
-	callSelfParams(setCustomAnimState,CUSTOM_ANIM_NONE arg true);
+	callSelfParams(setCustomActionState,CUSTOM_ANIM_ACTION_NONE arg true);
 }; rpcAdd("__resetCustomAnim",__resetCustomAnim);
 
 /**************************************************************************
@@ -584,6 +584,16 @@ _os_lt = {
 
 	setSelf(__lastClientLighting,_ctx);
 }; rpcAdd("os_lt",_os_lt);
+
+//onesync step get data
+_os_sgd = {
+	params ["_mobObj","_ctx"];
+	unrefObject(this,_mobObj,errorformat("OS_STEPDATA: Mob object has no exists virtual object - %1",_mobObj));
+	private _floorPtr = pointer_get(_ctx);
+	if !pointer_isValidResult(_floorPtr) exitWith {};
+	
+	callSelfParams(handleStepSounds,_floorPtr);
+}; rpcAdd("os_sgd",_os_sgd);
 
 
 //replicator common
