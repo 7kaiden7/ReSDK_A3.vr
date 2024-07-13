@@ -194,6 +194,9 @@ _onPrepareClient = {
 				//initialize onesync services
 				call os_start;
 
+				//enable atmos packets
+				[true] call noe_client_nat_setEnabled;
+
 				//set client game state
 				"game" call client_setState;
 
@@ -543,7 +546,7 @@ _setvdirup = {
 }; rpcAdd("syncongrabrot",_setvdirup);
 
 //теперь cam_addCamShake можно вызывать удаленно
-rpcAdd("camshake",cam_addCamShake);
+rpcAdd("camshake",{_this call cam_addCamShake}); //fix initialization error
 
 //Репликация любых методов. универсальный удаленный вызов
 _replloc = {

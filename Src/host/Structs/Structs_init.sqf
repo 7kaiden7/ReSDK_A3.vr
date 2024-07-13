@@ -4,15 +4,10 @@
 // ======================================================
 
 #include "..\engine.hpp"
-#include "..\oop.hpp"
-#include "Atmos.h"
+#include "..\struct.hpp"
 
 
-atmos_createChunk = {
-    params ["_pos"];
-};
+#include "Struct_tests.sqf"
 
-//create atmos effect (fire,smoke etc)
-atmos_createProcess = {
-    params ["_pos","_processClass"];
-};
+//atmos structures
+loadFile("src\host\Atmos\Atmos_structs.sqf");

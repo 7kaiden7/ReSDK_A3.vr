@@ -7,6 +7,8 @@
 #include <..\..\host\NOEngine\NOEngine.hpp>
 #include "..\..\host\NOEngine\NOEngine_Shared.sqf"
 #include <..\..\host\NOEngine\NOEngine_SharedTransportLevel.hpp>
+#include <..\..\host\Atmos\Atmos.hpp>
+#include <..\..\host\Atmos\Atmos_shared.sqf>
 #include <..\ClientRpc\clientRpc.hpp>
 
 #include <NOEngineClient.h>
@@ -18,6 +20,12 @@
 #include "NOEngineClient_TransportLevel.sqf"
 
 #include "NOEngineClient_ObjectManager.sqf"
+
+//#include "NOEngineClient_localAtmos.sqf"
+
+#include "NOEngineClient_Interpolation.sqf"
+
+#include "NOEngineClient_NetAtmos.sqf"
 
 //#include "NOEngineClient_Rendering.sqf"
 
@@ -128,5 +136,7 @@ if (!isMultiplayer) then {
 	invokeAfterDelay(_post,1.5);
 };
 
+//structures only defined after main module inialized
+#include "NOEngineClient_NetAtmos_structs.sqf"
 
 log("NOEngine: client module loaded!");

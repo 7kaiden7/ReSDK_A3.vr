@@ -32,6 +32,15 @@ var(canUseContainer,true); //флаг для добавления содержи
 getterconst_func(startWith,[]); //list of items to start: getterconst_func(startWith,[["Item",["name","Предметец"],["weight",1200]],["Brain",["name","Объект"]]])
 // ------------- new vars end
 
+//!вычистку содержимого нельзя сделать через autoref, так как деструктор вызывает removeItem, который изменяет исходный массив и появляются миссы
+func(destructor)
+{
+	objParams();
+	{
+		delete(_x);
+	} foreach array_copy(getSelf(content));
+};
+
 func(getWeight)
 {
 	objParams();
@@ -112,6 +121,8 @@ func(addItem)
 	private _oldSlot = getVar(_item,slot);
 	private _isSlot = _oldSlot != -1;
 	if (callFunc(_oldLoc,isMob) && _isSlot) then {
+		callFuncParams(_oldLoc,interpolate,"auto_trans" arg _item arg this);
+
 		callFuncParams(_oldLoc,removeItem,_item arg this);
 	} else {
 
@@ -159,7 +170,7 @@ func(removeItem)
 		callSelf(onContainerContentUpdate);
 
 		if _isMobNewLoc then {
-
+			callFuncParams(_newLoc,interpolate,"auto_trans" arg _item arg _newLoc);
 			if (callFuncParams(_newLoc,addItem,args2(_item,_slot))) then {
 				callFuncParams(_item,playEventSound,"pickup");
 			} else {

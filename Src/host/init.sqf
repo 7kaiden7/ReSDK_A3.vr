@@ -47,6 +47,10 @@ call cs_runtime_internal_makeAll;
 [] call oop_loadTypes;
 //end classes
 
+//structures initialize
+loadFile("src\host\Structs\Structs_init.sqf");
+call struct_initialize; //init all struct
+
 //another loaded files...
 //DEPREACTED loadFile("src\host\Database\fDB\fDB_init.sqf"); //локальная база данных
 loadFile("src\host\Database\SQLite\SQLite_init.sqf");
@@ -62,6 +66,7 @@ loadFile("src\host\GURPS\Gurps.sqf");
 loadFile("src\host\PointerSystem\Pointer.sqf");
 loadFile("src\host\VerbSystem\verbs.sqf");
 loadFile("src\host\ClientManager\ClientManager.sqf");
+loadFile("src\host\Atmos\Atmos_init.sqf");
 loadFile("src\host\GamemodeManager\GamemodeManager.sqf");
 loadFile("src\host\CraftSystem\Craft.sqf"); //serverside craft system
 loadFile("src\host\AmbientControl\AmbientControl_init.sqf");

@@ -3,201 +3,359 @@
 // sdk.relicta.ru
 // ======================================================
 
-/*
-   Atmos system for area effects
-*/
 
 #include "..\engine.hpp"
-#include "..\oop.hpp"
+#include "..\struct.hpp"
+#include "..\profiling.hpp"
+#include "..\ServerRpc\serverRpc.hpp"
+#include "..\GameObjects\GameConstants.hpp"
+#include "Atmos.hpp"
 #include "Atmos.h"
+#include "Atmos_raycasts.sqf"
+#include "Atmos_shared.sqf"
+#include "Atmos_spreading.sqf"
 
-atmos_map_chunks = createHashMap; //key:str(chunkloc) -> value(object:AtmosChunk)
+#ifdef EDITOR
+	loadFile("src\host\Atmos\Atmos_debug.sqf");
+
+	if !isNull(atmos_map_chunks) then {
+		{[_y] call struct_eraseFull} foreach (values atmos_map_chunks);
+	};
+	if !isNull(atmos_handle_update) then {stopUpdate(atmos_handle_update)};
+#endif
+
+//chunks references used for effector
+atmos_map_chunks = createHashMap; //key:str(chunkloc) -> value(struct:AtmosChunk)
+
+//area used for sync data
+atmos_map_chunkAreas = createHashMap; //key: str chunkArea, value (list<AtmosChunks>)
 atmos_handle_update = -1;
+atmos_chunks_uniqIdx = 0;
 
-atmos_hasIntersect = {
-   params ["_fromCh","_toCh"];
-   private _fromPos = _fromCh call atmos_chunkIdToPos;
-   private _toPos = _toCh call atmos_chunkIdToPos;
+atmos_chunks = 0;
+atmos_areas = 0;
 
-   private _tRez = ([_fromPos,_toPos] call si_getIntersectData) select 2;
-   if (isNullReference(tRez)) exitWith {false};
-   _tRez = ([_fromPos vectorAdd [],_toPos] call si_getIntersectData) select 2;
+//returns chunk by id, creates new if not exists
+atmos_getChunkAtChId = {
+	params ["_chId"];
+	assert(equalTypes(_chId,[]));
+	private _strKey = str _chId;
+	if !(_strKey in atmos_map_chunks) then {
+		private _chObj = ["AtmosChunk",[_chId]] call struct_alloc; //newParams(AtmosChunk,[_chId]);
+		atmos_map_chunks set [_strKey,_chObj];
+
+		//checking area and register in area
+		private _aDat = [_chId call atmos_chunkIdToAreaId] call atmos_getAreaAtAid;
+		(_aDat select ATMOS_AREA_INDEX_CHUNKS) pushBack _chObj;
+		_chObj set ["areaSR",["SafeRef",[_aDat]] call struct_alloc];
+	};
+	atmos_map_chunks get _strKey
 };
 
-atmos_updateAll = {
-   private __destr__ = false;
-   private _reqDestr = [];
-   private _atmosList = [];
-   private _chPos = null;
-   private _canTransfer = false;
-   
-   private _cachedMobList = [];
-   private _cachedObjList = [];
-   private _generatedCacheMobs = false;
-   private _generatedCacheObjects = false;
-   
-   private _atmObj = nullPtr;
-
-   private _spChunkIdList = null;
-
-   _getMobList = {
-      if (_generatedCacheMobs) then {
-         _cachedMobList
-      } else {
-         _cachedMobList = ["BasicMob",_chPos,ATMOS_SIZE * 3,true,true] call getGameObjectOnPosition;
-         //sorting
-         private _delMobs = true;
-         {
-            if (!ATMOS_POS_INSIDE_CHUNK(callFunc(_x,getPos),_chPos)) then {
-               _cachedMobList set [_forEachIndex,objNull];
-            };
-         } foreach _cachedMobList;
-         if (_delMobs) then {
-            _cachedMobList = _cachedMobList - [objNull];
-         };
-         _generatedCacheMobs = true;
-         _cachedMobList
-      };
-   };
-
-   _getObjList = {
-      if (_generatedCacheObjects) then {
-         _cachedObjList
-      } else {
-         _cachedObjList = ["IDestructible",_chPos,ATMOS_SIZE * 3,true,true] call getGameObjectOnPosition;
-         //sorting
-         private _delObjs = true;
-         {
-            if (!ATMOS_POS_INSIDE_CHUNK(callFunc(_x,getModelPosition),_chPos)) then {
-               _cachedObjList set [_forEachIndex,objNull];
-            };
-         } foreach _cachedObjList;
-         if (_delObjs) then {
-            _cachedObjList = _cachedObjList - [objNull];
-         };
-         _generatedCacheObjects = true;
-         _cachedObjList
-      };
-   };
-
-   _getSpreadChunks = {
-      //TODO, return always in random sorting
-      []
-   };
-
-   {
-      _atmosList = getVar(_y,aObj);
-      if (count _atmosList == 0) continueWith{}; //no area inside atmos chunk
-      _canTransfer = false;
-      _chPos = getVar(_y,realPos); //center position
-
-      /*
-         Main update atmos object processes
-      */
-      _cachedMobList = [];
-      _cachedObjList = [];
-      _generatedCacheMobs = false;
-      _generatedCacheObjects = false;
-      //TODO refactoring
-      {
-         _atmObj = _x;
-
-         //common atmos updater
-         callFunc(_atmObj,onUpdate);
-      
-         // handle contact mobs in chunk
-         if callFunc(_atmObj,canContactOnMob) then {
-            {
-               callFuncParams(_atmObj,onMobContact,_x); true
-            } count (call _getMobList);
-         };
-
-         //handle contact objects in chunk
-         if callFunc(_atmObj,canContactOnObjects) then {
-            {
-               callFuncParams(_atmObj,onObjectContact,_x); true
-            } count (call _getObjList);
-         };
-
-         //spread atmos
-         _spChunkIdList = call _getSpreadChunks;
-         {
-            
-         } count foreach (_spChunkIdList select [0,randInt(1,ATMOS_SPREAD_MAX_COUNT)]);
-         
-      } foreach _atmosList;
-
-   } foreach atmos_map_chunks;
+//returns chunk by id
+atmos_getChunkAtChIdUnsafe = {
+	params ["_chId"];
+	assert(equalTypes(_chId,[]));
+	private _strKey = str _chId;
+	atmos_map_chunks get _strKey //can return null
 };
 
-//convert world postion to virtual chunk id
-atmos_chunkPosToId = {
-   params ["_x","_y","_z"];
-   
-   [
-		floor(_x / ATMOS_SIZE) + ATMOS_START_INDEX,
-		floor(_y / ATMOS_SIZE) + ATMOS_START_INDEX,
-      floor(_z / ATMOS_SIZE) + ATMOS_START_INDEX
-	]
+//returns area by id
+atmos_getAreaAtAid = {
+	params ["_aid"];
+	assert(equalTypes(_aid,[]));
+	private _strkey = str _aid;
+	if !(_strkey in atmos_map_chunkAreas) then {
+		atmos_map_chunkAreas set [_strkey,ATMOS_AREA_NEW];
+	};
+	atmos_map_chunkAreas get _strkey
 };
 
-atmos_chunkIdToPos = {
-   params ["_iX","_iY","_iZ"];
+//обработка запроса зоны от клиента
+atmos_rpc_requestGetArea = {
+	params ["_cli","_ar","_lastUpd"];
+	
+	private _aDat = [_ar] call atmos_getAreaAtAid;
+	private _packet = [_ar select 0,_ar select 1,_ar select 2];
 
-   [
-      (_iX - ATMOS_START_INDEX) * ATMOS_SIZE,
-      (_iY - ATMOS_START_INDEX) * ATMOS_SIZE,
-      (_iZ - ATMOS_START_INDEX) * ATMOS_SIZE   
-   ]
+	_packet pushBack (_aDat select ATMOS_AREA_INDEX_LASTUPDATE);
+	_packet pushBack (_aDat select ATMOS_AREA_INDEX_LASTDELETE);
+	
+	//генерируем пакет
+	[_packet,_aDat select ATMOS_AREA_INDEX_CHUNKS,_lastUpd] call atmos_internal_generatePacket;
+
+	rpcSendToClient(_cli,ATMOS_RPC_CLIENT_UPDATE_CHUNK,_packet);
+
+	//добавляем netid клиента к владельцам
+	(_aDat select ATMOS_AREA_INDEX_CLIENTS) pushBack _cli;
+
+	private _cObj = _cli call cm_findClientById;
+	if !isNullReference(_cObj) then {
+		getVar(_cObj,loadedAreas) set [_ar,null];
+	};
+};
+rpcAdd(ATMOS_RPC_SERVER_REQUEST_AREA,atmos_rpc_requestGetArea);
+
+atmos_internal_generatePacket = {
+	params ["_packet","_chObjList","_lastUpd"];
+	{
+		if ((_x get "lastUpd")>_lastUpd) then {
+			_packet append (_x call ["getPacket"])
+		};
+	} foreach _chObjList;
 };
 
-/*
-   get list of chunks around
+atmos_rpc_validateExpiredChunks = {
+	params ["_cli","_ar","_listIds"];
+	private _aDat = [_ar] call atmos_getAreaAtAid;
+	private _idListActual = (_aDat select ATMOS_AREA_INDEX_CHUNKS) apply {_x get "chNum"};
+	private _packet = [
+		_ar select 0,
+		_ar select 1,
+		_ar select 2,
+		-(_aDat select ATMOS_AREA_INDEX_LASTUPDATE) //нам не нужна отметка последнего удаления
+	];
+	private _baseCount = count _packet;
+	{
+		_packet append [_x,-1];
+	} count (_listIds - _idListActual);
+	
+	if (count _packet > _baseCount) then {
+		rpcSendToClient(_cli,ATMOS_RPC_CLIENT_UPDATE_CHUNK,_packet);	
+	};
+	
+};
+rpcAdd(ATMOS_RPC_SERVER_DELETE_EXPIRED_CHUNKS,atmos_rpc_validateExpiredChunks);
 
-   z+1:
-      -------
-      | | | |
-      | |x| |
-      | | | |
-      -------
-   z:
-      -------
-      | |x| |
-      |x|v|x| <- "v" is optional
-      | |x| |
-      -------
-   z-1:
-      -------
-      | | | |
-      | |x| |
-      | | | |
-      -------
-*/
-atmos_chunkIdGetAround = {
-   params ["_chunk",["_addCurrent",false]];
-   private _loadList = [];
-   if (_addCurrent) then {
+atmos_onUpdateAreaByChunk = {
+	params ["_chObj"];
+	#ifdef ATMOS_USE_UPDATE_BUFFER
 
-	   _loadList pushBack _chunk;
-   };
-   //5*3 => 15 - 1(current)
-	//no iteration - faster
+	private _aDat = _chObj get "areaSR" call ["getValue"];
+	private _lupd = tickTime;
+	_aDat set [ATMOS_AREA_INDEX_LASTUPDATE,_lupd];
+	_chObj set ["lastUpd",_lupd];
+	private _mapBuffer = _aDat select ATMOS_AREA_INDEX_UPDATE_BUFFER;
+	_mapBuffer set [_chObj get "chNum",_chObj call ["getPacket"]];
 
-   //upper z
-   _loadList pushBack (_chunk vectorAdd [0,0,1]);
-   //down z
-   _loadList pushBack (_chunk vectorAdd [0,0,-1]);
-   //middle z
-   _loadList pushBack (_chunk vectorAdd [1,0,0]);
-   _loadList pushBack (_chunk vectorAdd [-1,0,0]);
-   _loadList pushBack (_chunk vectorAdd [0,1,0]);
-   _loadList pushBack (_chunk vectorAdd [0,-1,0]);
-   
-   _loadList
-}; 
+	#else
 
-//run thread updater
-atmos_init = {
-   error("Atmos system disabled");
-   //atmos_handle_update = startUpdate(atmos_updateAll,ATMOS_MAIN_THREAD_UPDATE_DELAY);
+	private _aDat = _chObj get "areaSR" call ["getValue"];
+	private _lupd = tickTime;
+	_aDat set [ATMOS_AREA_INDEX_LASTUPDATE,_lupd];
+	_chObj set ["lastUpd",_lupd];
+	private _aid = _chObj call ["getChunkAreaId"];
+	private _packetS = _aid;
+
+	_packetS pushBack (-_lupd);//это обновление. не загрузка
+	//_packetS pushBack (_aDat select ATMOS_AREA_INDEX_LASTDELETE);
+	
+	assert(count _packetS == 4);
+
+	_packetS append (_chObj call ["getPacket"]);
+
+	{
+		rpcSendToClient(_x,ATMOS_RPC_CLIENT_UPDATE_CHUNK,_packetS);
+	} foreach (_aDat select ATMOS_AREA_INDEX_CLIENTS);
+
+	#endif
+};
+
+#ifdef ATMOS_USE_UPDATE_BUFFER
+atmos_transferBuffer = {
+	params ["_aDat"];
+	private _t = tickTime;
+	private _ubuff = _aDat select ATMOS_AREA_INDEX_UPDATE_BUFFER;
+	//no updates
+	if (count _ubuff == 0) exitWith {
+		_aDat set [ATMOS_AREA_INDEX_LASTSEND_BUFFER,_t + ATMOS_SEND_DELAY_BUFFER];
+	};
+
+	private _packBuff = array_copy(_aDat select ATMOS_AREA_INDEX_AREAID);
+	_packBuff pushBack (-_t);
+	{
+		_packBuff append _x;
+	} count (values(_ubuff));
+
+	{
+		rpcSendToClient(_x,ATMOS_RPC_CLIENT_UPDATE_CHUNK,_packBuff);
+	} foreach (_aDat select ATMOS_AREA_INDEX_CLIENTS);
+	//cleanup buffer and update timestamp
+	_aDat set [ATMOS_AREA_INDEX_UPDATE_BUFFER,createHashMap];
+	_aDat set [ATMOS_AREA_INDEX_LASTSEND_BUFFER,_t + ATMOS_SEND_DELAY_BUFFER];
+};
+#endif
+
+atmos_onUnsubscribeClientListening = {
+	params ["_cli","_aId"];
+	private _aDat = [_aId] call atmos_getAreaAtAid;
+	private _cList = (_aDat select ATMOS_AREA_INDEX_CLIENTS);
+	private _idxDel = _cList find _cli;
+	if (_idxDel!=-1) then {
+		_cList deleteAt _idxDel;
+	};
+
+	private _cObj = _cli call cm_findClientById;
+	if !isNullReference(_cObj) then {
+		getVar(_cObj,loadedAreas) deleteAt _aId;
+	};
+};
+rpcAdd(ATMOS_RPC_CLIENT_UNSUBSCRIBE_LISTEN_CHUNK,atmos_onUnsubscribeClientListening);
+
+atmos_unsubscribeClientListeningSrv = {
+	params ["_cli"];
+	private _aDat = null;
+	private _cList = null;
+	private _id = getVar(_cli,id);
+	{
+		_aDat = [_x] call atmos_getAreaAtAid;
+		_cList = (_aDat select ATMOS_AREA_INDEX_CLIENTS);
+		array_remove(_cList,_id);
+	} foreach getVar(_cli,loadedAreas);
+};
+
+//create new process inside chunk
+atmos_createProcess = {
+	params ["_pos","_procType",["_manualCreate",false],["_paramsInit",null]];
+
+	private _chId = _pos call atmos_chunkPosToId;
+	private _atmCh = [_chId] call atmos_getChunkAtChId;
+	private _mapper = atmos_imap_process_t get _procType;
+	assert(!isNullVar(_mapper));
+
+	_mapper params ["_fNameStore","_aObjOffset"];
+
+	private _m = _atmCh get _fNameStore;
+	
+	if isNullVar(_m) then {
+		//private _at = [_procType,"_chId"] call struct_alloc;
+		//_m = _at;
+		_m = _atmCh call ["registerArea",[_procType,_fNameStore,_aObjOffset]];
+		_m call ["onInitialized",_paramsInit];
+	};
+
+	if (_manualCreate) then {
+		_m call ["onManualCreated",_paramsInit];
+	};
+
+	_m
+};
+
+atmos_imap_process_t = createHashMapFromArray [
+	["AtmosAreaFire",	["aFire",ATMOS_TYPEID_FIRE]],
+	["AtmosAreaGas",	["aGas",ATMOS_TYPEID_GAS]],
+	["AtmosAreaWater",	["aWater",ATMOS_TYPEID_WATER]]
+];
+
+//----- main update handle -------
+
+atmos_internal_handleUpdate = -1;
+
+//small optimizations
+atmos_cv_ca = ["canActivity"];
+atmos_cv_goch = ["getObjectsInChunk"];
+atmos_cv_oa = ["onActivity"];
+
+#define ASP_USE_NAMED_REGION
+
+#ifdef ASP_USE_NAMED_REGION
+	#define ASP_REGION_NAMED(t,x) ASP_REGION(t + (str _x))
+#else
+	#define ASP_REGION_NAMED(t,x) ASP_REGION(t)
+#endif
+
+atmos_internal_onUpdate = {
+	_chunkList = null;
+	_atmosDat = null;
+	_chObj = null;
+	_aObj = null;
+	_objInside = null;
+	ASP_REGION("Atmos update")
+	
+	{
+		_atmosDat = _y;
+		ASP_REGION_NAMED("Atmos area process: ",_x)
+
+		_chunkList = _y select ATMOS_AREA_INDEX_CHUNKS;
+
+		{
+			_chObj = _x;
+			ASP_REGION_NAMED("Chunk process",(_chObj))
+			_objInside = null;
+
+			
+			_aFire = null;
+
+			{
+				if !isNullVar(_x) then {
+					ASP_REGION_NAMED("Object process ",_x)
+					_aObj = _x;
+					if !(_aObj call atmos_cv_ca) then {continue};
+					if isinstance(_aObj,AtmosAreaFire) then {
+						_aFire = _aObj;	
+					};
+					// if isNullVar(_objInside) then {
+					// 	_objInside = _chObj call atmos_cv_goch;
+					// };
+					ASP_MESSAGE("Start activity")
+					_aObj call atmos_cv_oa;
+					ASP_MESSAGE("End activity")
+
+					// {
+					// 	_aObj call ["onObjectContact",_x];
+					// 	false
+					// } count _objInside;
+				};
+				false;
+			} count (_chObj get "atmosList");
+
+			//handle fire
+			ASP_MESSAGE("Start fire obj check")
+			if !isNullVar(_aFire) then {
+				ASP_REGION_NAMED("Fire process ",(_aFire))
+				if isNullVar(_objInside) then {
+					_objInside = _chObj call atmos_cv_goch;
+				};
+
+				{_aFire call ["onObjectContact",_x];false;} count _objInside;
+			};
+			ASP_MESSAGE("End fire obj check")
+
+			false;
+		} count (_chunkList);
+
+		#ifdef ATMOS_USE_UPDATE_BUFFER
+		if (count (_atmosDat select ATMOS_AREA_INDEX_CLIENTS) > 0) then {
+			if (tickTime > (_atmosDat select ATMOS_AREA_INDEX_LASTSEND_BUFFER)) then {
+				[_atmosDat] call atmos_transferBuffer;
+			};
+		};
+		#endif
+
+		
+	} foreach atmos_map_chunkAreas;
+
+};
+
+atmos_internal_handleUpdate = startUpdate(atmos_internal_onUpdate,ATMOS_MAIN_THREAD_UPDATE_DELAY);
+
+//!================================== WIP ==================================!
+
+//what this?..
+atmos_internal_generateChunkGetCode = {
+	private _code = [
+		"private _bch = _this;"
+	];
+	private _chidInt = 1;
+	for "_x" from 1 to ATMOS_AREA_SIZE do {
+		for "_y" from 1 to ATMOS_AREA_SIZE do {
+			for "_z" from 1 to ATMOS_AREA_SIZE do {
+				_f =  (_x - 1) * 100 + (_y - 1) * 10 + (_z-1) + 1;
+				_code pushBack (format["_bch pushBack [%1,%2,%3];",_x,_y,_z]);
+				INC(_chidInt);
+			};
+		};
+	};
+	_code pushBack "_bch";
+	compile (_code joinString endl);
 };
