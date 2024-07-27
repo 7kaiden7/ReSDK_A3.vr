@@ -32,3 +32,8 @@
 #include "ScriptedConfigs\SLIGHT_ATMOS_SMOKE_1.sqf"
 #include "ScriptedConfigs\SLIGHT_ATMOS_SMOKE_2.sqf"
 #include "ScriptedConfigs\SLIGHT_ATMOS_SMOKE_3.sqf"
+#include "ScriptedConfigs\SLIGHT_LIGHTKOPILKAMEDIUM.sqf"
+#include "ScriptedConfigs\SLIGHT_LIGHTKOPILKA.sqf"
+#include "ScriptedConfigs\SLIGHT_LIGHTCELLKOPILKA.sqf"
+#include "ScriptedConfigs\SLIGHT_KOPILKAREDLIGHT.sqf"
+#include "ScriptedConfigs\SLIGHT_KOPILKAGREENLIGHT.sqf"
