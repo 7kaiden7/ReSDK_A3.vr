@@ -37,3 +37,7 @@
 #include "ScriptedConfigs\SLIGHT_LIGHTCELLKOPILKA.sqf"
 #include "ScriptedConfigs\SLIGHT_KOPILKAREDLIGHT.sqf"
 #include "ScriptedConfigs\SLIGHT_KOPILKAGREENLIGHT.sqf"
+#include "ScriptedConfigs\SLIGHT_THEATRE_SCENE_MAIN.sqf"
+#include "ScriptedConfigs\SLIGHT_THEATRE_SCENE_AREA_MAIN.sqf"
+#include "ScriptedConfigs\SLIGHT_THEATRE_SCENE_STREETS.sqf"
+#include "ScriptedConfigs\SLIGHT_THEATRE_ROOM_GENERIC.sqf"

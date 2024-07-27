@@ -5,6 +5,7 @@
 
 #include <..\..\..\engine.hpp>
 #include <..\..\..\oop.hpp>
+#include <..\..\..\text.hpp>
 #include <..\..\GameConstants.hpp>
 
 // Стеллажи
@@ -72,6 +73,13 @@ class(Sink) extends(ShelfBase)
 		objParams();
 		callSelfParams(playSound,"reagents\sink.ogg" arg getRandomPitchInRange(0.9,1.3));
 	};
+endclass
+
+editor_attribute("EditorGenerated")
+class(Shower) extends(Sink)
+	var(model,"ml\ml_object_new\model_05\dysh.p3d");
+	var(name,"Мытьё");
+	var(desc,"Так сделано" pcomma " что сверху течёт струя прямо на голову.");
 endclass
 
 
