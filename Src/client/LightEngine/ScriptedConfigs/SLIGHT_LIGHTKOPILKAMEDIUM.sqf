@@ -11,7 +11,7 @@ regScriptEmit(SLIGHT_LIGHTKOPILKAMEDIUM)
 		["linkToSrc",[0,0,3.493]],
 		["setOrient",[-5.23499,-221.18,0]],
 		["setLightColor",[1,1,0.749]],
-		["setLightIntensity",4425.74],
+		["setLightIntensity",4424.74],
 		["setLightUseFlare",true],
 		["setLightFlareSize",3.054],
 		["setLightFlareMaxDistance",38.31],

@@ -11,7 +11,7 @@ regScriptEmit(SLIGHT_LIGHTCELLKOPILKA)
 		["linkToSrc",[0,0,-0.162998]],
 		["setOrient",[0,-266.987,0]],
 		["setLightColor",[1,1,0.6588]],
-		["setLightIntensity",600],
+		["setLightIntensity",601],
 		["setLightUseFlare",true],
 		["setLightFlareSize",0.522],
 		["setLightFlareMaxDistance",8.12],

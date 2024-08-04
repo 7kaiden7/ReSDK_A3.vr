@@ -12,7 +12,7 @@ regScriptEmit(SLIGHT_KOPILKAGREENLIGHT)
 		["setOrient",[-90,0,0]],
 		["setLightColor",[0.1569,0.3882,0.0471]],
 		["setLightAmbient",[0.0196,0.2706,0.0431]],
-		["setLightIntensity",16892.6],
+		["setLightIntensity",16891.6],
 		["setLightFlareSize",3.054],
 		["setLightFlareMaxDistance",100],
 		["setLightConePars",[184.57,34.74,2.9]]
