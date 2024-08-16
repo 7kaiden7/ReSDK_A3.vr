@@ -9,8 +9,10 @@
 #include "..\struct.hpp"
 #include "GameConstants.hpp"
 #include "..\ServerRpc\serverRpc.hpp"
+#include "..\Networking\Network.hpp"
 #include <..\..\client\Inventory\inventory.hpp>
 #include <..\PointerSystem\pointers.hpp>
+#include <..\NOEngine\NOEngine_SharedTransportLevel.hpp>
 
 /*
 # Основные методы для моба
@@ -84,7 +86,7 @@ class(GameObject) extends(ManagedObject)
 	editor_attribute("Tooltip" arg "Модифицируемый метод получения описания")
 	getter_func(getDesc,if isNull(getSelf(desc)) then {""} else {getSelf(desc)});
 
-	verbListOverride("extinguish description mainact"); //список действий которые можно сделать с ЭТИМ объектом
+	verbListOverride("pull pulltransform extinguish description mainact"); //список действий которые можно сделать с ЭТИМ объектом
 
 	"
 		name:В мире
@@ -178,7 +180,7 @@ class(GameObject) extends(ManagedObject)
 		desc:Возвращает @[bool ИСТИНУ], если игровой объект может светиться, используя конфиги освещения и частиц.
 		type:const
 		classprop:0
-		return:bool:Является ли объект дверью
+		return:bool:Является ли объект источником света
 	" node_met
 	getterconst_func(canLight,false); //является ли предмет источником света
 	"
@@ -194,7 +196,7 @@ class(GameObject) extends(ManagedObject)
 		desc:Возвращает @[bool ИСТИНУ], если игровой объект является хранилищем реагентов (например, бутыки, шприцы).
 		type:const
 		classprop:0
-		return:bool:Является ли объект дверью
+		return:bool:Является ли объект реагент-хранилищем
 	" node_met
 	getterconst_func(isReagentContainer,false); // реагент-контейнер
 	"
@@ -235,6 +237,10 @@ class(GameObject) extends(ManagedObject)
 	editor_attribute("EditorVisible" arg "custom_provider:weight")
 	editor_attribute("Tooltip" arg "Вес объекта в граммах или килограммах")
 	var(weight,gramm(1000));//вес в граммах
+
+	//перетаскивание
+	getter_func(isMovable,false); //объект движим
+	var(__moverMobs,[]);// кто двигает предмет
 
 	//рандомизатор веса
 	getterconst_func(canApplyWeightRandomize,false);
@@ -1158,7 +1164,7 @@ endregion
 		if callSelf(isInWorld) then {
 			private _cht = callSelf(getChunkType);
 			if isNullVar(_cht) exitWith {
-				error("GameObject::unloadModel() - getChunkType returns null");
+				error("GameObject::replicateObject() - getChunkType returns null");
 				false
 			};
 			[getSelf(loc),_cht,true] call noe_replicateObject;
@@ -1460,6 +1466,104 @@ class(IDestructible) extends(GameObject)
 		callSelf(replicateObject);
 	};
 
+	//todo optimize transport (from replicateObject to replicateTransform)
+	func(setTransform)
+	{
+		objParams_2(_p,_rot);
+		if !callSelf(isInWorld) exitWith {false};
+		assert_str(callSelf(isEnabledTransformMode),"Transform mode for pointer must be enabled -> " + getSelf(pointer));
+		private _wobj = getSelf(loc);
+		
+		if !isNullVar(_rot) then {
+			if equalTypes(_rot,0) then {
+				_wobj setDir _rot;
+			} else {
+				//conv to vec-coords
+				if (count _rot == 3) then {
+					_rot = _rot call model_convertPithBankYawToVec;
+				};
+				_rot params ["_vdr","_vup"];
+				_wobj setvectordirandup _rot;
+			};
+		};
+		
+		_wobj setPosWorld (atltoasl _p);
+
+		traceformat("Replicate object %1 (wpos %4); %2 %3",getSelf(pointer) arg _p arg _rot arg _posworld)
+
+		callSelf(replicateObject);
+
+		true
+	};
+
+	//return in struct vec2(pos[ATL|world],rot) - rot is float or vec3 (see model_getPitchBankYaw)
+	func(getTransform)
+	{
+		objParams();
+		if !callSelf(isInWorld) exitWith {null};
+		private _wobj = getSelf(loc);
+		[
+			ifcheck(_wobj getVariable vec2("wpos",false),getPosWorld _wobj,getPosAtl _wobj),
+			ifcheck(_wobj getVariable vec2("vdir",false),getDir _wobj,[_wobj] call model_getPitchBankYaw)
+		]
+	};
+
+	func(setTransformMode)
+	{
+		objParams_2(_mode,_replicate);
+		if !callSelf(isInWorld) exitWith {};
+		private _wobj = getSelf(loc);
+		if (_mode) then {
+			if !(_wobj getVariable ["wpos",false]) then {
+				(_wobj setVariable ["flags",(_wobj getvariable "flags") + wposObj_true]);
+			};
+			_wobj setVariable ["wpos",true];
+			if !(_wobj getVariable ["vdir",false]) then {
+				(_wobj setVariable ["flags",(_wobj getvariable "flags") + vDirObj_true]);
+			};
+			_wobj setVariable ["vdir",true];
+		} else {
+			if (_wobj getVariable ["wpos",false]) then {
+				(_wobj setVariable ["flags",(_wobj getvariable "flags") - wposObj_true]);
+			};
+			_wobj setVariable ["wpos",null];
+			if (_wobj getVariable ["vdir",false]) then {
+				(_wobj setVariable ["flags",(_wobj getvariable "flags") - vDirObj_true]);
+			};
+			_wobj setVariable ["vdir",null];
+		};
+		
+		if !isNullVar(_replicate) then {_replicate = true};
+
+		if (_replicate) then {
+			callSelf(replicateObject);
+		};
+	};
+	func(isEnabledTransformMode)
+	{
+		objParams();
+		if !callSelf(isInWorld) exitWith {false};
+		private _wobj = getSelf(loc);
+		(_wobj getVariable ["wpos",false]) && (_wobj getVariable ["vdir",false])
+	};
+
+	func(replicateTransform)
+	{
+		objParams();
+		if callSelf(isInWorld) then {
+			private _cht = callSelf(getChunkType);
+			if isNullVar(_cht) exitWith {
+				error("GameObject::replicateTransform() - getChunkType returns null");
+				false
+			};
+			[getSelf(loc),_cht,true] call noe_replicateTransform;
+
+			true
+		} else {
+			false
+		};
+	};
+
 	#define DEBUG_VISUAL_OPENSPACE
 
 	#ifndef EDITOR
@@ -1548,7 +1652,7 @@ class(IDestructible) extends(GameObject)
 		_countConnections <= 3//8=>примерно треть для устойчивости объекта
 	};
 
-	getter_func(isMovable,isTypeOf(this,IStruct) || isTypeOf(this,Item));
+	getter_func(isMovable,false);
 
 	//all info for this system in baisc set: B 557
 	//Повреждения оружия на B 485
@@ -2074,6 +2178,354 @@ region(Fire functionality)
 		#else
 		setSelf(__s_nextCheckIgnite,tickTime + randInt(40,60*2));
 		#endif
+	};
+
+region(Pulling functionality)
+	//get helper object on pulling
+	func(getPullHelperObject)
+	{
+		objParams();
+		if !callSelf(isInWorld) exitWith {objNull};
+		private _vtg = getSelf(loc) getVariable ["__vtarg_pull",objNull];
+		_vtg
+	};
+	getter_func(isPulled,count getSelf(__moverMobs) > 0);
+	func(getPullMainOwner)
+	{
+		objParams();
+		private _mvr = getSelf(__moverMobs);
+		if (count _mvr == 0) exitWith {nullPtr};
+		_mvr select 0
+	};
+	func(playPullSound)
+	{
+		objParams();
+		private _mat = callSelf(getMaterial);
+		if isNullReference(_mat) exitWith {};
+		private _snd = callFunc(_mat,getPullSound);
+		if (_snd == "") exitWith {};
+		callSelfParams(playSound,_snd arg getRandomPitchInRange(0.5,1.1) arg 8);
+	};
+	func(_checkCanPullingConditions)
+	{
+		objParams_1(_usr);
+		
+		if !callFunc(_usr,isActive) exitWith {false};
+
+		private _dir = callFuncParams(_usr,getDirFrom,this);
+		if (_dir!=DIR_FRONT) exitWith {false};
+		if callFunc(_usr,isConnected) exitWith {false};//сел - сброс
+		_stance = callFunc(_usr,getStance);
+		
+		if (_stance < STANCE_MIDDLE) exitWith {false};
+		
+		true
+	};
+	func(startPull)
+	{
+		objParams_1(_usr);
+		if !callSelf(isMovable) exitWith {};
+		if !callSelf(isInWorld) exitWith {};
+		if !callSelfParams(_checkCanPullingConditions,_usr) exitWith {};
+		
+		//todo горящие чанки объекта не позволят двигать его
+		
+		getSelf(__moverMobs) pushBack _usr;
+		callSelfParams(_pullStarted,_usr);
+		callSelf(onPullChanged);
+	};
+
+	//internal function for handling pullings
+	func(_pullStarted)
+	{
+		objParams_1(_usr);
+		//default async check timeout
+		#define async_delay_check_ 0.5
+
+		//this is helper puller, do not attach
+		private _isMainOwner = equals(callSelf(getPullMainOwner),_usr);
+
+		private _wobj = getSelf(loc);
+		private _srcPos = asltoatl getPosWorld _wobj;
+		private _own = getVar(_usr,owner);
+		private _offs = _srcPos vectorDiff (getposatl _own);
+
+		private _vtarg = if (_isMainOwner) then {
+			callSelfParams(setTransformMode,true); //enable transform
+			private _newvtarg = "Sign_Sphere10cm_F" createVehicleLocal [0,0,0];
+
+			_newvtarg setvariable ["_srcPos",_srcPos];
+			_newvtarg setvariable ["_own",_own];
+			_newvtarg setvariable ["_offs",_offs];
+
+			private _rotDefault = [_wobj] call model_getPitchBankYaw;
+			_newvtarg setvariable ["_rot",_rotDefault];//offset vector transform
+			_newvtarg setvariable ["_curRot",_rotDefault]; //current vector transform
+			_newvtarg setvariable ["_zpos",0]; //offset z-axis
+			_newvtarg setvariable ["_curZPos",0]; //current offset z-axis
+
+			_newvtarg setVariable ["_lastTransform",callSelf(getTransform)];
+
+			_wobj setVariable ["__vtarg_pull",_newvtarg];//creating reference
+			
+			_newvtarg setPosATL ((getposatl _own) vectoradd _offs);
+			[_newvtarg,_rotDefault] call model_SetPitchBankYaw;
+
+			_newvtarg
+		} else {
+			callSelf(getPullHelperObject)
+		};
+
+		private _params = [this,_usr,_vtarg,_own,_offs];
+
+		if (_isMainOwner) then {
+			private _bbxDat = (core_modelBBX get (tolower getSelf(model)));
+			if isNullVar(_bbxDat) then {_bbxDat = [[0,0,0],[0,0,0],0];};
+			(_bbxDat select 0) params ["_x1","_y1","_z1"];
+			(_bbxDat select 1) params ["_x2","_y2","_z2"];
+			private _bbxDatAll = [
+				[0,0,0],
+				[_x1,_y1,_z1],
+				[_x1,_y1,_z2],
+				[_x1,_y2,_z1],
+				[_x1,_y2,_z2],
+				[_x2,_y1,_z1],
+				[_x2,_y1,_z2],
+				[_x2,_y2,_z1],
+				[_x2,_y2,_z2]
+			];
+			private _maxZ = ((abs _z1) + (abs _z2))/2;
+			_vtarg setVariable ["_maxZOffset",_maxZ];
+
+			_params pushBack _bbxDatAll;
+		};
+		
+		private _ptrInfo = getSelf(pointer);
+		if (!_isMainOwner) then {
+			_ptrInfo = "helper+"+_ptrInfo;
+		} else {
+			callFuncParams(_usr,fastSendInfo,"pulling_canPull" arg true);
+		};
+		private _paramsRPC = [_ptrInfo];
+		
+		callFuncParams(_usr,syncSmdVar,"pull" arg _paramsRPC);
+		
+
+		startAsyncInvoke
+			{
+				private _tick = _this select 1;
+				if (tickTime < _tick) exitWith {false};
+				_this set [1,tickTime + async_delay_check_];
+				(_this select 0) params ['this',"_usr","_vtarg","_own","_offs","_bbxDatAll"];
+				private _isStop = false;
+
+				if isNullReference(_vtarg) exitWith {true};
+				if !callFunc(this,isInWorld) exitWith {true};
+				private _isMainOwner = equals(callSelf(getPullMainOwner),_usr);
+				private _canmove = true;
+				private _oldpos = getposatl _vtarg;
+				private _modpos = ((getposatl _own) vectoradd _offs);
+				
+				private _newtempPosZ = _vtarg getvariable "_zpos";
+				private _newtempPos = _modpos vectorAdd [0,0,_newtempPosZ];
+				private _newtempVec = _vtarg getvariable "_rot";
+
+				if !callSelfParams(_checkCanPullingConditions,_usr) then {
+					_isStop = true;
+				};
+
+				if (_isMainOwner) then {
+					
+					//apply vtarg temp transform
+					_vtarg setPosATL _newtempPos;
+					[_vtarg,_newtempVec] call model_SetPitchBankYaw;
+
+					_intersectCount = 0;
+					private _its = null;
+					//_upos = _own modelToWorld (_own selectionPosition "spine3");
+					_upos = getPosATL _own; //от предыдущей позиции проверка, не от моба...
+					{
+						_its = [
+							_upos,
+							_vtarg modelToWorld _x,
+							_vtarg,
+							_own
+						] call si_getIntersectData;
+						if !isNullReference(_its select 0) then {
+							private _itobj = _its select 0;
+							if equals(_itobj,_vtarg) exitWith {};
+							_itobj = [_itobj] call si_handleObjectReturnCheckVirtual;
+							if equals(_itobj,this) exitWith {};
+							//traceformat("increment iobj: %1",_its select 0)
+							INC(_intersectCount);
+						};
+					} foreach _bbxDatAll;
+
+					//traceformat("On intersection check result: %1",_intersectCount)
+					_canmove = _intersectCount <= 4;
+				};
+
+				if ((_oldpos distance (_modpos)) > 1.1) then {
+					_isStop = true;
+					callFuncParams(_usr,localSay,"Сорвалась хватка!" arg "error");
+				};
+				_it = [
+					getposatl _own,
+					(getposatl _own) vectoradd [0,0,-100],
+					_own,
+					getSelf(loc)
+				] call si_getIntersectData;
+				if (!isNullReference(_it select 0)) then {
+					if equals(_it select 0,getSelf(loc)) exitWith {
+						_isStop = true;
+					};
+				};
+
+				//bbx checking
+
+				if (!_isStop) then {
+					if (!_isMainOwner) exitWith {};
+					callFuncParams(_usr,fastSendInfo,"pulling_canPull" arg _canmove);
+					if (!_canmove) exitWith {
+						//reset position
+						_vtarg setPosAtl (_oldpos);
+						[_vtarg,_vtarg getVariable "_curRot"] call model_SetPitchBankYaw;
+					};
+					
+					//save positions
+					_vtarg setVariable ["_curRot",_newtempVec];
+					_vtarg setVariable ["_curZPos",_newtempPosZ];
+					
+					private _newPos = _newtempPos;
+					
+					getSelf(loc) setPosWorld (atltoasl _newPos);
+					[getSelf(loc),_newtempVec] call model_SetPitchBankYaw;
+					
+					callSelf(replicateObject);
+					traceformat("transform update %1 %2; OFFSET %3; Z %4",_newPos arg _newtempVec arg _offs arg _newtempPosZ)
+					
+
+					if ((_oldpos distance _newpos) > 0.15) then {
+						callFunc(this,playPullSound);
+					};
+				};
+
+				_isStop;
+			},
+			{
+				(_this select 0) params ['this',"_usr","_vtarg"];
+				
+				traceformat("PULLING TRIGGER STOPPED %1",_vtarg)
+				if !isNullReference(_vtarg) then {
+					//callFuncParams(_usr,onGrab,this);
+					{
+						if equals(getVar(_x,object),this) then {
+							callFunc(_x,stopGrab);
+						};
+					} foreach getVar(_usr,specHandAct);
+				};
+			},
+			[_params,tickTime + async_delay_check_]
+		endAsyncInvoke
+
+		#undef async_delay_check_
+	};
+
+	func(stopPull)
+	{
+		objParams_1(_usr);
+		
+		if isNullReference(_usr) exitWith {};
+		callFuncParams(_usr,syncSmdVar,"pull" arg 0);
+		private _mvr = getSelf(__moverMobs);
+		private _isMainOwner = equals(callSelf(getPullMainOwner),_usr);
+		array_remove(_mvr,_usr);
+
+		if (_isMainOwner) then {
+			callSelf(closePullSettings);
+		};
+
+		if (count _mvr == 0) then {
+			private _vtarg = callSelf(getPullHelperObject);
+			deleteVehicle _vtarg;
+		};
+
+		callSelf(onPullChanged);
+	};
+	
+	func(onPullChanged)
+	{
+		objParams();
+		callSelf(pullRecalculateWeight);
+	};
+	func(pullRecalculateWeight)
+	{
+		objParams();
+		private _mvr = getSelf(__moverMobs);
+		if ((count _mvr) == 0) exitWith {};
+		private _wobjList = [];
+		{
+			if isTypeOf(_x,Mob) then {
+				private _sysitm = getVar(_x,specHandAct);
+				{if equals(_x,this) then {_wobjList pushBack _x;}} foreach _sysitm;
+			};
+		} foreach _mvr;
+		
+		if (count _wobjList == 0) exitWith {};
+
+		private _wPerItem = callSelf(getWeight) / (count _wobjList);
+		{setVar(_x,weight,_wPerItem)} foreach _wobjList;
+		//update weight for mobs
+		{_x call gurps_recalcuateEncumbrance} foreach _mvr;
+	};
+	
+	func(closePullSettings)
+	{
+		objParams();
+		private _dynDisp = getVar(_usr,_internalDynamicND);
+		if equals(getVar(_dynDisp,ndName),"ObjectPull") then {
+			callFunc(_dynDisp,closeNDisplayForAllMobs);
+		};
+	};
+
+	func(openPullSettings)
+	{
+		objParams_1(_usr);
+		private _dynDisp = getVar(_usr,_internalDynamicND);
+
+		private _getInfo = {
+			private _p = getSelf(ptrval);
+			private _ctx = getSelf(context);
+			private _ph = callFunc(_ctx,getPullHelperObject);
+
+			[_p]
+		};
+		private _handleInp = {
+			objParams_2(_usr,_inp);
+			private _src = getSelf(context);
+			if isNullReference(_src) exitWith {};
+			if !callFunc(_src,isInWorld) exitWith {};
+			
+			private _ph = callFunc(_src,getPullHelperObject);
+			if isNullReference(_ph) exitWith {};
+			private _maxZOffset = _ph getvariable "_maxZOffset";
+
+			_inp params ["_mode","_val"];
+			if (_mode == "vupd") exitWith {
+				private _oldrot = _ph getVariable "_rot";
+				_ph setVariable ["_rot",_val];
+			};
+			if (_mode == "zupd") exitWith {
+				private _oldval = _ph getVariable "_zpos";
+				_ph setVariable ["_zpos",clamp(_val + _oldval,-_maxZOffset/2,_maxZOffset)];	
+			};
+			//unsupported mode
+			setLastError("Mode '" + _mode + "' is not supported");
+		};
+		private _ctx = this;
+		callFuncParams(_dynDisp,setNDOptions,"ObjectPull" arg 10 arg getSelf(pointer) arg _getInfo arg _handleInp arg _ctx);
+		
+		callFuncParams(_dynDisp,openNDisplayInternal,_usr arg getVar(_usr,owner));
 	};
 
 	// "
