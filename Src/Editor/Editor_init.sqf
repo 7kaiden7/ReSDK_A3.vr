@@ -65,9 +65,11 @@ call compile __pragma_preprocess "src\host\CommonComponents\Assert.sqf";
 //структуры
 #define STRUCT_INIT_FUNCTIONS
 #include <..\host\struct.hpp>
-
+#undef STRUCT_INIT_FUNCTIONS
 //структурная библиотека
 #include <..\host\CommonComponents\StructLib.sqf>
+//дефайны для лута
+#include <..\host\LootSystem\LootSystem_structs.sqf>
 
 //Отладчик
 #include <..\host\Tools\EditorWorkspaceDebug\InternalImpl.sqf>
@@ -87,13 +89,15 @@ call compile __pragma_preprocess "src\host\CommonComponents\Assert.sqf";
 
 #include <..\host\CommonComponents\ModelTransform.hpp>
 
+#include <..\host\Yaml\Yaml_init.sqf>
+
 //renode отладчик
 #include "..\host\ReNode\ReNode_debugger.sqf"
 
 #include <EditorEngine.h>
 
 //Строковое название версии. Пишется в пользовательском интерфейсе редактора
-Core_version_name = "1.14-path.3";
+Core_version_name = "1.15.1";
 //Номер версии сборки редактора. Используется в бинарных файлах карт.
 Core_version_number = 4;
 

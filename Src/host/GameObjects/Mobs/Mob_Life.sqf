@@ -1000,7 +1000,7 @@ region(Status effects)
 		#define AMOUNT_LESS_STAMINA 0.5
 
 		//moving mob
-		if (callSelf(getRealSpeed) > 0) then {
+		if (callSelf(getSpeedMode) > SPEED_MODE_STOP) then {
 			_staLoss = AMOUNT_LESS_STAMINA * (getSelf(curEncumbranceLevel) + 1);
 			modvar(_staLoss) * ([1,1,3,10] select callSelf(getSpeedMode));
 			callSelfParams(addStaminaLoss,_staLoss);
@@ -1308,7 +1308,7 @@ region(Log macros)
 	#define __dmgAndHp _dmg arg _hp
 	#define log_performance
 
-	#define lifelog(mes,fmt) "debug_console" callExtension (format["[LOG::LIFE]" + (mes) + "#1011",fmt])
+	#define lifelog(mes,fmt) (["[LOG::LIFE]",(mes),fmt,"#1011"] call stdoutPrint)
 
 	"
 		name:Нанести повреждение
@@ -2321,8 +2321,8 @@ region(Food and drinking)
 	{
 		objParams();
 		if getSelf(isDead) exitWith {};
-
-		callSelfParams(stun,randInt(2,5));
+		private _stunTime = randInt(2,5);
+		callSelfParams(stun,_stunTime);
 
 		if !callFuncParams(this,hasBodyOrgan,BO_INDEX_STOMACH) exitWith {
 			callSelfParams(playSound,pick callSelf(getRetchSounds) arg getRandomPitch);
@@ -2339,6 +2339,17 @@ region(Food and drinking)
 		};
 		callSelfParams(playEmoteSound,"vomit");
 		callSelfParams(meSay,pick _mes);
+
+		private _vomitDuration = precentage(_stunTime,60);
+		private _vparams = [getSelf(owner),SLIGHT_MOB_VOMIT_var,
+			["bubbleseffect","Memory"] //"head"
+			,_vomitDuration];
+		{
+			callFuncParams(_x,sendInfo,"do_fe_mob" arg _vparams);
+		} foreach callSelfParams(getNearMobs,20 arg false);
+
+		callSelfParams(setMobFaceAnim,DEAD_MIMIC);
+		callSelfAfter(syncMobFaceAnim,_vomitDuration);
 		
 		callSelfParams(adjustToxin, - randInt(1,5));
 	};

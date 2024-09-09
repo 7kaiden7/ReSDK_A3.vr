@@ -194,7 +194,21 @@ loadFile("src\host\init.sqf");
 
 call dsm_initialize; //discord mgr init
 
-if (server_isLocked) exitWith {};
+
+if (!call yaml_isExtensionLoaded) then {
+	#ifdef EDITOR
+	["Yaml библиотека не найдена."
+		+endl+endl+"Пожалуйста выполните команду по обновлению файлов редактора: Закройте Платформу и запустите ""ReMaker\DEPLOY.bat"""] call messageBox;
+	#endif
+	setLastError("Yaml library not found.");
+	appExit(APPEXIT_REASON_EXTENSION_ERROR);
+};
+
+if (server_isLocked) exitWith {
+	#ifdef RBUILDER
+	call RBuilder_onServerLockedLoading;
+	#endif
+};
 
 progLog("Serverside scripts loaded in " + str(diag_ticktime - _time_global) + " sec");
 
