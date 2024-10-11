@@ -6,7 +6,7 @@
 
 #include <..\engine.hpp>
 #include <..\struct.hpp>
-
+#include "FileSystem.h"
 
 fso_map_tree = createhashMap; //flat object
 
@@ -15,9 +15,16 @@ fso_init = {
 	private _nativeCollection = addonFiles ["src\"];
 	private _useNativeCollector = count _nativeCollection > 0;
 	if (!_useNativeCollector) then {
-		assert_str(!isNull(file_getFileList),"file::getFileList function not found");
+		
+		if isNull(file_getFileList) exitWith {
+			setLastError("file::getFileList function not found");
+		};
+		
 		_nativeCollection = ["src\",null,null,true] call file_getFileList;
-		assert_str(count _nativeCollection > 0,"Empty file collection");
+		if (count _nativeCollection == 0) exitWith {
+			setLastError("file::getFileList Empty file collection");
+		};
+
 		_nativeCollection = _nativeCollection apply {;
 			_parts = (tolower _x) splitString "\/";
 			_idxSrc = _parts find "src";
@@ -29,17 +36,6 @@ fso_init = {
 	
 	fso_map_tree = [_nativeCollection] call fso_buildTree;
 };
-
-#define FSO_INDEX_FILES 0
-#define FSO_INDEX_FOLDERS 1
-
-#define FSO_PATH_DELIMETER "/"
-
-#define FSO_NEW_DATA [[],[]]
-
-#define FSO_NORMALIZE_PATH(p) ((tolower (p)) splitString "\/" joinString FSO_PATH_DELIMETER)
-
-#define FSO_PATH_JOIN(p1,p2) ([p1,p2] joinString FSO_PATH_DELIMETER)
 
 /*
 	tree builder maker

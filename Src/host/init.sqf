@@ -43,7 +43,6 @@ loadFile("src\host\Client\client.sqf");
 loadFile("src\host\Gender\Genders.sqf");
 loadFile("src\host\Materials\Materials_init.sqf");
 call nodegen_loadClasses;
-call loot_prepareAll;
 // start class generator
 call cs_runtime_internal_makeAll;
 
@@ -93,6 +92,8 @@ if (!isMultiplayer) then {
 	loadFile("src\host\ServerSceneTest\serverscrene_init.sqf"); //for testing only
 };
 #endif
+
+call loot_prepareAll;// intialize loot only after structs loaded
 
 server_loadingState = 1;
 

@@ -4,34 +4,74 @@
 
 Type: Variable
 
-Description: 
+Description: cleanup all
 
 
 Initial value:
 ```sqf
-createHashMap
+createHashMap //all crafts map
 ```
-File: [host\LootSystem\LootSystem_init.sqf at line 9](../../../Src/host/LootSystem/LootSystem_init.sqf#L9)
+File: [host\LootSystem\LootSystem_init.sqf at line 10](../../../Src/host/LootSystem/LootSystem_init.sqf#L10)
+## loot_mapTemplates
+
+Type: Variable
+
+Description: all crafts map
+
+
+Initial value:
+```sqf
+createHashMap //template map (tagged)
+```
+File: [host\LootSystem\LootSystem_init.sqf at line 11](../../../Src/host/LootSystem/LootSystem_init.sqf#L11)
 ## loot_list_loader
 
 Type: Variable
 
-Description: 
+Description: template map (tagged)
 
 
 Initial value:
 ```sqf
 []// список файлов для загрузки
 ```
-File: [host\LootSystem\LootSystem_init.sqf at line 10](../../../Src/host/LootSystem/LootSystem_init.sqf#L10)
+File: [host\LootSystem\LootSystem_init.sqf at line 12](../../../Src/host/LootSystem/LootSystem_init.sqf#L12)
+## loot_internal_catchedError
+
+Type: Variable
+
+> Exists if **EDITOR** defined
+
+Description: 
+
+
+Initial value:
+```sqf
+false
+```
+File: [host\LootSystem\LootSystem_init.sqf at line 15](../../../Src/host/LootSystem/LootSystem_init.sqf#L15)
+## loot_internal_editor_previewBuffer
+
+Type: Variable
+
+> Exists if **EDITOR** defined
+
+Description: 
+
+
+Initial value:
+```sqf
+[]
+```
+File: [host\LootSystem\LootSystem_init.sqf at line 171](../../../Src/host/LootSystem/LootSystem_init.sqf#L171)
 ## loot_init
 
 Type: function
 
-Description: список файлов для загрузки
+Description: 
 
 
-File: [host\LootSystem\LootSystem_init.sqf at line 11](../../../Src/host/LootSystem/LootSystem_init.sqf#L11)
+File: [host\LootSystem\LootSystem_init.sqf at line 18](../../../Src/host/LootSystem/LootSystem_init.sqf#L18)
 ## loot_addConfig
 
 Type: function
@@ -39,15 +79,7 @@ Type: function
 Description: 
 - Param: _cfgPath
 
-File: [host\LootSystem\LootSystem_init.sqf at line 19](../../../Src/host/LootSystem/LootSystem_init.sqf#L19)
-## loot_internal_resolvePath
-
-Type: function
-
-Description: 
-- Param: _p
-
-File: [host\LootSystem\LootSystem_init.sqf at line 25](../../../Src/host/LootSystem/LootSystem_init.sqf#L25)
+File: [host\LootSystem\LootSystem_init.sqf at line 26](../../../Src/host/LootSystem/LootSystem_init.sqf#L26)
 ## loot_prepareAll
 
 Type: function
@@ -55,7 +87,7 @@ Type: function
 Description: 
 
 
-File: [host\LootSystem\LootSystem_init.sqf at line 47](../../../Src/host/LootSystem/LootSystem_init.sqf#L47)
+File: [host\LootSystem\LootSystem_init.sqf at line 32](../../../Src/host/LootSystem/LootSystem_init.sqf#L32)
 ## loot_loadConfig
 
 Type: function
@@ -63,7 +95,7 @@ Type: function
 Description: 
 - Param: _path
 
-File: [host\LootSystem\LootSystem_init.sqf at line 68](../../../Src/host/LootSystem/LootSystem_init.sqf#L68)
+File: [host\LootSystem\LootSystem_init.sqf at line 52](../../../Src/host/LootSystem/LootSystem_init.sqf#L52)
 ## loot_processObject
 
 Type: function
@@ -72,7 +104,37 @@ Description:
 - Param: _type
 - Param: _obj
 
-File: [host\LootSystem\LootSystem_init.sqf at line 133](../../../Src/host/LootSystem/LootSystem_init.sqf#L133)
+File: [host\LootSystem\LootSystem_init.sqf at line 123](../../../Src/host/LootSystem/LootSystem_init.sqf#L123)
+## loot_internal_editor_reloadLooting
+
+Type: function
+
+> Exists if **EDITOR** defined
+
+Description: 
+
+
+File: [host\LootSystem\LootSystem_init.sqf at line 148](../../../Src/host/LootSystem/LootSystem_init.sqf#L148)
+## loot_editor_isLoadedLib
+
+Type: function
+
+> Exists if **EDITOR** defined
+
+Description: 
+
+
+File: [host\LootSystem\LootSystem_init.sqf at line 157](../../../Src/host/LootSystem/LootSystem_init.sqf#L157)
+## loot_editor_getTemplateByInput
+
+Type: function
+
+> Exists if **EDITOR** defined
+
+Description: 
+- Param: _input
+
+File: [host\LootSystem\LootSystem_init.sqf at line 161](../../../Src/host/LootSystem/LootSystem_init.sqf#L161)
 # LootSystem_structs.sqf
 
 ## LOOT_COMPARE_BY_NAME
