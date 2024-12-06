@@ -189,7 +189,7 @@ _3642_662604124_7041074_01463 = ['IStruct',[3642.66,4124.7,79.1775,true],[-0.769
 ['BigGreenRock',[3595.76,4040.16,61.446,true],65.1731,[-0.0770933,0.0263563,0.996675]] call InitDecor; 
 ['BigGreenRock',[3617.74,4024.14,69.446,true],340.173,[-0.0329766,-0.0744984,0.996676]] call InitDecor; 
 _3708_953134130_1694366_95133 = ['IStruct',[3708.95,4130.17,82.6428,true],[-0.762211,0.641685,0.0852933],[0.0598619,-0.0613262,0.996321], {_thisObj setvariable ['model','a3\rocks_f_exp\cliff\cliff_wall_round_f.p3d'];}] call InitStruct; // !!! realocated model !!!
-['YellowOre',[3608.69,4136.15,52.7703,true],355,[0.00342017,-0.00619339,0.999975]] call InitStruct; 
+_3608_693124136_1528347_52544 = ['IStruct',[3608.69,4136.15,52.7703,true],355,[0.00342017,-0.00619339,0.999975], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
 ['BigLightRuinedBuilding',[3592.39,4114.52,47.2779],45,[0,0,1]] call InitDecor; 
 _3682_022714131_4912167_40568 = ['IStruct',[3682.02,4131.49,72.5542,true],[-0.133869,-0.0163231,-0.990865],[-0.980832,-0.140674,0.134831], {_thisObj setvariable ['model','a3\rocks_f_exp\cliff\cliff_boulder_f.p3d'];}] call InitStruct; // !!! realocated model !!!
 _3680_702884131_6650471_38916 = ['IStruct',[3680.7,4131.67,77.1409,true],[-0.418449,0.903316,0.0944532],[0.0207531,-0.0944591,0.995312], {_thisObj setvariable ['model','a3\rocks_f_exp\cliff\cliff_boulder_f.p3d'];}] call InitStruct; // !!! realocated model !!!
@@ -295,70 +295,34 @@ _3671_557624067_7919961_55488 = ['IStruct',[3671.56,4067.79,72.6808,true],[-0.51
 ['BigStoneWall',[3592.63,4091.07,47.6311],148.002,[0,0,1]] call InitDecor; 
 _3623_413334135_1162147_45319 = ['IStruct',[3623.41,4135.12,52.8395,true],0.312292,[0.0260322,-0.114395,0.993094], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_01_f.p3d'];}] call InitStruct; // !!! realocated model !!!
 _3619_117434135_0854547_37920 = ['IStruct',[3619.12,4135.09,52.3489,true],[-0.810104,0.586101,-0.0147283],[0.0212747,0.0544919,0.998288], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_erosion_f.p3d'];}] call InitStruct; // !!! realocated model !!!
-['YellowOre',[3605.57,4129.13,52.6308,true],355,[0.00342017,-0.00619339,0.999975]] call InitStruct; 
-['YellowOre',[3598.62,4123.04,52.6836,true],355,[0.00342017,-0.00619339,0.999975]] call InitStruct; 
-['YellowOre',[3584.11,4080.92,52.6494,true],355,[0.00342017,-0.00619339,0.999975]] call InitStruct; 
-['YellowOre',[3583.72,4063.77,52.6304,true],355,[0.00342017,-0.00619339,0.999975]] call InitStruct; 
-['YellowOre',[3566.06,4062.46,52.9176,true],355,[0.00342017,-0.00619339,0.999975]] call InitStruct; 
-['YellowOre',[3549.09,4080.07,52.7296,true],271.001,[0.00649812,0.00275261,0.999975]] call InitStruct; 
+_3605_571534129_1279347_38593 = ['IStruct',[3605.57,4129.13,52.6308,true],355,[0.00342017,-0.00619339,0.999975], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
+_3598_623054123_0380947_43880 = ['IStruct',[3598.62,4123.04,52.6836,true],355,[0.00342017,-0.00619339,0.999975], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
+_3584_108644080_9199247_40460 = ['IStruct',[3584.11,4080.92,52.6494,true],355,[0.00342017,-0.00619339,0.999975], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
+_3583_723884063_7724647_38559 = ['IStruct',[3583.72,4063.77,52.6304,true],355,[0.00342017,-0.00619339,0.999975], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
+_3566_055424062_4619147_67280 = ['IStruct',[3566.06,4062.46,52.9176,true],355,[0.00342017,-0.00619339,0.999975], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
+_3549_093514080_0710447_48478 = ['IStruct',[3549.09,4080.07,52.7296,true],271.001,[0.00649812,0.00275261,0.999975], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
 ['BigGreyRuinedBuilding',[3565.71,4090.88,53.3917,true],313.001,[-0.00559788,-0.00698199,0.99996]] call InitDecor; 
-['YellowOre',[3569.78,4116.3,52.6408,true],355,[0.00342017,-0.00619339,0.999975]] call InitStruct; 
-['YellowOre',[3570.17,4100.9,52.7742,true],355,[0.00342017,-0.00619339,0.999975]] call InitStruct; 
-['YellowOre',[3611.89,4095.07,52.8222,true],355,[0.00342017,-0.00619339,0.999975]] call InitStruct; 
-['YellowOre',[3620.13,4069.66,62.189,true],355,[0.00342017,-0.00619339,0.999975]] call InitStruct; 
-['YellowOre',[3674.29,4081.52,67.2962,true],355,[0.00342017,-0.00619339,0.999975]] call InitStruct; 
-['YellowOre',[3656.86,4113.62,68.5477,true],355,[0.00342017,-0.00619339,0.999975]] call InitStruct; 
-['YellowOre',[3555.39,4105.46,52.6099,true],326,[0.00598839,-0.00375436,0.999975]] call InitStruct; 
-['YellowOre',[3565.59,4091.42,53.4939,true],331,[0.00563935,-0.00426267,0.999975]] call InitStruct; 
+_3569_779054116_2973647_39599 = ['IStruct',[3569.78,4116.3,52.6408,true],355,[0.00342017,-0.00619339,0.999975], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
+_3570_171394100_9013747_52933 = ['IStruct',[3570.17,4100.9,52.7742,true],355,[0.00342017,-0.00619339,0.999975], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
+_3611_893074095_0678747_57733 = ['IStruct',[3611.89,4095.07,52.8222,true],355,[0.00342017,-0.00619339,0.999975], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
+_3620_131844069_6599156_94411 = ['IStruct',[3620.13,4069.66,62.189,true],355,[0.00342017,-0.00619339,0.999975], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
+_3674_294924081_5156362_05141 = ['IStruct',[3674.29,4081.52,67.2962,true],355,[0.00342017,-0.00619339,0.999975], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
+_3656_863534113_6196363_30284 = ['IStruct',[3656.86,4113.62,68.5477,true],355,[0.00342017,-0.00619339,0.999975], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
+_3555_388184105_4619147_36502 = ['IStruct',[3555.39,4105.46,52.6099,true],326,[0.00598839,-0.00375436,0.999975], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
+_3565_594484091_4223648_24904 = ['IStruct',[3565.59,4091.42,53.4939,true],331,[0.00563935,-0.00426267,0.999975], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
 ['BlockStone',[3617.27,4057.07,58.4103,true],[-0.694386,-0.352092,-0.627582],[-0.544523,-0.31307,0.778127]] call InitDecor; 
-['YellowOre',[3557.53,4066.94,53.5834,true],[-0.656039,0.201821,0.727242],[0.00639894,-0.962061,0.272759]] call InitStruct; 
-['YellowOre',[3555.07,4065.82,53.8977,true],[-0.656039,0.201821,0.727242],[0.00639894,-0.962061,0.272759]] call InitStruct; 
-['YellowOre',[3644.63,4128.48,56.4508,true],272.001,[0.00653149,0.00262295,0.999975]] call InitStruct; 
-['YellowOre',[3581.35,4103.68,57.9579,true],[0.111901,0.882925,-0.455985],[0.974229,-0.00703952,0.225451]] call InitStruct; 
-['YellowOre',[3596.34,4126.18,60.5331,true],[0.380659,0.164252,-0.910011],[0.71911,-0.671274,0.179644]] call InitStruct; 
-['YellowOre',[3612.27,4105.52,60.0454,true],[0.380659,0.164252,-0.910011],[0.71911,-0.671274,0.179644]] call InitStruct; 
-['YellowOre',[3606.04,4114.7,57.7889,true],[0.380659,0.81822,-0.430831],[0.71911,-0.554841,-0.418368]] call InitStruct; 
-['YellowOre',[3550.66,4103.24,60.3137,true],[0.380659,0.164252,-0.910011],[0.71911,-0.671274,0.179644]] call InitStruct; 
-['YellowOre',[3558.71,4123.01,59.9543,true],[0.380659,0.164252,-0.910011],[0.71911,-0.671274,0.179644]] call InitStruct; 
-['YellowOre',[3552.87,4071.85,58.3409,true],[0.380659,0.164252,-0.910011],[0.71911,-0.671274,0.179644]] call InitStruct; 
-['YellowOre',[3585.41,4058.41,61.775,true],[0.380659,0.164252,-0.910011],[0.71911,-0.671274,0.179644]] call InitStruct; 
-['YellowOre',[3584.71,4092.03,52.8292,true],[0.352881,-0.217616,-0.91001],[-0.137417,-0.974085,0.179652]] call InitStruct; 
-['BlockStone',[3447.64,4055.17,63.9076],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3456.84,4048.76,63.9076],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3443.18,4045.1,63.9076],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3438.18,4036.44,63.9076],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3451.84,4040.1,63.9076],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3446.84,4031.44,63.9076],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3430.06,4064.49,64.1213],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3438.72,4059.49,64.1213],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3425.06,4055.82,64.1213],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3420.06,4047.17,64.1213],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3433.72,4050.83,64.1213],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3428.72,4042.16,64.1213],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3463.48,4079.39,64.2097],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3472.14,4074.39,64.2097],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3458.48,4070.73,64.2097],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3453.48,4062.07,64.2097],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3467.14,4065.73,64.2097],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3462.14,4057.07,64.2097],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3445.29,4090.68,64.4715],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3453.95,4085.68,64.4715],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3440.29,4082.02,64.4715],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3435.29,4073.36,64.4715],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3448.95,4077.02,64.4715],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3443.95,4068.36,64.4715],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3466.04,4043.66,64.7368],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3474.7,4038.66,64.7368],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3461.04,4035,64.7368],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3456.04,4026.34,64.7368],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3469.7,4030,64.7368],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3464.7,4021.34,64.7368],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3481.56,4069.9,64.8326],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3490.22,4064.9,64.8326],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3476.56,4061.24,64.8326],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3471.56,4052.58,64.8326],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3485.22,4056.24,64.8326],300,[0,0,1]] call InitDecor; 
-['BlockStone',[3480.22,4047.58,64.8326],300,[0,0,1]] call InitDecor; 
+_3557_532234066_9360448_68130 = ['IStruct',[3557.53,4066.94,53.5834,true],[-0.656039,0.201821,0.727242],[0.00639894,-0.962061,0.272759], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
+_3555_072024065_8198248_99553 = ['IStruct',[3555.07,4065.82,53.8977,true],[-0.656039,0.201821,0.727242],[0.00639894,-0.962061,0.272759], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
+_3644_631104128_4848651_20598 = ['IStruct',[3644.63,4128.48,56.4508,true],272.001,[0.00653149,0.00262295,0.999975], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
+_3581_351564103_6816452_58387 = ['IStruct',[3581.35,4103.68,57.9579,true],[0.111901,0.882925,-0.455985],[0.974229,-0.00703952,0.225451], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
+_3596_337654126_1787155_47695 = ['IStruct',[3596.34,4126.18,60.5331,true],[0.380659,0.164252,-0.910011],[0.71911,-0.671274,0.179644], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
+_3612_266854105_5156354_98931 = ['IStruct',[3612.27,4105.52,60.0454,true],[0.380659,0.164252,-0.910011],[0.71911,-0.671274,0.179644], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
+_3606_036134114_6977552_59496 = ['IStruct',[3606.04,4114.7,57.7889,true],[0.380659,0.81822,-0.430831],[0.71911,-0.554841,-0.418368], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
+_3550_660164103_2392655_25761 = ['IStruct',[3550.66,4103.24,60.3137,true],[0.380659,0.164252,-0.910011],[0.71911,-0.671274,0.179644], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
+_3558_708254123_0117254_89816 = ['IStruct',[3558.71,4123.01,59.9543,true],[0.380659,0.164252,-0.910011],[0.71911,-0.671274,0.179644], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
+_3552_867684071_8530353_28477 = ['IStruct',[3552.87,4071.85,58.3409,true],[0.380659,0.164252,-0.910011],[0.71911,-0.671274,0.179644], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
+_3585_405034058_4091856_71893 = ['IStruct',[3585.41,4058.41,61.775,true],[0.380659,0.164252,-0.910011],[0.71911,-0.671274,0.179644], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
+_3584_706794092_0349147_77306 = ['IStruct',[3584.71,4092.03,52.8292,true],[0.352881,-0.217616,-0.91001],[-0.137417,-0.974085,0.179652], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
 ['BlockStone',[3789.15,4192.51,67.8923],0,[0,0,1]] call InitDecor; 
 ['BlockStone',[3789.15,4211.5,67.8923],0,[0,0,1]] call InitDecor; 
 ['BlockStone',[3789.15,4201.51,67.8923],0,[0,0,1]] call InitDecor; 
@@ -742,10 +706,10 @@ _3747_463874186_6704168_62801 = ['IStruct',[3747.46,4186.67,74.3725,true],0,[0.0
 ['RedLuxuryChair',[3714.02,4175.31,74.2249,true],187.238,[-0.0131999,-0.011826,0.999843]] call InitStruct; 
 ['LuxuryDoubleBed',[3712.1,4175.21,78.5769,true],2.22191,[-0.00642866,-0.00670873,0.999957], {go_editor_globalRefs set ["bossbed",_thisObj];
 }] call InitStruct; 
-['YellowOre',[3951.51,4205.94,63.5591,true],0,[-0.00341796,0.00585932,0.999977]] call InitStruct; 
-['YellowOre',[3950.83,4221.66,63.3368,true],0,[0.002868,-0.00646853,0.999975]] call InitStruct; 
-['YellowOre',[3953.72,4212.53,63.2026,true],0,[-0.00503899,-0.00740494,0.99996]] call InitStruct; 
-['YellowOre',[3945.01,4212.36,63.4699,true],[0,0.884413,0.466705],[0.148704,-0.461516,0.87458]] call InitStruct; 
+_3951_509774205_9394558_31937 = ['IStruct',[3951.51,4205.94,63.5591,true],0,[-0.00341796,0.00585932,0.999977], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
+_3950_830574221_6640658_09200 = ['IStruct',[3950.83,4221.66,63.3368,true],0,[0.002868,-0.00646853,0.999975], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
+_3953_717534212_5322357_96125 = ['IStruct',[3953.72,4212.53,63.2026,true],0,[-0.00503899,-0.00740494,0.99996], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
+_3945_009284212_3559658_11426 = ['IStruct',[3945.01,4212.36,63.4699,true],[0,0.884413,0.466705],[0.148704,-0.461516,0.87458], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_02_f.p3d'];}] call InitStruct; // !!! realocated model !!!
 ['PaperHolder',[3712.69,4174.97,74.3701,true],187.238,[-0.00633688,-0.0126874,0.999899]] call InitItem; 
 ['PaperHolder',[3807.78,4168.21,76.2091,true],20.7905,[-0.00814146,-0.0197623,0.999772]] call InitItem; 
 ['Paper',[3732.43,4161.68,68.9824],55.8106,[0,0,1]] call InitItem; 
@@ -973,6 +937,7 @@ _3752_176034170_0927775_20316 = ['IStruct',[3752.18,4170.09,81.6088,true],4.4009
 ['TinBigFence',[3810.29,4047.34,68.2341],235.219,[0,0,1]] call InitStruct; 
 ['TinBigFence',[3789.42,4073.6,68.1747],161.729,[0,0,1]] call InitStruct; 
 ['TinFence',[3786.11,4068.23,68.2732],40.566,[0,0,1]] call InitStruct; 
+_3953_854984204_1450257_92506 = ['IStruct',[3953.85,4204.15,62.6089,true],0.582228,[-0.0648987,-0.000823514,-0.997891], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_01_f.p3d'];}] call InitStruct; // !!! realocated model !!!
 _3947_666024208_0585958_85456 = ['IStruct',[3947.67,4208.06,64.008,true],[-0.00572664,0.999947,-0.00851895],[0.51663,0.0102526,0.856147], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_01_f.p3d'];}] call InitStruct; // !!! realocated model !!!
 _3947_764894212_9941457_99213 = ['IStruct',[3947.76,4212.99,63.3293,true],0,[-0.00503899,-0.00740494,0.99996], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_01_f.p3d'];}] call InitStruct; // !!! realocated model !!!
 _3950_437264213_5849658_63036 = ['IStruct',[3950.44,4213.58,64.2293,true],[0,0.848199,0.529677],[-0.132041,-0.52504,0.840773], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_01_f.p3d'];}] call InitStruct; // !!! realocated model !!!
@@ -2092,30 +2057,6 @@ _3733_991464175_1665067_89616 = ['CaseBedroomMedium',[3733.99,4175.17,67.8962],7
 ['LongDestroyedPipeWithSupportingStructure',[3728.69,4177.01,79.7707,true],[-0.193676,0.981065,-0.000921339],[0.978365,0.193074,-0.0743283]] call InitStruct; 
 ['LongSteelPipe',[3762.64,4144.48,77.7258,true],[-0.29809,0.954538,-0.000248138],[-0.954461,-0.298063,0.0127797]] call InitStruct; 
 ['LargeConcreteWallWithReinforcement',[3792.68,4172.74,71.3632],228.003,[0,0,1]] call InitStruct; 
-['StreetLamp',[3467.2,4029.3,64.8444],350.464,[0,0,1], {_thisObj setvariable ['light',SLIGHT_LIGHTKOPILKA_var]; go_editor_globalRefs set ["StreetLamp G:Ro4DpppiYx8 (3)",_thisObj];
-}] call InitStruct; 
-['StreetLamp',[3471.23,4038.09,64.8528],313.464,[0,0,1], {_thisObj setvariable ['light',SLIGHT_LIGHTKOPILKA_var]; go_editor_globalRefs set ["StreetLamp G:Ro4DpppiYx8 (4)",_thisObj];
-}] call InitStruct; 
-['StreetLamp',[3480.45,4051.93,65.0116],296.464,[0,0,1], {_thisObj setvariable ['light',SLIGHT_LIGHTKOPILKA_var]; go_editor_globalRefs set ["StreetLamp G:Ro4DpppiYx8 (5)",_thisObj];
-}] call InitStruct; 
-['StreetLamp',[3474.2,4067.4,64.8886],227.465,[0,0,1], {_thisObj setvariable ['light',SLIGHT_LIGHTKOPILKA_var]; go_editor_globalRefs set ["StreetLamp G:Ro4DpppiYx8 (6)",_thisObj];
-}] call InitStruct; 
-['StreetLamp',[3459.45,4074.29,64.4037],177.465,[0,0,1], {_thisObj setvariable ['light',SLIGHT_LIGHTKOPILKA_var]; go_editor_globalRefs set ["StreetLamp G:Ro4DpppiYx8 (7)",_thisObj];
-}] call InitStruct; 
-['StreetLamp',[3439.86,4068.47,64.592],121.464,[0,0,1], {_thisObj setvariable ['light',SLIGHT_LIGHTKOPILKA_var]; go_editor_globalRefs set ["StreetLamp G:Ro4DpppiYx8 (8)",_thisObj];
-}] call InitStruct; 
-['StreetLamp',[3431.85,4046.74,64.2116],33.4643,[0,0,1], {_thisObj setvariable ['light',SLIGHT_LIGHTKOPILKA_var]; go_editor_globalRefs set ["StreetLamp G:Ro4DpppiYx8 (9)",_thisObj];
-}] call InitStruct; 
-['StreetLamp',[3447.7,4036.17,64.1206],18.4643,[0,0,1], {_thisObj setvariable ['light',SLIGHT_LIGHTKOPILKA_var]; go_editor_globalRefs set ["StreetLamp G:Ro4DpppiYx8 (10)",_thisObj];
-}] call InitStruct; 
-['StreetLamp',[3463.3,4064.06,64.3304],121.464,[0,0,1], {_thisObj setvariable ['light',SLIGHT_LIGHTKOPILKA_var]; go_editor_globalRefs set ["StreetLamp G:Ro4DpppiYx8 (11)",_thisObj];
-}] call InitStruct; 
-['StreetLamp',[3448.69,4045.56,64.2291],121.464,[0,0,1], {_thisObj setvariable ['light',SLIGHT_LIGHTKOPILKA_var]; go_editor_globalRefs set ["StreetLamp G:Ro4DpppiYx8 (12)",_thisObj];
-}] call InitStruct; 
-['StreetLamp',[3439.03,4055.31,64.209],121.464,[0,0,1], {_thisObj setvariable ['light',SLIGHT_LIGHTKOPILKA_var]; go_editor_globalRefs set ["StreetLamp G:Ro4DpppiYx8 (13)",_thisObj];
-}] call InitStruct; 
-['StreetLamp',[3449.01,4070.9,64.8167],121.464,[0,0,1], {_thisObj setvariable ['light',SLIGHT_LIGHTKOPILKA_var]; go_editor_globalRefs set ["StreetLamp G:Ro4DpppiYx8 (15)",_thisObj];
-}] call InitStruct; 
 ['LargeHighRock',[3735.88,4206.08,80.3903,true],[-0.997541,0.0697362,0.00693125],[0.0697378,0.997565,1.94233e-07]] call InitDecor; 
 ['LargeHighRock',[3749.61,4256.5,77.9145,true],[-0.866015,0.499969,0.00693133],[0.499981,0.866036,1.68623e-07]] call InitDecor; 
 _3785_690674211_0678770_18720 = ['IStruct',[3785.69,4211.07,75.8337,true],249.001,[0.00345641,-0.00615429,0.999975], {_thisObj setvariable ['model','ca\structures\wall\wall_indvar2_5.p3d'];}] call InitStruct; // !!! realocated model !!!
@@ -2282,23 +2223,6 @@ _3665_838384138_6650463_32719 = ['IStruct',[3665.84,4138.67,63.3272],0,[0,0,1], 
 _3593_927734112_6816447_20642 = ['IStruct',[3593.93,4112.68,47.2064],0,[0,0,1], {_thisObj setvariable ['model','a3\structures_f\civ\accessories\loudspeakers_f.p3d'];}] call InitStruct; // !!! realocated model !!!
 _3782_581794213_6523467_98376 = ['IStruct',[3782.58,4213.65,67.9838],0,[0,0,1], {_thisObj setvariable ['model','a3\structures_f\civ\accessories\loudspeakers_f.p3d'];}] call InitStruct; // !!! realocated model !!!
 ['BigStoneWall1',[3800,4199.86,86.3734,true],[-0.424541,0.878353,0.219686],[-0.879178,-0.457904,0.131796]] call InitDecor; 
-_3442_343514040_2585464_63432 = ['IStruct',[3442.34,4040.26,69.9691,true],355,[0.00342113,-0.00619434,0.999975], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_01_f.p3d'];}] call InitStruct; // !!! realocated model !!!
-_3438_902344043_7587964_95314 = ['IStruct',[3438.9,4043.76,70.1126,true],355,[0.00342065,-0.00619386,0.999975], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_03_f.p3d'];}] call InitStruct; // !!! realocated model !!!
-['YellowOre',[3442.1,4045.07,69.2557,true],355,[0.00342208,-0.00619434,0.999975]] call InitStruct; 
-['YellowOre',[3438.53,4051.23,69.655,true],355,[0.00342208,-0.00619434,0.999975]] call InitStruct; 
-['YellowOre',[3445.92,4052.37,69.2565,true],355,[0.00342208,-0.00619434,0.999975]] call InitStruct; 
-['YellowOre',[3435.33,4047.73,69.45,true],355,[0.00342208,-0.00619434,0.999975]] call InitStruct; 
-_3441_598634050_0952164_03780 = ['IStruct',[3441.6,4050.1,69.1973,true],355,[0.00342065,-0.00619386,0.999975], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_03_f.p3d'];}] call InitStruct; // !!! realocated model !!!
-_3446_672614045_8813564_14874 = ['IStruct',[3446.67,4045.88,69.3082,true],355,[0.00342065,-0.00619386,0.999975], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_03_f.p3d'];}] call InitStruct; // !!! realocated model !!!
-_3438_477294042_5380964_01637 = ['IStruct',[3438.48,4042.54,69.1759,true],355,[0.00342065,-0.00619386,0.999975], {_thisObj setvariable ['model','a3\rocks_f_argo\limestone\limestone_01_03_f.p3d'];}] call InitStruct; // !!! realocated model !!!
-['Pickaxe',[3444.94,4043.4,63.9385],0,[0,0,1]] call InitItem; 
-['Pickaxe',[3439.08,4039.41,63.9338],0,[0,0,1]] call InitItem; 
-['Pickaxe',[3444.2,4047.08,63.9347],0,[0,0,1]] call InitItem; 
-['Pickaxe',[3435.46,4044.84,64.1554],0,[0,0,1]] call InitItem; 
-['Pickaxe',[3434.93,4051.24,64.1498],0,[0,0,1]] call InitItem; 
-['Pickaxe',[3440.99,4054.06,64.1557],0,[0,0,1]] call InitItem; 
-['Pickaxe',[3443.56,4049.21,63.9322],0,[0,0,1]] call InitItem; 
-['Pickaxe',[3446.81,4049.1,68.961,true],[0,0.924741,-0.380596],[0.211099,0.372019,0.903902]] call InitItem; 
 
 
 
