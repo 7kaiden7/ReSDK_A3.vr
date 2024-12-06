@@ -19,6 +19,24 @@ class(Vegetation) extends(Constructions)
 endclass
 
 editor_attribute("EditorGenerated")
+class(YellowOre) extends(Vegetation)
+	var(name,"Звяковая руда"); 
+	var(model,"a3\rocks_f_argo\limestone\limestone_01_02_f.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
+class(YellowOre1) extends(YellowOre)
+	var(name,"Звяковая руда"); 
+	var(model,"a3\rocks_f_argo\limestone\limestone_01_01_f.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
+class(YellowOre2) extends(YellowOre)
+	var(name,"Звяковая руда"); 
+	var(model,"a3\rocks_f_argo\limestone\limestone_01_03_f.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
 class(SmallMushroom) extends(Vegetation)
 	var(model,"veg_gliese\br1.p3d");
 	var(name,"Гриб");

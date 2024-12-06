@@ -221,6 +221,13 @@ class(FleshDebris1) extends(Debris)
 	var(size,ITEM_SIZE_MEDIUM);
 endclass
 
-
+//Руда
+class(ZvyakOre) extends(Debris)
+	var(name,"Звяковая руда");
+	var(model,"relicta_models\models\interier\props\ironore.p3d");
+	var(material,"MatStone");
+	var(weight,gramm(666));
+	var(size,ITEM_SIZE_MEDIUM);
+endclass
 
 
