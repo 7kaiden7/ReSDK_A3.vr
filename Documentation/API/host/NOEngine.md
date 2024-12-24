@@ -528,6 +528,15 @@ Description: Получает объект чанка. Если нет - соз�
 - Param: _cht
 
 File: [host\NOEngine\NOEngine_ChunkModel.sqf at line 25](../../../Src/host/NOEngine/NOEngine_ChunkModel.sqf#L25)
+## noe_forceChunksUnsubscribe
+
+Type: function
+
+Description: функция принудительно отписывает клиента с его загруженных зон. функция исключительно для отладки
+- Param: _client
+- Param: _mob
+
+File: [host\NOEngine\NOEngine_ChunkModel.sqf at line 41](../../../Src/host/NOEngine/NOEngine_ChunkModel.sqf#L41)
 # NOEngine_initializers.sqf
 
 ## objectInitializator(cht)
@@ -751,7 +760,7 @@ Description:
 - Param: _retAsList (optional, default false)
 - Param: _retChild (optional, default false)
 
-File: [host\NOEngine\NOEngine_ObjectManager.sqf at line 523](../../../Src/host/NOEngine/NOEngine_ObjectManager.sqf#L523)
+File: [host\NOEngine\NOEngine_ObjectManager.sqf at line 524](../../../Src/host/NOEngine/NOEngine_ObjectManager.sqf#L524)
 ## getMobsOnPosition
 
 Type: function
@@ -763,7 +772,7 @@ Description:
 - Param: _retAsList (optional, default false)
 - Param: _retChild (optional, default false)
 
-File: [host\NOEngine\NOEngine_ObjectManager.sqf at line 726](../../../Src/host/NOEngine/NOEngine_ObjectManager.sqf#L726)
+File: [host\NOEngine\NOEngine_ObjectManager.sqf at line 727](../../../Src/host/NOEngine/NOEngine_ObjectManager.sqf#L727)
 ## getZoneByName
 
 Type: function
@@ -771,7 +780,7 @@ Type: function
 Description: TODO implement
 
 
-File: [host\NOEngine\NOEngine_ObjectManager.sqf at line 783](../../../Src/host/NOEngine/NOEngine_ObjectManager.sqf#L783)
+File: [host\NOEngine\NOEngine_ObjectManager.sqf at line 784](../../../Src/host/NOEngine/NOEngine_ObjectManager.sqf#L784)
 ## noe_transform_position
 
 Type: function
@@ -781,7 +790,7 @@ Description: TODO implement
 - Param: _newpos
 - Param: _transformAsWPos (optional, default false)
 
-File: [host\NOEngine\NOEngine_ObjectManager.sqf at line 788](../../../Src/host/NOEngine/NOEngine_ObjectManager.sqf#L788)
+File: [host\NOEngine\NOEngine_ObjectManager.sqf at line 789](../../../Src/host/NOEngine/NOEngine_ObjectManager.sqf#L789)
 ## noe_transform_direction
 
 Type: function
@@ -789,7 +798,7 @@ Type: function
 Description: TODO implement
 
 
-File: [host\NOEngine\NOEngine_ObjectManager.sqf at line 793](../../../Src/host/NOEngine/NOEngine_ObjectManager.sqf#L793)
+File: [host\NOEngine\NOEngine_ObjectManager.sqf at line 794](../../../Src/host/NOEngine/NOEngine_ObjectManager.sqf#L794)
 ## noe_transform_vector
 
 Type: function
@@ -797,7 +806,7 @@ Type: function
 Description: TODO implement
 
 
-File: [host\NOEngine\NOEngine_ObjectManager.sqf at line 797](../../../Src/host/NOEngine/NOEngine_ObjectManager.sqf#L797)
+File: [host\NOEngine\NOEngine_ObjectManager.sqf at line 798](../../../Src/host/NOEngine/NOEngine_ObjectManager.sqf#L798)
 ## noe_transform_all
 
 Type: function
@@ -805,7 +814,7 @@ Type: function
 Description: TODO implement
 
 
-File: [host\NOEngine\NOEngine_ObjectManager.sqf at line 801](../../../Src/host/NOEngine/NOEngine_ObjectManager.sqf#L801)
+File: [host\NOEngine\NOEngine_ObjectManager.sqf at line 802](../../../Src/host/NOEngine/NOEngine_ObjectManager.sqf#L802)
 # NOEngine_ObjectRegisterModel.sqf
 
 ## noe_extended_log_reguister
@@ -1083,7 +1092,7 @@ Description:
 - Param: _clientTick
 - Param: _cbPacket
 
-File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 545](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L545)
+File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 548](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L548)
 ## noe_serializeObjectInfoPacket
 
 Type: function
@@ -1092,7 +1101,7 @@ Description: Сериализует в пакет информацию об об
 - Param: _packet
 - Param: _visObj
 
-File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 565](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L565)
+File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 568](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L568)
 ## noe_prepareInfoToRemoveObject
 
 Type: function
@@ -1101,7 +1110,7 @@ Description: подготовка пакета объекта для удале�
 - Param: _packet
 - Param: _ptr
 
-File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 572](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L572)
+File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 575](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L575)
 # NOEngine_Shared.sqf
 
 ## noe_posToChunk

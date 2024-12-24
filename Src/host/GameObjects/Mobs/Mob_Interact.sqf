@@ -189,6 +189,8 @@ func(clickTarget)
 
 				callScriptedEvent(callFuncParams(_scriptOut,onInteractWith,_item arg this arg _isCombatAction arg equals(_targLoc,this)));
 				
+				if ([this,[_item,_targ]] call csys_processCraftMain) exitWith {}; //craft interactor redirect
+
 				private _isRedirAct = callFunc(_item,isRedirectedInteractWith);
 				if (!isNullVar(_isRedirAct) && {_isRedirAct}) then {
 					callFuncParams(_item,onInteractWith,_targ arg this);
@@ -944,6 +946,18 @@ region(Captives)
 				callFunc(_x,stopGrab);
 			};
 		} foreach getSelf(specHandAct);
+	};
+
+	func(stopGrabIf)
+	{
+		objParams_2(_fcond,_ctxtpl);
+		{
+			if callFunc(_x,isGrabProcess) then {
+				if ([_x,_ctxtpl] call _fcond)	then {
+					callFunc(_x,stopGrab);
+				};
+			};
+		} foreach getSelf(specHandAct)
 	};
 
 	func(startGrab)

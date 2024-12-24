@@ -29,7 +29,6 @@ loadFile("src\host\OOP_engine\oop_object.sqf");
 #include "CombatSystem\RuntimeWeaponModulesGenerator.sqf"
 #include "GameObjects\loader.hpp"
 #include "CombatSystem\loader.hpp"
-#include "CraftSystem\Crafts\Basic.sqf"
 loadFile("src\host\LootSystem\LootSystem_init.sqf");
 loadFile("src\host\DataObjects\DataObjects_init.sqf");
 loadFile("src\host\Reagents\loader.hpp");
@@ -47,7 +46,9 @@ call nodegen_loadClasses;
 call cs_runtime_internal_makeAll;
 
 //OOP INIT ZONE
-[] call oop_loadTypes;
+if !([] call oop_loadTypes) exitWith {
+	appExit(APPEXIT_REASON_COMPILATIOEXCEPTION);
+};
 //end classes
 
 //structures initialize
@@ -71,7 +72,7 @@ loadFile("src\host\VerbSystem\verbs.sqf");
 loadFile("src\host\ClientManager\ClientManager.sqf");
 loadFile("src\host\Atmos\Atmos_init.sqf");
 loadFile("src\host\GamemodeManager\GamemodeManager.sqf");
-loadFile("src\host\CraftSystem\Craft.sqf"); //serverside craft system
+loadFile("src\host\CraftSystem\CraftSystem_init.sqf"); //craft system
 loadFile("src\host\AmbientControl\AmbientControl_init.sqf");
 loadFile("src\host\ServerInteraction\ServerInteractionInit.sqf"); //throwing, interactions etc. on serverside
 loadFile("src\host\ServerLighting\ServerLighting_init.sqf"); //serverside lighting system
@@ -92,8 +93,15 @@ if (!isMultiplayer) then {
 	loadFile("src\host\ServerSceneTest\serverscrene_init.sqf"); //for testing only
 };
 #endif
+#ifdef RBUILDER
+	loadFile("src\host\Tools\EditorDebug\EditorDebug.sqf"); //predecl debug utils in rb mode
 
+	loadFile("src\host\Tools\BuildTools\BuildTools_init.sqf");
+#endif
+
+//postload initialize systems
 call loot_prepareAll;// intialize loot only after structs loaded
+call csys_init; //craft table init
 
 server_loadingState = 1;
 

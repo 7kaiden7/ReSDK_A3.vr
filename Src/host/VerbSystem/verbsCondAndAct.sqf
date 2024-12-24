@@ -90,6 +90,8 @@ ENDVERB
 VERB(pickup)
 	act
 		callFunc(usr,generateLastInteractOnServer);
+		callFuncParams(usr,__setLastInteractDistance,0);//bypass check distance inside pickupitem()
+		
 		callFuncParams(usr,pickupItem,src);
 	cond
 		skipCond(!isTypeOf(usr,Mob));
@@ -164,6 +166,16 @@ VERB(craft)
 		skipCond(!callSelf(canUseAsCraftSpace));
 	act
 		[src,usr] call craft_requestOpenMenu;
+ENDVERB
+
+VERB(craft_here)
+	cond
+		skipCond(!isTypeOf(usr,Mob));
+		skipCond(getVar(usr,isCombatModeEnable));
+	act
+		[src,usr,!isNull(getSelf(craftComponent))] call csys_requestOpenMenu;
+	name
+		if !isNull(getSelf(craftComponent)) exitWith {setName("Вспомнить рецепты")};
 ENDVERB
 
 VERB(twohands)

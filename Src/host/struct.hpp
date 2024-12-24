@@ -3,7 +3,7 @@
 // sdk.relicta.ru
 // ======================================================
 
-#define STRUCT_API_VERSION 1.2
+#define STRUCT_API_VERSION 1.7
 // enable fileinfo for structs. do not enable in release build
 //#define STRUCT_USE_ALLOC_INFO
 
@@ -108,9 +108,27 @@
 
 // * * * * * * * * * * * * Declaration base * * * * * * * * * * * * 
 
-#define struct(name) _sdecl__ = [ [STRUCT_MEM_TYPE, #name ], [STRUCT_MEM_FLAGS, struct_default_flag], ["__dflg__",false] ];
+#define struct(name) _t_vtable = spi_lst; _t_annot_ = []; _sdecl__ = [ [STRUCT_MEM_TYPE, #name ], [STRUCT_MEM_FLAGS, struct_default_flag], ["__dflg__",false] ];
 #define base(basename) _sdecl__ pushBack [STRUCT_MEM_BASE, #basename ];
-#define endstruct ;spi_lst pushBack _sdecl__;
+#define endstruct ;_t_vtable pushBack _sdecl__; if (count _t_annot_ > 0) then {_sdecl__ pushBack ["#type_annot_list",_t_annot_]};
+
+/*
+	private _obj = inline_struct(TestStruct)
+		def(var)3;
+		def(test_func) {
+			_x = self getv(var);
+			print(_x);
+		}
+	inline_endstruct;
+
+	private _number = _obj getv(var);
+
+	logformat("inline struct: %1", inline_struct(Obj) def(someValue) 123 inline_endstruct);
+*/
+#define inline_struct(name) call{ _sdecl__ = [ [STRUCT_MEM_TYPE, #name ], [STRUCT_MEM_BASE, vtable_s get "InlineStructBase__"], [STRUCT_MEM_FLAGS, struct_default_flag], ["__dflg__",false] ];
+
+#define inline_endstruct ; private _sobj = createHashMapObject [_sdecl__,nil]; _sobj}
+
 
 
 // * * * * * * * * * * * * Member declaration * * * * * * * * * * * *
@@ -129,6 +147,16 @@
 
 #define def_null(varname) def(varname) null;
 
+/*
+	type annotation for fix bug #428
+	def_ret(functest) 
+	{
+		if (true) exitWith {"can be with ret_def(), not def()"};
+		"no returns..."
+	}
+*/
+#define def_ret(varname) ;_t_annot_ pushBack ( #varname ); def(varname)
+
 #define __STRUCT_CAST_PREFIX___ "$_"
 #define cast_def(typeto) ;_soffst__ = _sdecl__ pushBack [__STRUCT_CAST_PREFIX___ + (#varname)]; _sdecl__ select _soffst__ pushBack 
 #define static_def(t) setLastError("Static declarations are not supported in current version");
@@ -143,12 +171,18 @@
 //call functions with parameters
 #define callp(methodname,params) call [#methodname,[params]]
 //call base version of any method
-#define callbase(methodname) _this call {__CBASE_INC__; _this call(missionnamespace getvariable ("pts_"+(self GET STRUCT_MEM_TYPE select __scb_i_s)) GET #methodname) }
-#define __CBASE_INC__ private __scb_i_s = if (isnil'__scb_i_s') then {1} else {__scb_i_s + 1}
+#define callbase(methodname) call{__STRUCT_CALLBASE__;'methodname'}
+#define __STRUCT_CALLBASE_TOKEN__ "__STRUCT_CALLBASE__;"
+#define __STRUCT_CALLBASE_REGEX__ "call\{__STRUCT_CALLBASE__;'(\w+)'\}"
+#define __STRUCT_CALLBASE_REGEX_REPLACE_FORMAT__ "call\{__STRUCT_CALLBASE__;'%1'\}"
 
 //variables management
 #define getv(memname) get #memname
 #define setv(memname,val__) set [#memname,val__]
+
+#define modv(memname,val__) call { _this set [#memname, (_this get #memname) val__ ] }
+#define incv(memname) modv(memname, + 1)
+#define decv(memname) modv(memname, - 1)
 
 
 // * * * * * * * * * * * * Type checking * * * * * * * * * * * *
@@ -158,16 +192,18 @@
 
 #define struct_typename(o) ((o) GET STRUCT_MEM_TYPE select 0)
 
+#define struct_existType(o) (#o in vtable_s)
+#define struct_existType_str(o) ((o) in vtable_s)
 
 // * * * * * * * * * * * * Object management * * * * * * * * * * * *
 
 //instansing
 #ifdef STRUCT_USE_ALLOC_INFO
-	#define struct_new(name) (call{_sbj___ = [ pts_##name ,nil] call struct_iallc; _sbj___ set ["__fileinfo__",__FILE__+ '+__LINE__']; _sbj___})
-	#define struct_newp(name,arglist) (call{_sbj___ = [ pts_##name ,[arglist]] call struct_iallc; _sbj___ set ["__fileinfo__",__FILE__+ '+__LINE__']; _sbj___})
+	#define struct_new(name) (call{_sbj___ = createHashMapObject[ pts_##name ,nil]; _sbj___ set ["__fileinfo__",__FILE__+ '+__LINE__']; _sbj___})
+	#define struct_newp(name,arglist) (call{_sbj___ = createHashMapObject[ pts_##name ,[arglist]]; _sbj___ set ["__fileinfo__",__FILE__+ '+__LINE__']; _sbj___})
 #else
-	#define struct_new(name) ([ pts_##name ,nil ] call struct_iallc)
-	#define struct_newp(name,arglist) ([ pts_##name ,[arglist]] call struct_iallc)
+	#define struct_new(name) (createHashMapObject[ pts_##name ,nil ])
+	#define struct_newp(name,arglist) (createHashMapObject[ pts_##name ,[arglist]])
 #endif
 
 //forced delete structure
@@ -251,13 +287,18 @@
 	vtable_s = createHashMap;
 	vt_cast = createHashMap; //cast table
 	struct_default_flag = ["unscheduled"];
+	strt_inh = createHashMap; //struct inheritance table
+	strt_inhChld = createHashMap; //struct inheritance table of all childrens
 	struct_initialize = {
+		assert(regex_replace);
 
 		private _t = null;
 		private _decl = null;
 		//first pass - creating vtable and setup into vtable map
 		private _bmap = createHashMap;
 		private _undefFields = null;
+		private _weakDecl = null;
+		private _weakDeclMap = createHashMap;
 		{
 			//fill all fields with null values
 			_undefFields = _x select {count _x==1};
@@ -287,9 +328,68 @@
 				_decl set [STRUCT_MEM_TOSTRING,_t];
 			};
 
+			_t = _decl deleteat "#type_annot_list";
+			if !isNullVar(_t) then {
+				
+				private _cde_ = null;
+				//get unique
+				_t = _t arrayIntersect _t;
+
+				//recompile
+				{
+					_cde_ = _decl get _x;
+					if (_cde_ isequaltype {}) then {
+						//update code
+						_cde_ = compile (["call{", toString _cde_, "}"] joinString " ");
+						//save
+						_decl set [_x,_cde_];
+					};
+				} foreach _t;
+			};
+
+			//["Load struct %1",_decl get STRUCT_MEM_TYPE] call logInfo;
+			//virtual check
+			{
+				if isNullVar(_y) then {continue};
+
+				if (equalTypes(_y,{})) then {
+
+					private _code__ = toString _y;
+					if !(__STRUCT_CALLBASE_TOKEN__ in _code__) exitWith {};
+
+					//match
+					private _signatures = [_code__,__STRUCT_CALLBASE_REGEX__] call regex_getMatches;
+					private _mname = null;
+					_mother = _decl get STRUCT_MEM_BASE;
+					//replace tokens
+					{
+						_mname = [_x,"'(\w+)'",1] call regex_getFirstMatch;
+						_code__ = [_code__,
+							format[__STRUCT_CALLBASE_REGEX_REPLACE_FORMAT__,_mname],
+							format["(_this call (pts_%1 get '%2'))",_mother,_mname]
+						] call regex_replace
+					} foreach _signatures;
+
+					//update code
+					_decl set [_x,compile _code__];
+				}
+			} foreach _decl;
+			
 			missionnamespace setvariable ["pts_"+(_decl get STRUCT_MEM_TYPE),_decl];
 			vtable_s set [_decl get STRUCT_MEM_TYPE,_decl];
 			_bmap set [_decl get STRUCT_MEM_TYPE,_decl];
+			
+			//creating type only with type and base fields
+			_weakDecl = createHashMapFromArray [
+				[STRUCT_MEM_TYPE,_decl get STRUCT_MEM_TYPE]
+			];
+			
+			if (STRUCT_MEM_BASE in _decl) then {
+				_weakDecl set [STRUCT_MEM_BASE,_decl get STRUCT_MEM_BASE];
+			};
+			
+			_weakDeclMap set [_weakDecl get STRUCT_MEM_TYPE,_weakDecl];
+			strt_inhChld set [_weakDecl get STRUCT_MEM_TYPE,[]]; //generate empty child list
 		} foreach spi_lst;
 
 		//check base
@@ -307,11 +407,23 @@
 			_declTo = _bmap get _tnTo;
 			if !isNullVar(_declTo) then {
 				_declFrom set [STRUCT_MEM_BASE,_declTo];
+				//
+				_weakDeclMap get _x set [STRUCT_MEM_BASE,_weakDeclMap get _tnTo];
 			};
 		} foreach _bmap;
-	};
 
-	VM_COMPILER_ADDFUNC_UNARY(struct_iallc,createHashMapObject);
+		//third pass - register mother types
+		private _tList = null;
+		private _baseName = null;
+		{
+			_baseName = _x;
+			_tList = (createHashMapObject[_y]) get STRUCT_MEM_TYPE;
+			{
+				(strt_inhChld get _x) pushBack _baseName;
+			} foreach (_tList select [1]);
+			strt_inh set [_x,_tList];
+		} foreach _weakDeclMap;
+	};
 
 	struct_alloc = {
 		params ["_s","_params"];
@@ -321,9 +433,9 @@
 		#endif
 
 		if isNullVar(_params) then {
-			[vtable_s get _s] call struct_iallc;
+			createHashMapObject[vtable_s get _s];
 		} else {
-			[vtable_s get _s,_params] call struct_iallc;
+			createHashMapObject[vtable_s get _s,_params];
 		};
 		
 		#ifdef STRUCT_USE_ALLOC_INFO
@@ -354,6 +466,16 @@
 		} else {
 			_val
 		};
+	};
+
+	struct_getAllTypesOf = {
+		params ["_typename"];
+		array_copy(strt_inhChld get _typename)
+	};
+
+	struct_getBaseTypesOf = {
+		params ["_typename"];
+		array_copy(strt_inh get _typename)
 	};
 
 #endif

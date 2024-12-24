@@ -24,6 +24,7 @@ class(Kastrula) extends(IReagentNDItem)
 	//"ml\ml_object_new\shabbat\kostrylya_2.p3d" CHANGE MODEL AND REMOVE OTHERS
 	var(model,"relicta_models\models\interier\props\kitchen\kastryla.p3d");
 	var(material,"MatMetal");
+	getter_func(getDropSound,"dropping\potspans_" + (str randInt(1,4)));
 	var(allowedSlots,[INV_HEAD]);
 	var(size,ITEM_SIZE_MEDIUM);
 	var(weight,gramm(700));
@@ -222,6 +223,17 @@ class(FoodPlate) extends(Container)
 	var(size,ITEM_SIZE_SMALL);
 	var(weight,gramm(200));
 	var(dr,1);
+endclass
+
+class(Ashtray) extends(Container)
+	var(name,"Пепельница");
+	var(desc,"Окурки все сюда!");
+	var(model,"ml_shabut\exodus\ashtray.p3d");
+	var(material,"MatMetal");
+	var(weight,gramm(130));
+	var_exprval(countSlots,BASE_STORAGE_CAPACITY(1.4));
+	var(size,ITEM_SIZE_SMALL);
+	var(maxSize,ITEM_SIZE_SMALL);
 endclass
 
 // Cups

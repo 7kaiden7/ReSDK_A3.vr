@@ -94,7 +94,8 @@ oop_getSimpleTypeSize = {
 --------------------------------------------------------------------------------
 */
 
-// object istypeof gameobject (from base to childs) (!!!Slower)
+// object istypeof gameobject (from base to childs)
+//now oop_getinhlist use cache and will be faster
 //TODO replace by oop_isTypeOfBase
 oop_isTypeOf = {
 	params ["_searched","_type"];
@@ -137,16 +138,21 @@ oop_getTypeValue = {
 
 oop_getinhlist = {
 	params ["_typename","_recurs","_refarr"];
-
+	private _isFirstCall = isNullVar(_refarr);
 	private _type = missionNamespace getVariable ["pt_"+_typename,0];
 	if equals(_type,0) exitWith {
 		errorformat("oop::getInhlist() - Cant find type %1 in memory",_typename);
 		[]
 	};
+	private _hasCache = !isNull(_type getvariable "$cache_childs_all");
+	if (_isFirstCall && {_hasCache} && {_recurs}) exitWith {
+		array_copy(_type getvariable "$cache_childs_all")
+	};
+
 
 	private _childs = +(_type getVariable "__childList");
 
-	if (_recurs) then {
+	private _chRet = if (_recurs) then {
 		private _internalRefArr = defIsNull(_refarr,_childs);
 
 		{
@@ -161,6 +167,12 @@ oop_getinhlist = {
 	} else {
 		_childs
 	};
+
+	if (_isFirstCall && {!_hasCache} && {_recurs}) then {
+		_type setvariable ["$cache_childs_all",array_copy(_chRet)];
+	};
+
+	_chRet
 };
 
 oop_getAllObjectsOfType = {
@@ -184,11 +196,11 @@ oop_getAllObjectsOfType = {
 //_doCompile - возвращает десериализованное дефолтное значение типа
 //_altMethodNameIfNil - возвращает альтернативный метод геттера по которому будет осуществлён поиск и получение значения
 oop_getFieldBaseValue = {
-	params ["_type","_field",["_doCompile",false],["_altMethodNameIfNil",""]];
+	params ["_typename","_field",["_doCompile",false],["_altMethodNameIfNil",""]];
 
-	private _type = missionNamespace getVariable ["pt_"+_type,nullPtr];
+	private _type = missionNamespace getVariable ["pt_"+_typename,nullPtr];
 	if isNullReference(_type) exitWith {
-		errorformat("oop::getFieldBaseValue() - Cant find field '%2+%3' in type '%1'",_type arg _field arg _altMethodNameIfNil);
+		errorformat("oop::getFieldBaseValue() - Cant find field '%2+%3' in type '%1'",_typename arg _field arg _altMethodNameIfNil);
 		null;
 	};
 

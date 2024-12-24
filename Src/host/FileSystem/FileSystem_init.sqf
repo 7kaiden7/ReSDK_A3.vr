@@ -13,6 +13,7 @@ fso_map_tree = createhashMap; //flat object
 //initialize filesystem
 fso_init = {
 	private _nativeCollection = addonFiles ["src\"];
+
 	private _useNativeCollector = count _nativeCollection > 0;
 	if (!_useNativeCollector) then {
 		
@@ -61,7 +62,7 @@ fso_buildTree = {
 			_tree set [_dir,FSO_NEW_DATA]; 
 		};
 		if !(_parentDir in _tree) then {
-			_tree set [_dir,FSO_NEW_DATA];
+			_tree set [_parentDir,FSO_NEW_DATA];
 		};
 
 		//traceformat("Check path: %1 + %2",_dir arg _probFileName)

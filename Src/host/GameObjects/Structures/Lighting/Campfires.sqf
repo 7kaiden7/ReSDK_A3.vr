@@ -10,9 +10,6 @@
 #include <..\..\..\text.hpp>
 
 class(ICampfireStruct) extends(ILightibleStruct)
-	#include "..\..\Interfaces\IConnectibleSource.Interface"
-	getterconst_func(allowedConnectItems,["Kastrula" arg "FryingPan"]);
-	var(connectedItems,[nullPtr]);
 	
 	#include "..\..\Interfaces\ITrigger.Interface"
 	//attributeParams(hasField,"tDistance" arg "tDelay" arg "tCallDelay");
@@ -45,14 +42,12 @@ endclass
 // !!!WARNING!!! связано с SmallStoveGrill
 class(Campfire) extends(ICampfireStruct)
 	
-	var(connectedItems,[nullPtr]);
-	getterconst_func(getConnectionOffset,[ICONSRC_POSDAT(vec3(0,0,0.05),0,vec3(0,0,1))]);// смещение объектов присоединения
-
 	var(name,"Костёр");
 	var(desc,"Главный источник тепла и света.");
 	var(light,LIGHT_CAMPFIRE);
 	var(model,"a3\structures_f\civ\camping\fireplace_f.p3d");
 	var(material,"MatStone");
+	getterconst_func(getCoefAutoWeight,10);
 	var(dr,2);
 	getterconst_func(isFireLight,true);
 	getter_func(canIgniteArea,getSelf(lightIsEnabled));
@@ -120,12 +115,6 @@ class(Campfire) extends(ICampfireStruct)
 	func(onUpdate)
 	{
 		updateParams();
-		if getSelf(lightIsEnabled) then {
-			_cookingCont = getSelf(connectedItems) select 0;
-			if (!isNullObject(_cookingCont)) then {
-				callFunc(_cookingCont,onUpdate);
-			};
-		};
 
 		callSelf(handleIgniteArea);
 		modSelf(fuelLeft,-1);
@@ -157,10 +146,6 @@ class(Campfire) extends(ICampfireStruct)
 		if isTypeOf(_with,IPaperItemBase) exitWith {
 			callFuncParams(_with,doBurn,this arg _usr);
 		};
-		
-		if (callSelf(getClassName) == "Campfire" || callSelf(getClassName) == "CampfireDisabled") then {
-			callSelfParams(connectItem,_with);
-		};
 	};
 	getter_func(canUseMainAction,getSelf(lightIsEnabled) && super());
 	getter_func(getMainActionName,"Затушить");
@@ -180,8 +165,6 @@ class(CampfireBig) extends(Campfire)
 	var(model,"ml_shabut\drova\pepelishe.p3d");
 	var(dr,3);
 	var(fuelLeft,-1);
-	//getterconst_func(allowedConnectItems,[]);
-	getter_func(canConnect,false);
 endclass
 
 editor_attribute("EditorGenerated")
@@ -194,6 +177,7 @@ class(BarrelCampfireBig) extends(CampfireBig)
 	var(model,"a3\props_f_enoch\military\garbage\garbagebarrel_02_buried_f.p3d");
 	var(name,"Костёр в бочке");
 	var(material,"MatMetal");
+	getterconst_func(getCoefAutoWeight,10);
 	var(dr,2);
 
 	func(checkCanIgniteObject)

@@ -386,6 +386,16 @@ Description:
 - Param: _optMath (optional, default 0)
 
 File: [host\CommonComponents\!PreInit.sqf at line 292](../../../Src/host/CommonComponents/!PreInit.sqf#L292)
+## regex_getMatches
+
+Type: function
+
+Description: 
+- Param: _txt
+- Param: _pattern
+- Param: _optMath (optional, default 0)
+
+File: [host\CommonComponents\!PreInit.sqf at line 299](../../../Src/host/CommonComponents/!PreInit.sqf#L299)
 ## regex_replace
 
 Type: function
@@ -395,7 +405,7 @@ Description:
 - Param: _pattern
 - Param: _replacer
 
-File: [host\CommonComponents\!PreInit.sqf at line 299](../../../Src/host/CommonComponents/!PreInit.sqf#L299)
+File: [host\CommonComponents\!PreInit.sqf at line 310](../../../Src/host/CommonComponents/!PreInit.sqf#L310)
 ## stringStartWith
 
 Type: function
@@ -405,7 +415,7 @@ Description: Строковые хелперы
 - Param: _started
 - Param: _casesense (optional, default true)
 
-File: [host\CommonComponents\!PreInit.sqf at line 351](../../../Src/host/CommonComponents/!PreInit.sqf#L351)
+File: [host\CommonComponents\!PreInit.sqf at line 362](../../../Src/host/CommonComponents/!PreInit.sqf#L362)
 ## stringEndWith
 
 Type: function
@@ -415,7 +425,7 @@ Description:
 - Param: _ended
 - Param: _casesense (optional, default true)
 
-File: [host\CommonComponents\!PreInit.sqf at line 357](../../../Src/host/CommonComponents/!PreInit.sqf#L357)
+File: [host\CommonComponents\!PreInit.sqf at line 368](../../../Src/host/CommonComponents/!PreInit.sqf#L368)
 ## stringReplace
 
 Type: function
@@ -425,7 +435,7 @@ Description:
 - Param: _find (optional, default "")
 - Param: _replace (optional, default "")
 
-File: [host\CommonComponents\!PreInit.sqf at line 364](../../../Src/host/CommonComponents/!PreInit.sqf#L364)
+File: [host\CommonComponents\!PreInit.sqf at line 375](../../../Src/host/CommonComponents/!PreInit.sqf#L375)
 ## selectBest
 
 Type: function
@@ -435,7 +445,7 @@ Description: Выбирает лучший случай [[2, -6, 4], {abs _x}] c
 - Param: _criteria
 - Param: _return
 
-File: [host\CommonComponents\!PreInit.sqf at line 383](../../../Src/host/CommonComponents/!PreInit.sqf#L383)
+File: [host\CommonComponents\!PreInit.sqf at line 394](../../../Src/host/CommonComponents/!PreInit.sqf#L394)
 ## searchInList
 
 Type: function
@@ -445,7 +455,7 @@ Description:
 - Param: _lambda
 - Param: _defaultReturn
 
-File: [host\CommonComponents\!PreInit.sqf at line 399](../../../Src/host/CommonComponents/!PreInit.sqf#L399)
+File: [host\CommonComponents\!PreInit.sqf at line 410](../../../Src/host/CommonComponents/!PreInit.sqf#L410)
 ## arrayDeleteItem
 
 Type: function
@@ -454,7 +464,7 @@ Description:
 - Param: _a
 - Param: _it
 
-File: [host\CommonComponents\!PreInit.sqf at line 406](../../../Src/host/CommonComponents/!PreInit.sqf#L406)
+File: [host\CommonComponents\!PreInit.sqf at line 417](../../../Src/host/CommonComponents/!PreInit.sqf#L417)
 ## arrayIsValidIndex
 
 Type: function
@@ -463,7 +473,7 @@ Description:
 - Param: _a
 - Param: _ix
 
-File: [host\CommonComponents\!PreInit.sqf at line 413](../../../Src/host/CommonComponents/!PreInit.sqf#L413)
+File: [host\CommonComponents\!PreInit.sqf at line 424](../../../Src/host/CommonComponents/!PreInit.sqf#L424)
 ## arrayShuffleOrig
 
 Type: function
@@ -471,7 +481,7 @@ Type: function
 Description: shuffle array elements, return alter array
 - Param: _array
 
-File: [host\CommonComponents\!PreInit.sqf at line 419](../../../Src/host/CommonComponents/!PreInit.sqf#L419)
+File: [host\CommonComponents\!PreInit.sqf at line 430](../../../Src/host/CommonComponents/!PreInit.sqf#L430)
 ## arraySwap
 
 Type: function
@@ -481,7 +491,7 @@ Description: swap 2 elements in array
 - Param: _is
 - Param: _id
 
-File: [host\CommonComponents\!PreInit.sqf at line 431](../../../Src/host/CommonComponents/!PreInit.sqf#L431)
+File: [host\CommonComponents\!PreInit.sqf at line 442](../../../Src/host/CommonComponents/!PreInit.sqf#L442)
 ## stringLength
 
 Type: function
@@ -490,7 +500,7 @@ Description:
 - Param: _str
 - Param: _unicode (optional, default true)
 
-File: [host\CommonComponents\!PreInit.sqf at line 438](../../../Src/host/CommonComponents/!PreInit.sqf#L438)
+File: [host\CommonComponents\!PreInit.sqf at line 449](../../../Src/host/CommonComponents/!PreInit.sqf#L449)
 ## stringSelect
 
 Type: function
@@ -500,7 +510,7 @@ Description:
 - Param: _i
 - Param: _c
 
-File: [host\CommonComponents\!PreInit.sqf at line 448](../../../Src/host/CommonComponents/!PreInit.sqf#L448)
+File: [host\CommonComponents\!PreInit.sqf at line 459](../../../Src/host/CommonComponents/!PreInit.sqf#L459)
 ## randomFloat
 
 Type: function
@@ -509,7 +519,7 @@ Description:
 - Param: _beg
 - Param: _end
 
-File: [host\CommonComponents\!PreInit.sqf at line 454](../../../Src/host/CommonComponents/!PreInit.sqf#L454)
+File: [host\CommonComponents\!PreInit.sqf at line 465](../../../Src/host/CommonComponents/!PreInit.sqf#L465)
 ## randomInt
 
 Type: function
@@ -518,7 +528,7 @@ Description:
 - Param: _beg
 - Param: _end
 
-File: [host\CommonComponents\!PreInit.sqf at line 459](../../../Src/host/CommonComponents/!PreInit.sqf#L459)
+File: [host\CommonComponents\!PreInit.sqf at line 470](../../../Src/host/CommonComponents/!PreInit.sqf#L470)
 ## randomProbably
 
 Type: function
@@ -526,7 +536,7 @@ Type: function
 Description: 
 - Param: _v
 
-File: [host\CommonComponents\!PreInit.sqf at line 464](../../../Src/host/CommonComponents/!PreInit.sqf#L464)
+File: [host\CommonComponents\!PreInit.sqf at line 475](../../../Src/host/CommonComponents/!PreInit.sqf#L475)
 ## getPrecentage
 
 Type: function
@@ -535,7 +545,7 @@ Description:
 - Param: _checkedval
 - Param: _pval
 
-File: [host\CommonComponents\!PreInit.sqf at line 469](../../../Src/host/CommonComponents/!PreInit.sqf#L469)
+File: [host\CommonComponents\!PreInit.sqf at line 480](../../../Src/host/CommonComponents/!PreInit.sqf#L480)
 ## clampNumber
 
 Type: function
@@ -545,7 +555,7 @@ Description:
 - Param: _mi
 - Param: _ma
 
-File: [host\CommonComponents\!PreInit.sqf at line 474](../../../Src/host/CommonComponents/!PreInit.sqf#L474)
+File: [host\CommonComponents\!PreInit.sqf at line 485](../../../Src/host/CommonComponents/!PreInit.sqf#L485)
 ## clampInRange
 
 Type: function
@@ -555,7 +565,7 @@ Description:
 - Param: _mi
 - Param: _ma
 
-File: [host\CommonComponents\!PreInit.sqf at line 479](../../../Src/host/CommonComponents/!PreInit.sqf#L479)
+File: [host\CommonComponents\!PreInit.sqf at line 490](../../../Src/host/CommonComponents/!PreInit.sqf#L490)
 ## pulsate
 
 Type: function
@@ -564,7 +574,7 @@ Description: See - BIS_fnc_pulsate; frequency: Number - the frequency in Hz, 1 /
 - Param: _freq
 - Param: _timeval (optional, default diag_tickTime)
 
-File: [host\CommonComponents\!PreInit.sqf at line 492](../../../Src/host/CommonComponents/!PreInit.sqf#L492)
+File: [host\CommonComponents\!PreInit.sqf at line 503](../../../Src/host/CommonComponents/!PreInit.sqf#L503)
 ## numberGetDigits
 
 Type: function
@@ -572,7 +582,7 @@ Type: function
 Description: число в массив цифр
 - Param: _num
 
-File: [host\CommonComponents\!PreInit.sqf at line 498](../../../Src/host/CommonComponents/!PreInit.sqf#L498)
+File: [host\CommonComponents\!PreInit.sqf at line 509](../../../Src/host/CommonComponents/!PreInit.sqf#L509)
 ## numberCutDecimals
 
 Type: function
@@ -581,7 +591,7 @@ Description: срезает дробную часть числа
 - Param: _num
 - Param: _digits
 
-File: [host\CommonComponents\!PreInit.sqf at line 504](../../../Src/host/CommonComponents/!PreInit.sqf#L504)
+File: [host\CommonComponents\!PreInit.sqf at line 515](../../../Src/host/CommonComponents/!PreInit.sqf#L515)
 ## stringFormat
 
 Type: function
@@ -591,7 +601,7 @@ Description:
 - Param: _val
 - Param: _breakArr (optional, default false)
 
-File: [host\CommonComponents\!PreInit.sqf at line 509](../../../Src/host/CommonComponents/!PreInit.sqf#L509)
+File: [host\CommonComponents\!PreInit.sqf at line 520](../../../Src/host/CommonComponents/!PreInit.sqf#L520)
 ## formatLazy
 
 Type: function
@@ -599,7 +609,7 @@ Type: function
 Description: 
 - Param: _args
 
-File: [host\CommonComponents\!PreInit.sqf at line 536](../../../Src/host/CommonComponents/!PreInit.sqf#L536)
+File: [host\CommonComponents\!PreInit.sqf at line 547](../../../Src/host/CommonComponents/!PreInit.sqf#L547)
 ## getPosListCenter
 
 Type: function
@@ -608,7 +618,7 @@ Description:
 - Param: _poses (optional, default [])
 - Param: _dummyParam
 
-File: [host\CommonComponents\!PreInit.sqf at line 551](../../../Src/host/CommonComponents/!PreInit.sqf#L551)
+File: [host\CommonComponents\!PreInit.sqf at line 562](../../../Src/host/CommonComponents/!PreInit.sqf#L562)
 ## randomRadius
 
 Type: function
@@ -617,7 +627,7 @@ Description: Специальный рандом по области. Чем б�
 - Param: _center
 - Param: _radius
 
-File: [host\CommonComponents\!PreInit.sqf at line 567](../../../Src/host/CommonComponents/!PreInit.sqf#L567)
+File: [host\CommonComponents\!PreInit.sqf at line 578](../../../Src/host/CommonComponents/!PreInit.sqf#L578)
 ## randomPosition
 
 Type: function
@@ -626,7 +636,7 @@ Description: Специальный рандом по области. Равно
 - Param: _center
 - Param: _radius
 
-File: [host\CommonComponents\!PreInit.sqf at line 573](../../../Src/host/CommonComponents/!PreInit.sqf#L573)
+File: [host\CommonComponents\!PreInit.sqf at line 586](../../../Src/host/CommonComponents/!PreInit.sqf#L586)
 ## randomGaussian
 
 Type: function
@@ -635,7 +645,7 @@ Description: Специальный рандом по области. Распр
 - Param: _center
 - Param: _radius
 
-File: [host\CommonComponents\!PreInit.sqf at line 579](../../../Src/host/CommonComponents/!PreInit.sqf#L579)
+File: [host\CommonComponents\!PreInit.sqf at line 594](../../../Src/host/CommonComponents/!PreInit.sqf#L594)
 ## fileExists_Node
 
 Type: function
@@ -643,7 +653,26 @@ Type: function
 Description: 
 - Param: _f
 
-File: [host\CommonComponents\!PreInit.sqf at line 584](../../../Src/host/CommonComponents/!PreInit.sqf#L584)
+File: [host\CommonComponents\!PreInit.sqf at line 601](../../../Src/host/CommonComponents/!PreInit.sqf#L601)
+## sortBy
+
+Type: function
+
+Description: _mode == true -> asc, false -> desc: [[20,2,5],{_x}] call sortBy;
+- Param: _list
+- Param: _algorithm
+- Param: _modeIsAscend (optional, default true)
+
+File: [host\CommonComponents\!PreInit.sqf at line 607](../../../Src/host/CommonComponents/!PreInit.sqf#L607)
+## nearNumber
+
+Type: function
+
+Description: find nearest number in array of numbers
+- Param: _arr
+- Param: _num
+
+File: [host\CommonComponents\!PreInit.sqf at line 623](../../../Src/host/CommonComponents/!PreInit.sqf#L623)
 ## fileLoad_Node
 
 Type: function
@@ -652,17 +681,27 @@ Description:
 - Param: _f
 - Param: _doPreprocess (optional, default false)
 
-File: [host\CommonComponents\!PreInit.sqf at line 589](../../../Src/host/CommonComponents/!PreInit.sqf#L589)
+File: [host\CommonComponents\!PreInit.sqf at line 638](../../../Src/host/CommonComponents/!PreInit.sqf#L638)
+## pushFront
+
+Type: function
+
+Description: 
+- Param: _list
+- Param: _element
+- Param: _unique (optional, default false)
+
+File: [host\CommonComponents\!PreInit.sqf at line 648](../../../Src/host/CommonComponents/!PreInit.sqf#L648)
 # Algorithm.sqf
 
 ## allOf
 
 Type: function
 
-Description: 
+Description: #define __ENABLE_ALGORITHM_TEST___
 - Param: _list
 
-File: [host\CommonComponents\Algorithm.sqf at line 18](../../../Src/host/CommonComponents/Algorithm.sqf#L18)
+File: [host\CommonComponents\Algorithm.sqf at line 14](../../../Src/host/CommonComponents/Algorithm.sqf#L14)
 ## anyOf
 
 Type: function
@@ -670,7 +709,7 @@ Type: function
 Description: 
 - Param: _list
 
-File: [host\CommonComponents\Algorithm.sqf at line 23](../../../Src/host/CommonComponents/Algorithm.sqf#L23)
+File: [host\CommonComponents\Algorithm.sqf at line 19](../../../Src/host/CommonComponents/Algorithm.sqf#L19)
 ## noneOf
 
 Type: function
@@ -678,7 +717,7 @@ Type: function
 Description: 
 - Param: _list
 
-File: [host\CommonComponents\Algorithm.sqf at line 28](../../../Src/host/CommonComponents/Algorithm.sqf#L28)
+File: [host\CommonComponents\Algorithm.sqf at line 24](../../../Src/host/CommonComponents/Algorithm.sqf#L24)
 # Animator.sqf
 
 ## addAnim(name)
@@ -814,30 +853,6 @@ Description:
 File: [host\CommonComponents\Animator.sqf at line 308](../../../Src/host/CommonComponents/Animator.sqf#L308)
 # Assert.sqf
 
-## __vmthrow_assert(res)
-
-Type: constant
-
-Description: 
-- Param: res
-
-Replaced value:
-```sqf
-__vm_log(res); exitcode__ -100;
-```
-File: [host\CommonComponents\Assert.sqf at line 9](../../../Src/host/CommonComponents/Assert.sqf#L9)
-## __vmthrow_assert_nothrow(res)
-
-Type: constant
-
-Description: 
-- Param: res
-
-Replaced value:
-```sqf
-__vm_log(res); if(true)exitwith{};
-```
-File: [host\CommonComponents\Assert.sqf at line 10](../../../Src/host/CommonComponents/Assert.sqf#L10)
 ## sys_int_evalassert
 
 Type: function
@@ -845,7 +860,7 @@ Type: function
 Description: 
 - Param: _value
 
-File: [host\CommonComponents\Assert.sqf at line 12](../../../Src/host/CommonComponents/Assert.sqf#L12)
+File: [host\CommonComponents\Assert.sqf at line 9](../../../Src/host/CommonComponents/Assert.sqf#L9)
 ## sys_static_assert_
 
 Type: function
@@ -856,7 +871,7 @@ Description:
 - Param: _line (optional, default 0)
 - Param: _message (optional, default "")
 
-File: [host\CommonComponents\Assert.sqf at line 25](../../../Src/host/CommonComponents/Assert.sqf#L25)
+File: [host\CommonComponents\Assert.sqf at line 22](../../../Src/host/CommonComponents/Assert.sqf#L22)
 ## sys_assert_
 
 Type: function
@@ -867,7 +882,7 @@ Description:
 - Param: _line (optional, default 0)
 - Param: _message (optional, default "")
 
-File: [host\CommonComponents\Assert.sqf at line 89](../../../Src/host/CommonComponents/Assert.sqf#L89)
+File: [host\CommonComponents\Assert.sqf at line 70](../../../Src/host/CommonComponents/Assert.sqf#L70)
 # AttackTypesAssoc.sqf
 
 ## ata_assoc_map
@@ -1118,42 +1133,6 @@ Description: Конвертация даты и времени в строку
 - Param: _outms (optional, default false)
 
 File: [host\CommonComponents\DateTime.sqf at line 13](../../../Src/host/CommonComponents/DateTime.sqf#L13)
-# loader.hpp
-
-## importCommon(path)
-
-Type: constant
-
-> Exists if **__VM_BUILD** defined
-
-Description: 
-- Param: path
-
-Replaced value:
-```sqf
-if (isNil {allClientContents}) then {allClientContents = [];}; \
-	__vm_log("[LOAD] " + ("src\host\CommonComponents\" + path)); \
-	_path = "src\host\CommonComponents\" + path; \
-	private _ctx = compile ((__pragma_prep_cli _path)); \
-	allClientContents pushback _ctx;
-```
-File: [host\CommonComponents\loader.hpp at line 10](../../../Src/host/CommonComponents/loader.hpp#L10)
-## importCommon(path)
-
-Type: constant
-
-> Exists if **__VM_VALIDATE** defined
-
-Description: 
-- Param: path
-
-Replaced value:
-```sqf
-diag_log format["Start validate common module %1",path]; \
-	private _ctx = compile preprocessFileLineNumberS ("src\host\CommonComponents\" + path); \
-	diag_log format["   - Module %1 loaded",path];
-```
-File: [host\CommonComponents\loader.hpp at line 18](../../../Src/host/CommonComponents/loader.hpp#L18)
 # ModelsPath.sqf
 
 ## model_getAssoc
@@ -1211,14 +1190,32 @@ Description:
 - Param: _vehicle
 
 File: [host\CommonComponents\ModelTransform.hpp at line 86](../../../Src/host/CommonComponents/ModelTransform.hpp#L86)
+## model_getPitchBankYawAccurate
+
+Type: function
+
+Description: 
+- Param: _v
+
+File: [host\CommonComponents\ModelTransform.hpp at line 91](../../../Src/host/CommonComponents/ModelTransform.hpp#L91)
 ## model_isSafedirTransform
 
 Type: function
 
 Description: проверяет является ли направление безопасным
 - Param: _vdu_dir
+- Param: _fromVUP (optional, default false)
 
-File: [host\CommonComponents\ModelTransform.hpp at line 92](../../../Src/host/CommonComponents/ModelTransform.hpp#L92)
+File: [host\CommonComponents\ModelTransform.hpp at line 105](../../../Src/host/CommonComponents/ModelTransform.hpp#L105)
+## model_isPosInsideBBX
+
+Type: function
+
+Description: 
+- Param: _pos
+- Param: _obj
+
+File: [host\CommonComponents\ModelTransform.hpp at line 123](../../../Src/host/CommonComponents/ModelTransform.hpp#L123)
 # Pencfg.sqf
 
 ## addtobj(model,soundpen,armpen)
@@ -1736,19 +1733,55 @@ Description:
 File: [host\CommonComponents\Structs\Collections.sqf at line 331](../../../Src/host/CommonComponents/Structs/Collections.sqf#L331)
 # Pointers.sqf
 
-## sref_cont
+## SAFE_REFERENCE_POOL_CONTAINER
 
-Type: Variable
+Type: constant
 
-Description: Safe reference. Used for bypass crossreferences and possible memory leaks
+Description: 
 
 
-Initial value:
+Replaced value:
 ```sqf
-createHashMap
+0
+```
+File: [host\CommonComponents\Structs\Pointers.sqf at line 6](../../../Src/host/CommonComponents/Structs/Pointers.sqf#L6)
+## SAFE_REFERENCE_POOL_COUNTER
+
+Type: constant
+
+Description: 
+
+
+Replaced value:
+```sqf
+1
 ```
 File: [host\CommonComponents\Structs\Pointers.sqf at line 7](../../../Src/host/CommonComponents/Structs/Pointers.sqf#L7)
-## sref_i
+## SAFE_REFERENCE_POOL_NAME
+
+Type: constant
+
+Description: 
+
+
+Replaced value:
+```sqf
+2
+```
+File: [host\CommonComponents\Structs\Pointers.sqf at line 8](../../../Src/host/CommonComponents/Structs/Pointers.sqf#L8)
+## SAFE_REFERENCE_MEMORY_ADDR
+
+Type: constant
+
+Description: 
+
+
+Replaced value:
+```sqf
+"mpstor"
+```
+File: [host\CommonComponents\Structs\Pointers.sqf at line 10](../../../Src/host/CommonComponents/Structs/Pointers.sqf#L10)
+## sref_defaultPool
 
 Type: Variable
 
@@ -1757,20 +1790,40 @@ Description:
 
 Initial value:
 ```sqf
-0
+["DefaultPool"] call SafeReference_CreatePool
 ```
-File: [host\CommonComponents\Structs\Pointers.sqf at line 8](../../../Src/host/CommonComponents/Structs/Pointers.sqf#L8)
+File: [host\CommonComponents\Structs\Pointers.sqf at line 24](../../../Src/host/CommonComponents/Structs/Pointers.sqf#L24)
+## SafeReference_CreatePool
+
+Type: function
+
+Description: создание нового пула для безопасных ссылок
+- Param: _poolName
+
+File: [host\CommonComponents\Structs\Pointers.sqf at line 13](../../../Src/host/CommonComponents/Structs/Pointers.sqf#L13)
 # Profiling.sqf
 
-## prof_map_zones
+## profiler_getSystemContainer
 
-Type: Variable
+Type: function
 
-Description: PROFILING
+Description: 
 
 
-Initial value:
-```sqf
-createHashMap
-```
-File: [host\CommonComponents\Structs\Profiling.sqf at line 10](../../../Src/host/CommonComponents/Structs/Profiling.sqf#L10)
+File: [host\CommonComponents\Structs\Profiling.sqf at line 52](../../../Src/host/CommonComponents/Structs/Profiling.sqf#L52)
+## profiler_getResults
+
+Type: function
+
+Description: 
+- Param: _printOnConsole (optional, default false)
+
+File: [host\CommonComponents\Structs\Profiling.sqf at line 56](../../../Src/host/CommonComponents/Structs/Profiling.sqf#L56)
+## profiler_clearResults
+
+Type: function
+
+Description: 
+
+
+File: [host\CommonComponents\Structs\Profiling.sqf at line 74](../../../Src/host/CommonComponents/Structs/Profiling.sqf#L74)
