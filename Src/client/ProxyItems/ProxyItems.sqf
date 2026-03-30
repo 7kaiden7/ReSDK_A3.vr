@@ -1,19 +1,27 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
 #include <..\..\host\engine.hpp>
 #include <..\..\host\oop.hpp>
 
+namespace(ProxyItems,proxIt_)
+
+decl(object)
 proxIt_configData = createObj;
+decl(vector3)
 proxIt_vec = [0,0,0];
+decl(vector3[])
 proxIt_def = [proxIt_vec,proxIt_vec];
+decl(string[])
 proxIt_list_selections = ["spine3","spine3","head","rightshoulder","spine3","head","lefthand","pelvis","righthand"];
 
+decl(bool)
 proxIt_canUseRProx = false; // переопределяется если скомпилирован RProx
 
 //Подготавливает имя если указан класснейм
+decl(string(string))
 proxIt_prepName = {
 	FHEADER;
 	private _modelPath = _this;
@@ -37,6 +45,7 @@ proxIt_prepName = {
 	_modelPath
 };
 
+decl(void(actor;mesh;int))
 proxIt_updateModel = {
 	params ["_mob","_object","_newselection"];
 
@@ -59,10 +68,12 @@ proxIt_updateModel = {
 	//fix lagvector after 0.8.147
 	_object attachTo [_mob,_posData select 0,proxIt_list_selections select _newselection,true];
 	_object setvariable ["_pit_lastAttachData",[_mob,_posData select 0,proxIt_list_selections select _newselection,true]];
-	
+	_object setvariable ["_pit_slotId",_newselection];
+
 	_object setPhysicsCollisionFlag false;
 };
 
+decl(mesh(actor;string;int))
 proxIt_loadConfig = {
 	params ["_mob","_modelPathOrClass","_selectionId"];
 	
@@ -109,12 +120,14 @@ proxIt_loadConfig = {
 	//fix lagvector after 0.8.147
 	_object attachTo [_mob,_posData select 0,proxIt_list_selections select _selectionId,true];
 	_object setvariable ["_pit_lastAttachData",[_mob,_posData select 0,proxIt_list_selections select _selectionId,true]];
+	_object setvariable ["_pit_slotId",_selectionId];
 
 	_object setPhysicsCollisionFlag false;
 	
 	_object
 };
 
-#include <..\Inventory\inventory.hpp>
-#include "ConfigProxyItems.sqf"
-]; traceformat("[PIT]:	Loaded %1 configs",_pit_loaded);
+//must_be_native
+#include "ConfigProxyItemsLoader.h"
+
+traceformat("[PIT]:	Loaded %1 configs",count (allvariables proxIt_configData));

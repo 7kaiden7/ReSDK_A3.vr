@@ -57,6 +57,8 @@ dest = pathJoin(args.sdk_path,"RBuilder")
 files = [
 	cli.appName,
 	"config.yml",
+	"DEPLOY.bat",
+	"rb_init.bat",
 	"DB\\GameMain.db",
 	"loader\\description.ext",
 	"loader\\init.sqf",

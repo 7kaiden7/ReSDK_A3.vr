@@ -1,24 +1,31 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
+
+#include <..\..\host\lang.hpp>
+
+namespace(NOEngine.Client.Transport,noe_client_)
 
 /*
 
 				=== EVENTS ===
 
 */
-#ifdef DEBUG
+decl(void())
 noe_client_debug_requestLoadChunk = {
+	#ifdef DEBUG
 
 	_chunk = [getPosATL player,CHUNK_TYPE_ITEM] call noe_posToChunk;
 	_obj = [_chunk,CHUNK_TYPE_ITEM] call noe_client_getPosChunkToData;
 
 	[_chunk,CHUNK_TYPE_ITEM,_obj] call noe_client_requestLoadChunk;
+	#endif
 };
-#endif
-// to server
 
+
+// to server
+decl(void(vector2;int;any[]))
 noe_client_requestLoadChunk = {
 	params ["_chunk","_type","_chunkObject"];
 
@@ -29,6 +36,7 @@ noe_client_requestLoadChunk = {
 	rpcSendToServer("requestChunkLoad",[clientOwner arg _chunk arg _type arg _tick arg _id]);
 };
 
+decl(void(any[];float))
 noe_client_requestDeleteUpdater = {
 	params ["_chunkObject","_time"];
 	
@@ -46,8 +54,8 @@ noe_client_requestDeleteUpdater = {
 
 // to client
 
-
-_noe_client_onUpdateChunk = {
+decl(void(...any[]))
+noe_client_onUpdateChunk = {
 	
 	//traceformat("packet get %1",_this);
 	_id = _this select 0;
@@ -96,10 +104,10 @@ _noe_client_onUpdateChunk = {
 		//TODO send server :remove client on chunk
 	};
 
-}; rpcAdd("onupdch",_noe_client_onUpdateChunk);
+}; rpcAdd("onupdch",noe_client_onUpdateChunk);
 
-
-_noe_client_onUpdateObject = {
+decl(void(...any[]))
+noe_client_onUpdateObject = {
 	
 	//Защита от загрузки информации когда клиент не подключен
 	if !(call noe_client_isEnabled) exitWith {};
@@ -135,11 +143,12 @@ _noe_client_onUpdateObject = {
 		//TODO send server :remove client on chunk
 	};
 
-}; rpcAdd("onupdob",_noe_client_onUpdateObject);
+}; rpcAdd("onupdob",noe_client_onUpdateObject);
 
 //fncs
 
 //get original object data; see noe_client_updateObject for info
+decl(map<string;any>|any[](string;bool))
 noe_client_getOrignalObjectData = {
 	params ["_ptr",["_retAsHash",true]];
 	private _dat = noe_client_allPointers get _ptr;
@@ -151,6 +160,7 @@ noe_client_getOrignalObjectData = {
 	["ref","isSimple","model","pos","dir","vec","light","anim","radio"] createHashMapFromArray _dat
 };
 
+decl(void(string))
 noe_client_resetObjectTransform = {
 	params ["_ptr"];
 	
@@ -198,6 +208,7 @@ noe_client_resetObjectTransform = {
 	};
 };
 
+decl(void(mesh|string;string;any))
 noe_client_setObjectTransform = {
 	params ["_obj","_type","_val"];
 	if equalTypes(_obj,"") then {
@@ -222,6 +233,7 @@ noe_client_setObjectTransform = {
 };
 
 //генерирует пакет который указывает на актуальность действия при коллбеке
+decl(int(any[];float))
 noe_client_generatePacketId = {
 	params ["_chunkObject",["_lifetime",PACKET_LIFETIME]];
 
@@ -261,7 +273,12 @@ noe_client_generatePacketId = {
 	};
 #endif*/
 
+//logging packet content on error
+decl(any[])
+noe_debug_packeterror = [];
+
 //Конвертирует данные из массива байтов в структуры объектов
+decl(any[](any[];any[];any[]))
 noe_client_byteArrToObjStruct = {
 	params ["_tokens","_struct","_remStruct"];
 
@@ -289,18 +306,25 @@ noe_client_byteArrToObjStruct = {
 	#define debug_calltraceOnErrorConvert
 
 	#ifdef debug_calltraceOnErrorConvert
+		inline_macro
 		#define callwarn(macroname) warningformat("__DEBUG__::%1() - count tokens %2" + endl + "Data: %3",macroname arg count _tokens arg _tokens);
 	#else
 		#define callwarn(ma)
 	#endif
 
+	inline_macro
 	#define tokenIndex _pos
+	inline_macro
 	#define moveNext() MOD(tokenIndex,+1); if (tokenIndex > (_lastIndex)) then { error("NOEngineClient::byteArrToObjStruct() - Out of range"); callwarn("next") RETURN(false);}
-
+	inline_macro
 	#define moveTo(val) MOD(tokenIndex,+val); if (tokenIndex > (_lastIndex)) then { error("NOEngineClient::byteArrToObjStruct() - Out of range"); callwarn("move") RETURN(false); }
+	inline_macro
 	#define getToken(ch) (_tokens select ch)
+	inline_macro
 	#define canMove(idx) (idx <= (count _tokens - 1) && idx >= 0)
+	inline_macro
 	#define getTokenSafe(idx) if canMove(idx) then {getToken(idx)} else {"0x0"}
+	inline_macro
 	#define getCurToken() getToken(tokenIndex)
 
 	private _lastIndex = count _tokens - 1;
@@ -309,6 +333,7 @@ noe_client_byteArrToObjStruct = {
 	private _countAnims = 0;
 
 	private _bufvar = ""; //свободная переменная для записи
+	inline_macro
 	#define isTrue(val) not_equals(val,_strZero)
 	//trace("START");
 
@@ -462,32 +487,37 @@ noe_client_byteArrToObjStruct = {
 				_nobject append [null]; //no anim
 				if isTrue(_hasRadio) then {
 					private _fqid = getCurToken();
-					//tokens: [int freq, float volume,float canHearUnits, prob pos.x,..pos.z, prob waveDistance,prob radiotype]
+					
+					//tokens: [string freq, float volume,float distance, uint radio type, prob [pos.x,..pos.z] | null]
 					_vec3 = [_fqid];
 					moveNext(); //from freq to vol
 					_vec3 pushBack getCurToken();
-					moveNext(); // from vol to speakermode
+					moveNext(); // from vol to distance
 					_vec3 pushBack getCurToken();
-					moveNext(); // from speakermode to prob pos
+					moveNext(); // from distance to radio type
+					_bufvar = RADIO_TYPE_ENUM_TO_STRING(getCurToken());
+					_vec3 pushBack _bufvar;
+					moveNext(); //from radio type to prob pos
 					_bufvar = getCurToken();
 					if isNullVar(_bufvar) then {
 						_vec3 pushBack [0,0,0];//add bias
 					} else {
-						_bufvar = [_bufvar];
-						moveNext(); //from pos.x to pos.y
-						_bufvar pushBack getCurToken();
-						moveNext(); //from pos.y to pos.z
-						_bufvar pushBack getCurToken();
-						_vec3 pushBack _bufvar;//add bias
+						// _bufvar = [_bufvar];
+						// moveNext(); //from pos.x to pos.y
+						// _bufvar pushBack getCurToken();
+						// moveNext(); //from pos.y to pos.z
+						// _bufvar pushBack getCurToken();
+						// _vec3 pushBack _bufvar;//add bias
+						_vec3 pushBack _bufvar;
 					};
-					if (_fqid < 0) then {
-						_vec3 set [0,-_fqid]; //inverse frequency
-						moveNext(); //from bias to wave dist
-						_bufvar = [getCurToken()];
-						moveNext(); //from wave dist to radio type
-						_bufvar pushBack getCurToken();
-						_vec3 pushBack _bufvar; //add speak function
-					};
+					// if (_fqid < 0) then {
+					// 	_vec3 set [0,-_fqid]; //inverse frequency
+					// 	moveNext(); //from bias to wave dist
+					// 	_bufvar = [getCurToken()];
+					// 	moveNext(); //from wave dist to radio type
+					// 	_bufvar pushBack getCurToken();
+					// 	_vec3 pushBack _bufvar; //add speak function
+					// };
 					
 					_nobject pushBack _vec3;
 				};
@@ -508,10 +538,13 @@ noe_client_byteArrToObjStruct = {
 };
 
 //производит выписывание клиента из прослушивателей чанка
+decl(void(vector2;int))
 noe_client_unsubscribeChunkListening = {
 	params ["_chunk","_type"];
 	rpcSendToServer("unsubChunkListen",[_chunk arg _type arg clientOwner]);
 };
+
+decl(void(vector2;int))
 noe_client_unsubscribeChunkListeningFull = {
 	params ["_chunk","_type"];
 	rpcSendToServer("unsubChunkListen",[_chunk arg _type arg clientOwner arg false]);

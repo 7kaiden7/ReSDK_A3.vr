@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -78,6 +78,20 @@ class(GateCity) extends(ElectronicDeviceDoor)
 	
 	getter_func(getOpenSoundParams,["doors\bulkhead_open" arg getRandomPitchInRange(0.6,1.3) arg null]);
 	getter_func(getCloseSoundParams,["doors\bulkhead_close" arg getRandomPitchInRange(0.6,1.3) arg null]);
+endclass
+
+editor_attribute("EditorGenerated")
+class(GateCity2) extends(GateCity)
+	var(model,"ml\ml_germogate\l19_police_germozatbor.p3d");
+endclass
+
+class(GateCity1) extends(GateCity)
+	var(model,"smg_metro_building\drugoe\smg_germozatvor1.p3d");
+	getter_func(animateData,[vec3(-1.8,-1.8,-2) arg 300]);
+	getterconst_func(interpSpeed,3);
+	getterconst_func(getActivationDelay,4.2);
+	getter_func(getOpenSoundParams,["doors\bulkhead_open" arg getRandomPitchInRange(0.6,1) arg null]);
+	getter_func(getCloseSoundParams,["doors\bulkhead_close" arg getRandomPitchInRange(0.6,1) arg null]);
 endclass
 
 class(SteelGridDoorElectronic) extends(ElectronicDeviceDoor)

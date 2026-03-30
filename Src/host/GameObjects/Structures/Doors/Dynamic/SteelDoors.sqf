@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -73,6 +73,11 @@ class(SteelArmoredDoor) extends(DoorDynamic)
 	
 endclass
 
+editor_attribute("EditorGenerated")
+class(SteelArmoredDoor3) extends(SteelArmoredDoor)
+	var(model,"apalon\metro_a3\bronedwerks\skurwysyn.p3d");
+endclass
+
 class(SteelArmoredDoor2) extends(SteelArmoredDoor)
 	var(desc,"Массивная стальная дверь");
 	getter_func(animateData,[["reshotks" arg 2.5 arg 5] arg vec3("plomba5",1.78,1.4)]);
@@ -83,6 +88,20 @@ class(SteelLatticeGate) extends(DoorDynamic)
 	var(model,"Land_PipeFence_01_m_gate_v2_closed_F");
 	getter_func(anmCount,animObj_count(2));
 	getter_func(animateData,[["door_1_rot" arg 2.5 arg ifcheck(!getSelf(isOpen),1.5,0.5)] arg ["door_2_rot" arg 2.5 arg ifcheck(!getSelf(isOpen),1.5,0.5)]]);
+	var(serializedAnim,[-1 arg -1 arg -1 arg -1 arg -1 arg -1]);
+	var(material,"MatMetal");
+endclass
+
+editor_attribute("EditorGenerated")
+class(NetfenceGate) extends(SteelLatticeGate)
+	var(model,"a3\structures_f_exp\walls\net\netfence_01_m_gate_f.p3d");
+endclass
+
+class(TinGate) extends(DoorDynamic)
+	var(name,"Железные ворота");
+	var(model,"land_tinwall_01_m_gate_v2_closed_f");
+	getter_func(anmCount,animObj_count(2));
+	getter_func(animateData,[["door_1_rot" arg 2.5 arg ifcheck(!getSelf(isOpen),0.7,0.7)] arg ["door_2_rot" arg 2.5 arg ifcheck(!getSelf(isOpen),0.7,0.7)]]);
 	var(serializedAnim,[-1 arg -1 arg -1 arg -1 arg -1 arg -1]);
 	var(material,"MatMetal");
 endclass

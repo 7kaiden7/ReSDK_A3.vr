@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -16,6 +16,16 @@ class(SmallDirtPile) extends(Constructions)
 	editor_only(var(desc,"Небольшая куча грязи");)
 	var(material,"MatDirt");
 	var(dr,1);
+endclass
+
+editor_attribute("EditorGenerated")
+class(SmallLightDirtPile) extends(SmallDirtPile)
+	var(model,"ca\structures_e\wall\wall_l\wall_l4_10m_ep1.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
+class(MediumLightDirtPile) extends(SmallLightDirtPile)
+	var(model,"ca\structures_e\wall\wall_l\wall_l5_10m_ep1.p3d");
 endclass
 
 editor_attribute("EditorGenerated")
@@ -38,13 +48,6 @@ editor_attribute("EditorGenerated")
 class(MediumPileOfDirtAndStones) extends(SmallDirtPile)
 	var(model,"ca\structures\castle\a_castle_walls_5_d_ruins.p3d");
 	var(name,"Куча грязи");
-endclass
-
-editor_attribute("EditorGenerated")
-class(SmallGrayStone) extends(SmallDirtPile)
-	var(model,"ca\rocks2\r2_stone.p3d");
-	var(name,"Маленький камень");
-	var(material,"MatStone");
 endclass
 
 editor_attribute("EditorGenerated")
@@ -76,6 +79,11 @@ endclass
 editor_attribute("EditorGenerated")
 class(DirtCraterLong) extends(SmallDirtPile)
 	var(model,"a3\structures_f_enoch\military\training\craterlong_02_f.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
+class(DirtCraterBrownLong) extends(DirtCraterLong)
+	var(model,"a3\data_f\particleeffects\craterlong\craterlong.p3d");
 endclass
 
 editor_attribute("EditorGenerated")

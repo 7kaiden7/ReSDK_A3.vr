@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -64,7 +64,7 @@ class(RBarmenSaloon) extends(BasicRoleSaloon)
 	func(getEquipment)
 	{
 		objParams_1(_mob);
-		private _cloth = ["BarmenCloth",_mob,INV_CLOTH] call createItemInInventory;
+		private _cloth = ["VestAndTie",_mob,INV_CLOTH] call createItemInInventory;
 		private _keyOwn = ["bar" arg "barsuper" arg "barowner"];
 		regKeyInUniform(_cloth,_keyOwn,"Ключ от Дыры");
 	};
@@ -180,7 +180,7 @@ class(RCitizenSaloon) extends(BasicRoleSaloon)
 		
 		if prob(70) then {
 			[
-			pick["HatOldUshanka","HatUshanka","WorkerCap","WorkerCoolCap","HatGrayOldUshanka"],
+			pick["HatUshankaUp2","HatUshanka","WorkerCap","WorkerCap2","HatUshankaUp"],
 			_mob,INV_HEAD
 			] call createItemInInventory;
 		};
@@ -239,7 +239,7 @@ class(RAssasinSaloon) extends(BasicRoleSaloon)
 		setVar(_l,name,"""Коронный""");
 		_l = ["ShortSword",_mob,INV_BACK] call createItemInInventory;
 		setVar(_l,name,"""Похоронный""");
-		private _b = ["SmallBackpack",_mob,INV_BACKPACK] call createItemInInventory;
+		private _b = ["LeatherBackpackBrown",_mob,INV_BACKPACK] call createItemInInventory;
 		for "_i" from 1 to 5 do {
 			["Lockpick",_arm] call createItemInContainer;
 		};
@@ -336,7 +336,7 @@ class(RDoctorSaloon) extends(BasicRoleSaloon)
 		private _cloth = ["DoctorCloth",_mob,INV_CLOTH] call createItemInInventory;
 		setVar(_cloth,name,"Лекарские одеяния");
 		["Rag",_cloth] call createItemInContainer;
-		["HatGrayOldUshanka",_mob,INV_HEAD] call createItemInInventory;
+		["HatUshankaUp",_mob,INV_HEAD] call createItemInInventory;
 		private _keyOwn = ["RDoctorSaloonKey"];
 		regKeyInUniform(_cloth,_keyOwn,"Лекарский ключ");
 		private _shot = ["Revolver",_mob,INV_BELT] call createItemInInventory; // Оружие на слоте пояса
@@ -378,7 +378,7 @@ class(RTrampSaloon) extends(BasicRoleSaloon)
 		callFuncParams(_cloth,initMoney,randInt(2,8));
 		if prob(60) then {
 			[
-			pick["HatOldUshanka","HatUshanka","WorkerCap","WorkerCoolCap","HatGrayOldUshanka"],
+			pick["HatUshankaUp2","HatUshanka","WorkerCap","WorkerCap2","HatUshankaUp"],
 			_mob,INV_HEAD
 			] call createItemInInventory;
 		};
@@ -586,7 +586,7 @@ class(RBanditMiniSaloon) extends(BasicRoleSaloon)
 		
 		if prob(40) then {
 			[
-			pick["HatOldUshanka","HatUshanka","WorkerCap","WorkerCoolCap","HatGrayOldUshanka"],
+			pick["HatUshankaUp2","HatUshanka","WorkerCap","WorkerCap2","HatUshankaUp"],
 			_mob,INV_HEAD
 			] call createItemInInventory;
 		};

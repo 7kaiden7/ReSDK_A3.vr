@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -102,7 +102,10 @@ db_checkSystemReturn = {
 */
 db_query = {
 	params ["_request",["_retTypes",""],["_singleReturn",false]];
-	
+	#ifdef SP_MODE
+	if (true) exitWith {null};
+	#endif
+
 	#ifdef CATCH_REQUEST_ERROR
 	private _checked = _request;
 	if not_equalTypes(_checked,"") then {_checked = str _checked};

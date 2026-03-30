@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -15,6 +15,8 @@ addCommandWithDescription("camswitch",ACCESS_ADMIN,"Переключает ре�
 
 addCommandWithDescription("reloadvoice",PUBLIC_COMMAND,"Перезапускает модуль голосового чата") {IS_LOCAL_COMMAND()};
 
+addCommandWithDescription("setvoipvol",PUBLIC_COMMAND,"Устанавливает громкость голосового чата") {IS_LOCAL_COMMAND()};
+
 addCommandWithDescription("grafon",ACCESS_ADMIN,"Переключает режим отображения эффектов в LightEngine") {IS_LOCAL_COMMAND()};
 
 addCommandWithDescription("ping",PUBLIC_COMMAND,"Узнать реальный пинг") {IS_LOCAL_COMMAND()};
@@ -22,3 +24,5 @@ addCommandWithDescription("ping",PUBLIC_COMMAND,"Узнать реальный �
 #ifdef EDITOR
 addCommandWithDescription("lightdebug",PUBLIC_COMMAND,"Показывает отрисовку света для скриптовых эффектов") {IS_LOCAL_COMMAND()};
 #endif
+
+addCommand("disablecolorcorrection",ACCESS_ADMIN) {IS_LOCAL_COMMAND()};

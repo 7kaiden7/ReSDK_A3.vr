@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -122,10 +122,12 @@ menu_structureLayout = [
 			"text:Переключить отображение классов;act:(!drawNames_enabled) call drawNames_setEnable",//short:512 + 0x16
 			"text:Переключить отображение курсора геометрии;act:call geoCursor_toggle",
 			"text:Переключить отображение сетки чанков;act: call pertest_chunkViewToggle;",
+			"text:Переключить отображение зон;act: call zoneVis_switchMode",
 			"text:Переключить время суток;act:(!call rendering_isNightEnabled) call rendering_setNight"
 		]
 	],
 	["text:Инструменты",
+		"text:Пересборка ReVoicer;act: call revoicer_rebuild",
 		["text:Системные инструменты;path:menu_path_platformSysTools",
 			"text:Консоль отладки;data:DebugConsole;act:(ctrlparent (_this select 0)) createdisplay 'RscDisplayDebugPublic';;short:544;",
 			"text:Просмотрщик конфигурации;data:ConfigViewer;act:[ctrlparent (_this select 0)] call (uinamespace getvariable 'bis_fnc_configviewer');short:2082;pic:a3\3den\data\displays\display3den\entitymenu\findconfig_ca.paa;",
@@ -217,3 +219,4 @@ menu_structureLayout = [
 #include "LoadingScreen.sqf"
 #include "DrawNames.sqf"
 #include "Widget_WinApi.sqf"
+#include "LayersUtility.sqf"

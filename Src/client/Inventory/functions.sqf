@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -11,12 +11,19 @@
 #include "inventory.hpp"
 #include "helpers.hpp"
 
+namespace(Inventory,inventory_)
+
+macro_const(invetory_widgetSizeInvSlot)
 #define SIZE_INVSLOT 7
 
+macro_const(inventory_widgetMyPersonFadeValExit)
 #define MYPERSON_FADEVAL_EXIT 0.9
+macro_const(inventory_widgetMyPersonFadeValEnter)
 #define MYPERSON_FADEVAL_ENTER 0.2
+macro_const(inventory_widgetMyPersonFadeTime)
 #define MYPERSON_FADETIME 0.5
 
+decl(void())
 inventory_init = {
 
 	private _offsetW = transformSizeByAR(SIZE_INVSLOT);
@@ -37,6 +44,7 @@ inventory_init = {
 	rpcAdd("invsetglobvis",inventory_setGlobalVisible);
 };
 
+decl(void(bool))
 inventory_setHideHands = {
 	params ["_mode"];
 
@@ -88,6 +96,7 @@ inventory_setHideHands = {
 	};
 };
 
+decl(void(bool;bool))
 inventory_restoreHide = {
 	params ["_now",["_applyCommit",true]];
 	if (inventory_hideValue != 0) then {
@@ -106,6 +115,7 @@ inventory_restoreHide = {
 inventory_isGlobalVisible = true;
 
 //установка видимости слотов на глобальном уровне
+decl(void(bool))
 inventory_setGlobalVisible = {
 	params ["_mode"];
 	if equals(_mode,inventory_isGlobalVisible) exitWith {};
@@ -121,9 +131,10 @@ inventory_setGlobalVisible = {
 		_x set [1,(_x select 1)+_valmod];
 	} foreach inventory_slotpos_map;
 	
-	call inventory_resetPositionHandWidgets;
+	call inventory_resetPositionHandWidgetsForced;
 };
 
+decl(void())
 inventory_applyColorTheme = {
 	{
 		(_x getVariable "background") setBackgroundColor (["inv_slot_back"] call ct_getValue)
@@ -131,6 +142,7 @@ inventory_applyColorTheme = {
 };
 
 //Псевдоним widgetSetPicture в этом модуле
+decl(void(widget;string))
 inventory_widgetSetPicture = {
 	params ["_pic","_val"];
 	if isNullReference(_pic getVariable vec2("text",widgetNull)) exitWith {
@@ -161,6 +173,7 @@ inventory_widgetSetPicture = {
 	};
 };
 
+decl(widget(display;string|int;vector4;int))
 createWidget_invSlot = {
 
 	params ["_display","_slotName","_pos","_slotId"];
@@ -230,15 +243,22 @@ createWidget_invSlot = {
 	_ctg
 };
 
+decl(void())
 openInventory = {
 
 	#ifdef DEBUG
 	private _invTimeCreate = tickTime;
 	#endif
 
+	#ifdef SP_MODE
+		sp_checkInput("open_inventory",[]);
+	#endif
+
 	if (isDisplayOpen) exitWith {};
 
 	private _d = call dynamicDisplayOpen;
+	
+	[_d] call vs_addDisplayInputHandlers;
 
 	//отладочная консоль в инвентаре
 	/*
@@ -262,7 +282,7 @@ openInventory = {
 			//process input emote text
 			if equals(focusedCtrl _d,_d getVariable "ieMenuCtg" getVariable "input") exitWith {};
 
-			doPrepareKeyData();
+			doPrepareKeyData(_this);
 
 			if isPressed(input_act_inventory) exitWith {
 				nextFrame({call closeInventory});
@@ -363,14 +383,14 @@ openInventory = {
 	inventory_modifierScroll = false;
 	if (!inventory_supressInventoryOpen) then {
 		_d displayAddEventHandler ["keyDown",{params ["_d","_key","_shift"];
-			doPrepareKeyData();
+			doPrepareKeyData(_this);
 
 			if (_shift) then {inventory_modifierScroll = true};
 			//if isPressed(input_act_mainAction) exitWith {inventory_isPressedInteractButton = true};
 			inventory_isHoldMode && _key == KEY_TAB
 		}];
 		_d displayAddEventHandler ["keyUp",{params ["_d","_key","_shift"];
-			doPrepareKeyData();
+			doPrepareKeyData(_this);
 
 			if (_shift) then {inventory_modifierScroll = false};
 			//if isPressed(input_act_mainAction) exitWith {inventory_isPressedInteractButton = false};
@@ -386,8 +406,12 @@ openInventory = {
 	logformat("[EXTENDED_INVENTORY_UPDATE]: Inventory loaded at %1 sec (%2 ms)",_deltaTime arg (_deltaTime*1000)toFixed 8);
 	#endif
 
+	#ifdef SP_MODE
+	nextFrame({call sp_gui_syncInventoryVisible});
+	#endif
 };
 
+decl(void(bool))
 inventory_onPrepareSlots = {
 	private _isOpened = _this;
 
@@ -448,7 +472,7 @@ inventory_onPrepareSlots = {
 		} foreach [INV_HAND_L,INV_HAND_R];
 
 		//germs sync
-		invenotry_commitNowAllGerms = true;
+		inventory_commitNowAllGerms = true;
 		inventory_slotdataDirt call inventory_syncGerms;
 
 	} else {
@@ -477,6 +501,7 @@ inventory_onPrepareSlots = {
 	};
 };
 
+decl(void())
 inventory_resetPositionHandWidgets = {
 	private _offsetW = transformSizeByAR(SIZE_INVSLOT);
 	private _biasW = transformSizeByAR(SLOT_BIASH);
@@ -487,6 +512,18 @@ inventory_resetPositionHandWidgets = {
 	[INV_HAND_R call inventoryGetWidgetById,[50 + _biasW,100 - SIZE_INVSLOT],TIME_PREPARE_SLOTS] call widgetSetPositionOnly;
 };
 
+decl(void())
+inventory_resetPositionHandWidgetsForced = {
+	private _offsetW = transformSizeByAR(SIZE_INVSLOT);
+	private _biasW = transformSizeByAR(SLOT_BIASH);
+	if (!inventory_isGlobalVisible) then {
+		_biasW = 100; _offsetW = 100;
+	};
+	[INV_HAND_L call inventoryGetWidgetById,[50 - _offsetW - _biasW,100 - SIZE_INVSLOT],0] call widgetSetPositionOnly;
+	[INV_HAND_R call inventoryGetWidgetById,[50 + _biasW,100 - SIZE_INVSLOT],0] call widgetSetPositionOnly;
+};
+
+decl(void())
 closeInventory = {
 
 	false call inventory_onPrepareSlots;
@@ -519,6 +556,7 @@ closeInventory = {
 };
 
 //Событие закрытия инвентаря
+decl(void())
 closeInventory_handle = {
 	call displayClose; isInventoryOpen = false;
 };
@@ -528,50 +566,56 @@ closeInventory_handle = {
 					REGION: WIDGET HELPERS
 ==============================================================================
 */
+decl(string(int))
 inventoryGetPictureById = {
 	inventory_sloticons_default select _this
 };
 
+decl(string(int))
 inventoryGetSlotNameById = {
 	inventory_slotnames_default select _this
 };
 
+decl(widget(int))
 inventoryGetWidgetById = {
 	inventor_slot_widgets select _this
 };
 
-
+decl(widget())
 inventoryGetWidgetOnMouse = {
-	scopeName "main";
+	FHEADER;
 	{
 		if (_x call isMouseInsideWidget) exitWith {
-			_x breakOut "main";
+			RETURN(_x)
 		};
 	} foreach inventor_slot_widgets;
 
 	widgetNull;
 };
 
-
+decl(widget())
 inventoryGetContainerWidgetOnMouse = {
-	scopename "main";
+	FHEADER;
 	{
 		if (_x call isMouseInsideWidget) exitWith {
-			_x breakOut "main";
+			RETURN(_x)
 		};
 	} foreach inventory_containerSlots;
 
 	widgetNull;
 };
 
+decl(bool())
 inventoryIsInContainerWidgetsZone = {
 	inventory_isOpenContainer && {inventory_contWidgetSize call isMouseInsidePosition}
 };
 
+decl(bool())
 inventoryIsInWidgetsZone = {
 	inventory_invWidgetSize call isMouseInsidePosition || {call inventoryIsInContainerWidgetsZone} || call inventoryIsInsideSelfWidget
 };
 
+decl(bool())
 inventoryIsInsideSelfWidget = {getSelfCtg call isMouseInsideWidget};
 
 /*
@@ -580,6 +624,7 @@ inventoryIsInsideSelfWidget = {getSelfCtg call isMouseInsideWidget};
 ==============================================================================
 */
 
+decl(void())
 inventory_onUpdate = {
 	#ifdef INVENTORY_USE_NEW_RENDER_ICONS
 	{
@@ -722,6 +767,7 @@ inventory_onUpdate = {
 };
 
 // Событие при нажатии мышки на слот
+decl(bool(widget;int))
 inventory_onMousePress = {
 	params ["_obj","_key"];
 
@@ -771,6 +817,7 @@ inventory_onMousePress = {
 };
 
 //событие при отпускании мышки на слоте
+decl(bool(widget;int))
 inventory_onMouseRelease = {
 	params ["_obj","_key"];
 
@@ -813,6 +860,7 @@ inventory_onMouseRelease = {
 };
 
 // При скроллинге мышкой
+decl(void(display;float))
 inventory_onMouseScroll = {
 	params ["_disp", "_scroll"];
 
@@ -841,6 +889,7 @@ inventory_onMouseScroll = {
 ==============================================================================
 */
 
+decl(void(int;any;bool))
 inventory_onSlotUpdate = {
 	params ["_slotid","_data",["_supressRestoreHide",false]];
 
@@ -888,6 +937,7 @@ inventory_onSlotUpdate = {
 	};
 };
 
+decl(void(...any[]))
 inventory_syncGerms = {
 	private _data = _this;
 
@@ -901,11 +951,12 @@ inventory_syncGerms = {
 		_x call inventory_internal_syncGermsBodyPartKey;
 	} foreach inventory_slotdataDirt;
 
-	if (invenotry_commitNowAllGerms) then {
-		invenotry_commitNowAllGerms = false;
+	if (inventory_commitNowAllGerms) then {
+		inventory_commitNowAllGerms = false;
 	};
 };
 
+decl(void(string;float))
 inventory_internal_syncGermsBodyPartKey = {
 	params ["_partKey","_opacity"];
 	private _idx = inventory_const_partkeyToSlots findif {_x select 0 == _partKey};
@@ -920,11 +971,12 @@ inventory_internal_syncGermsBodyPartKey = {
 		_wid = _x call inventoryGetWidgetById;
 		_wid = getSlotDirtOverlay(_wid);
 		_wid setFade _opacity;
-		_wid commit ifcheck(invenotry_commitNowAllGerms,0,0.1);
+		_wid commit ifcheck(inventory_commitNowAllGerms,0,0.1);
 	} foreach _partData;
 };
 
 #ifdef INVENTORY_USE_NEW_RENDER_ICONS
+decl(void(widget))
 inventory_syncModelPos = {
 	params ["_wid"];
 	private _obj = _wid getvariable "model";
@@ -954,6 +1006,7 @@ inventory_syncModelPos = {
 };
 #endif
 
+decl(void(...any[]))
 inventory_onSlotListUpdate = {
 	private _data = _this;
 
@@ -962,6 +1015,7 @@ inventory_onSlotListUpdate = {
 	} foreach _data;
 };
 
+decl(void(widget))
 inventory_onReleaseSlot = {
 
 	params ["_slotTo"];
@@ -1030,12 +1084,12 @@ inventory_onReleaseSlot = {
 
 };
 
+decl(void(widget))
 inventory_onPressSlot = {
 	params ["_slotFrom"];
 
 	if (isEmptyWidget(_slotFrom)) exitWith {
 		invlog("Inventory::onPressSlot - Slot is empty (%1)",getSlotName(_slotFrom));
-		false;
 	};
 
 	invlog("Inventory::onPressSlot - pressed pos is %1",_slotFrom call getMousePositionInWidget);
@@ -1057,6 +1111,7 @@ inventory_onPressSlot = {
 
 //событие при выкладывании на землю
 //параметр _isFastPutdown - событие безопасного выкладывания из руки
+decl(void(int;bool))
 inventory_onPutDownItem = {
 	params [["_id",cd_activeHand],["_isFastPutdown",false]];
 
@@ -1097,6 +1152,7 @@ inventory_onPutDownItem = {
 };
 
 //Событие которое выбрасывает предмет из инвентаря
+decl(void(int))
 inventory_onDropItem = {
 	params [["_id",cd_activeHand]];
 
@@ -1111,6 +1167,7 @@ inventory_onDropItem = {
 };
 
 //Событие при передачи из одного слота в другой
+decl(void(widget;widget))
 inventory_onTransferSlot = {
 	params ["_slotFrom","_slotTo"];
 
@@ -1147,7 +1204,7 @@ inventory_onTransferSlot = {
 	rpcSendToServer("onTransferItem",[player arg _idFrom arg _idTo]);
 };
 
-
+decl(void(mesh;any[]))
 inventory_onInteractTargetWith = {
 	params ["_obj","_slotData"];
 
@@ -1165,6 +1222,7 @@ inventory_onInteractTargetWith = {
 	rpcSendToServer("onInteractWith",[player arg getObjReferenceWithMob(_obj) arg _hash]);
 };
 
+decl(void())
 inventory_onMainAction = {
 	
 	if (isInsideVerbMenu_inv) exitWith {};
@@ -1201,6 +1259,7 @@ inventory_onMainAction = {
 	rpcSendToServer("onMainAction",[player arg _hash]);
 };
 
+decl(void())
 inventory_onExtraAction = {
 
 	/*if (inventory_protectExtraAction) exitWith {};
@@ -1259,6 +1318,7 @@ inventory_onExtraAction = {
 	//rpcSendToServer("onExtraAction",[player arg _hash]);
 };
 
+decl(void())
 inventory_onClick = {
 	if (isInsideVerbMenu_inv) exitWith {};
 
@@ -1300,6 +1360,7 @@ inventory_onClick = {
 	invokeAfterDelay({inventory_protectAltClick = false;},TIME_TO_RELOAD_ALTCLICKACTION);
 };*/
 
+decl(void())
 inventory_onExamine = {
 	if (isInsideVerbMenu_inv) exitWith {};
 	if (["examine"] call input_spamProtect) exitWith {};
@@ -1360,7 +1421,11 @@ inventory_onExamine = {
 };
 
 //Смена активной руки
+decl(void())
 inventory_changeActiveHand = {
+	#ifdef SP_MODE
+		sp_checkInput("change_active_hand",[]);
+	#endif
 
 	if (verb_isMenuLoaded) then {
 		call verb_unloadMenu;
@@ -1373,11 +1438,17 @@ inventory_changeActiveHand = {
 	rpcSendToServer("onUpdateActiveHand",[player]);
 };
 
+decl(void())
 inventory_changeTwoHandsMode = {
+	#ifdef SP_MODE
+		sp_checkInput("change_two_hands",[]);
+	#endif
+
 	if (["switch2hands",0.7] call input_spamProtect) exitWith {};
 	rpcSendToServer("switchTwoHands",[player]);
 };
 
+decl(void(any;any;bool))
 inventory_onChangeActiveHand = {
 	params ["_notAct","_act",["_setToNew",false]];
 
@@ -1403,20 +1474,25 @@ inventory_onChangeActiveHand = {
 ==============================================================================
 */
 
+decl(bool())
 inventory_isEmptyHands = {
 	(inventory_slotdata select INV_HAND_L) isEqualTo [] && (inventory_slotdata select INV_HAND_R) isEqualTo []
 };
 
+decl(bool())
 inventory_isEmptyActiveHand = {(inventory_slotdata select cd_activeHand) isEqualTo []};
 
+decl(string(int))
 inventory_getModelById = {
 	inventory_slotdata select (_this) select SD_MODEL
 };
 
+decl(any[](int))
 inventory_getSlotDataById = {
 	inventory_slotdata select (_this)
 };
 
+decl(any[](int))
 inventory_getContainerSlotDataById = {
 	inventory_containerData select (_this)
 };

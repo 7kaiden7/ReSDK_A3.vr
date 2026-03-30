@@ -1,11 +1,10 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
 #include <..\..\..\engine.hpp>
 #include <..\..\..\oop.hpp>
-#include <..\..\..\..\client\LightEngine\LightEngine.hpp>
 #include <..\..\GameConstants.hpp>
 #include <..\..\..\text.hpp>
 
@@ -187,12 +186,12 @@ editor_attribute("Deprecated" arg "Требуется рефакторинг с�
 class(TorchAsStruct) extends(Campfire)
 	var(tDistance,0.001);
 	var(name,null);
-	var(desc,"Хорошо закреплённый в специальном держателе для факела. Ходят слухи, что на таких держателях факелы никогад не затухают от пещерных ветров.");
+	var(desc,"Хорошо закреплённый в специальном держателе для факела. Ходят слухи, что на таких держателях факелы никогда не затухают от пещерных ветров.");
 	var(model,"relicta_models\models\weapons\melee\torch.p3d");
 	var(material,"MatWood");
 	getter_func(canApplyDamage,false); //TODO revert on fixed destroying holders
 	var(holder,nullPtr); //привязан к холдеру
-	var(light,LIGHT_FIRE);
+	var(light,"SLIGHT_LEGACY_FIRE" call lightSys_getConfigIdByName);
 	getter_func(isFireLight,true);
 	getter_func(canIgniteArea,false); //holders cannot ignite any
 	var(lightIsEnabled,false);
@@ -244,7 +243,7 @@ endclass
 class(LampKeroseneAsStruct) extends(TorchAsStruct)
 	var(model,"ml_shabut\exoduss\keroslampa.p3d");
 	var(material,"MatGlass");
-	var(light,LIGHT_LAMP_KEROSENE);
+	var(light,"SLIGHT_LEGACY_LAMP_KEROSENE" call lightSys_getConfigIdByName);
 	var(name,null);
 	var(desc,"");
 endclass

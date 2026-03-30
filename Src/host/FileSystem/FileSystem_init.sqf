@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -10,13 +10,22 @@
 
 fso_map_tree = createhashMap; //flat object
 
+
 //initialize filesystem
 fso_init = {
+	#ifdef SP_MODE
+	if(true)exitWith{};
+	#endif
+
 	private _nativeCollection = addonFiles ["src\"];
 
 	private _useNativeCollector = count _nativeCollection > 0;
 	if (!_useNativeCollector) then {
 		
+		#ifdef EDITOR_OR_RBUILDER
+			#include "..\Tools\EditorDebug\EditorDebug_io.sqf"
+		#endif
+
 		if isNull(file_getFileList) exitWith {
 			setLastError("file::getFileList function not found");
 		};
@@ -86,6 +95,10 @@ fso_buildTree = {
 fso_getFiles = {
 	params ["_pathDir",["_extension",""],["_recursive",false],["_internalFlag",true]];
 	
+	#ifdef SP_MODE
+	if(true)exitWith{};
+	#endif
+
 	//build fso tree
 	if (_internalFlag && {count fso_map_tree == 0}) then {
 		call fso_init;

@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -10,8 +10,8 @@
 
 
 class(MeatGrinder) extends(IStruct)
-	var(name,"Мясодавка");
-	var(desc,"Пригодна для создания фарша или лапши.");
+	var(name,"Фарширатор");
+	var(desc,"Пригоден для создания фарша или лапши.");
 	var(model,"ml\ml_object_new\model_24\press.p3d");
 	var(material,"MatMetal");
 	var(dr,3);
@@ -29,7 +29,7 @@ class(BlackSmallStove) extends(ILightibleStruct)
 	getterconst_func(getCoefAutoWeight,50);
 	var(dr,3);
 	getterconst_func(isFireLight,true);
-	var(light,LIGHT_BAKE);
+	var(light,"SLIGHT_LEGACY_BAKE" call lightSys_getConfigIdByName);
 	var(lightIsEnabled,true);
 
 	var(craftComponentName,"BakingOvenSystem");
@@ -108,7 +108,7 @@ class(SmallStoveGrill) extends(ILightibleStruct)
 	var(dr,3);
 	
 	getterconst_func(isFireLight,true);
-	var(light,LIGHT_BAKESTOVE);
+	var(light,"SLIGHT_LEGACY_BAKESTOVE" call lightSys_getConfigIdByName);
 	var(lightIsEnabled,true);
 	
 	var(handleUpdate,-1);
@@ -191,4 +191,10 @@ class(SmallStoveGrill) extends(ILightibleStruct)
 			callSelfParams(lightSetMode,false);
 		};
 	};
+endclass
+
+class(KitchenStove) extends(SmallStoveGrill)
+	var(name,"Дружковка");
+	var(desc,"Используется для приготовления пищи.")
+	var(model,"ml_exodusnew\stalker_tun\plita.p3d");
 endclass

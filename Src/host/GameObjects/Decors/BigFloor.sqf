@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -18,4 +18,8 @@ endclass
 editor_attribute("EditorGenerated")
 class(BigConcreteFloor) extends(BigFloor)
 	var(model,"ca\structures\rail\rail_misc\rail_najazdovarampa.p3d");
+endclass
+editor_attribute("EditorGenerated")
+class(BigConcreteFloor2) extends(BigConcreteFloor)
+	var(model,"csa_constr\csa_obj\pod_18x18.p3d");
 endclass

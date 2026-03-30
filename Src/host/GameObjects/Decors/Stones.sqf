@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -14,6 +14,36 @@ class(BigStoneDecor) extends(BigConstructions)
 	var(name,"Камень");
 	editor_only(var(desc,"Груда камней. Не разрушаема");)
 	var(material,"MatStone");
+endclass
+
+editor_attribute("EditorGenerated")
+class(MediumBrownRock) extends(BigStoneDecor)
+	var(model,"a3\rocks_f\blunt\bluntrock_apart.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
+class(BigGrayRockGeneral) extends(BigStoneDecor)
+	var(model,"a3\rocks_f_enoch\r_rock_general1.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
+class(BigStonesharpWall) extends(BigGrayRockGeneral)
+	var(model,"a3\rocks_f\stonesharp_wall.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
+class(BigGrayRockGeneral4) extends(BigGrayRockGeneral)
+	var(model,"a3\rocks_f\water\stonesharp_big_w.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
+class(BigGrayRockGeneral3) extends(BigGrayRockGeneral)
+	var(model,"a3\rocks_f\water\stonesharp_medium_w.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
+class(BigGrayRockGeneral2) extends(BigGrayRockGeneral)
+	var(model,"a3\rocks_f\stonesharp_medium.p3d");
 endclass
 
 editor_attribute("EditorGenerated")

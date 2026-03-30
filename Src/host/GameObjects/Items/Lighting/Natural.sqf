@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -131,11 +131,12 @@ class(Torch) extends(ILightible)
 	var(size,ITEM_SIZE_SMALL);
 	var(weight,gramm(560));
 	var(icon,invicon(torch));
-	var(light,LIGHT_FIRE);
+	var(light,"SLIGHT_LEGACY_FIRE" call lightSys_getConfigIdByName);
 	getter_func(isFireLight,true);
 	getterconst_func(getHandAnim,ITEM_HANDANIM_TORCH);
 	getter_func(getTwoHandAnim,ITEM_2HANIM_SWORD);
 	getter_func(getTwoHandCombAnim,ITEM_2HANIM_COMBAT_SWORD);
+	getter_func(canUseInteractToMethod,callSelf(getClassName) == "Torch");
 
 	autoref var(handleUpdate,-1);
 	var(fuelLeft,60 * 60 * 1.2);
@@ -165,6 +166,10 @@ class(Torch) extends(ILightible)
 	func(onUpdate)
 	{
 		updateParams();
+		#ifdef SP_MODE
+			sp_checkWSim("light");
+		#endif
+
 		modSelf(fuelLeft,-1);
 		callSelf(handleIgniteArea);
 		if (getSelf(fuelLeft) == 0) then {
@@ -236,6 +241,230 @@ class(Torch) extends(ILightible)
 		};
 	};
 
+	// =====================================================================
+	//  СИСТЕМА ПРИЖИГАНИЯ — хелперы
+	//  Константы CAUT_* определены в GameConstants.hpp
+	// =====================================================================
+
+	// --- хелпер: классификация тяжести кровотечения на части тела -------------
+	//  0 = лёгкое (только SCRATCH/MINOR раны), 1 = обычное (MODERATE/MAJOR),
+	//  2 = тяжёлое (CRITICAL+ или повреждена артерия)
+	// Работает с картой WOUND_TYPE_BLEEDING объекта BodyPart.
+	caut_classifyBleedingSeverity = {
+		params ["_partObj","_targ","_bp"];
+		private _woundArr = getVar(_partObj,partDamage) get WOUND_TYPE_BLEEDING;
+		private _maxSize = -1;
+		{ if (_x > _maxSize) then { _maxSize = _x } } forEach (keys _woundArr);
+		private _hasArtery = callFuncParams(_targ,isArteryDamaged,_bp);
+		if (_hasArtery || {_maxSize >= WOUND_SIZE_CRITICAL}) exitWith {2};
+		if (_maxSize >= WOUND_SIZE_MODERATE) exitWith {1};
+		0
+	};
+
+	// --- хелпер: тяжесть → бонус к шансу смерти ------------------------------
+	caut_severityDeathBonus = {
+		params ["_sev"];
+		if (_sev >= 2) exitWith {CAUT_SEV_DEATH_SEVERE};
+		if (_sev >= 1) exitWith {CAUT_SEV_DEATH_NORMAL};
+		CAUT_SEV_DEATH_MINOR
+	};
+
+	// --- хелпер: убрать все кровоточащие раны с части тела --------------------
+	caut_clearBleedingOnPart = {
+		params ["_partObj","_targ","_bp"];
+		private _woundMap = getVar(_partObj,partDamage) get WOUND_TYPE_BLEEDING;
+		private _hadWounds = count _woundMap > 0;
+		// очищаем карту ран
+		{ _woundMap deleteAt _x } forEach (keys _woundMap);
+		// также убираем повреждение артерии на этой части
+		private _hadArtery = callFuncParams(_targ,isArteryDamaged,_bp);
+		if (_hadArtery) then {
+			// setDamageArtery сам вызывает recalcBloodLoss
+			callFuncParams(_targ,setDamageArtery,_bp arg false);
+		};
+		// пересчитываем только если были раны, но артерию не трогали (иначе уже пересчитано)
+		if (_hadWounds && !_hadArtery) then {
+			callFunc(_targ,recalcBloodLoss);
+		};
+	};
+
+	//  interactTo - валидация + запуск прогресс-бара
+	func(interactTo)
+	{
+		objParams_2(_targ,_usr);
+		if (!getSelf(lightIsEnabled) || {!callSelf(isFireLight)}) exitWith {
+			callFuncParams(_usr,localSay,"Нужно использовать горящий факел." arg "error");
+		};
+		if (callFunc(_targ,isDead)) exitWith {};
+
+		private _ctz = getVar(_usr,curTargZone);
+		private _bp = [_ctz] call gurps_convertTargetZoneToBodyPart;
+
+		// --- Раны головы нельзя прижигать ------------------------------------
+		if (_bp == BP_INDEX_HEAD) exitWith {
+			callFuncParams(_usr,localSay,"Хорошая ли это идея?" arg "error");
+		};
+
+		// --- Определяем, есть ли что прижигать --------------------------------
+		private _isStump = false;
+		private _hasBleed = false;
+
+		if (_bp in [BP_INDEX_ARM_L,BP_INDEX_ARM_R,BP_INDEX_LEG_L,BP_INDEX_LEG_R]) then {
+			if (!callFuncParams(_targ,hasPart,_bp)) then {
+				// конечность отсутствует — прижигание культи (артерия должна кровоточить)
+				if callFuncParams(_targ,isArteryDamaged,_bp) then {
+					_isStump = true;
+				};
+			};
+		};
+
+		// Если часть тела на месте, проверяем наличие кровоточащих ран
+		if (!_isStump && {callFuncParams(_targ,hasPart,_bp)}) then {
+			private _partObj = callFuncParams(_targ,getPart,_bp);
+			if (!isNullObject(_partObj)) then {
+				if callFuncParams(_partObj,hasAnyDamageOfType,WOUND_TYPE_BLEEDING) then {
+					_hasBleed = true;
+				} else {
+					// также учитываем повреждение артерии без записей о ранах
+					if callFuncParams(_targ,isArteryDamaged,_bp) then {
+						_hasBleed = true;
+					};
+				};
+			};
+		};
+
+		if (!_isStump && !_hasBleed) exitWith {
+			callFuncParams(_usr,localSay,"Здесь нечего прижигать — нет кровотечения." arg "error");
+		};
+
+		// --- Объявление и запуск прогресс-бара --------------------------------
+		private _meSayTarget = if (equals(_targ,_usr)) then {"себя"} else {callFuncParams(_targ,getNameEx,"кого")};
+		private _actionText = if (_isStump) then {"прижечь культю"} else {"прижечь рану"};
+		callFuncParams(_usr,meSay,"собирается " + _actionText + " у " + _meSayTarget);
+
+		setSelf(__cauterizeBp,_bp);
+		setSelf(__cauterizeIsStump,_isStump);
+		callFuncParams(_usr,startProgress,_targ arg "item.cauterizeWound" arg getVar(_usr,rta)*3 arg INTERACT_PROGRESS_TYPE_FULL arg this);
+	};
+
+	// =====================================================================
+	//  cauterizeWound — основной колбэк после завершения прогресс-бара
+	// =====================================================================
+	func(cauterizeWound)
+	{
+		objParams_2(_targ,_usr);
+		if (callFunc(_targ,isDead)) exitWith {};
+		if (!getSelf(lightIsEnabled) || {!callSelf(isFireLight)}) exitWith {};
+
+		private _bp = getSelf(__cauterizeBp);
+		if (isNullVar(_bp)) exitWith {};
+
+		private _isStump = getSelf(__cauterizeIsStump);
+		if (isNullVar(_isStump)) then {_isStump = false};
+		private _isSelf = equals(_targ,_usr);
+
+		// --- Повторная валидация условий --------------------------------------
+		private _valid = true;
+		if (_isStump) then {
+			if (callFuncParams(_targ,hasPart,_bp) || {!callFuncParams(_targ,isArteryDamaged,_bp)}) then {
+				_valid = false;
+			};
+		} else {
+			if (!callFuncParams(_targ,hasPart,_bp)) then {
+				_valid = false;
+			} else {
+				// проверяем, что кровотечение ещё не остановлено
+				private _partObj = callFuncParams(_targ,getPart,_bp);
+				private _hasBleedNow = false;
+				if (!isNullObject(_partObj)) then {
+					_hasBleedNow =
+						callFuncParams(_partObj,hasAnyDamageOfType,WOUND_TYPE_BLEEDING)
+						|| {callFuncParams(_targ,isArteryDamaged,_bp)};
+				};
+				if (!_hasBleedNow) then {
+					_valid = false;
+				};
+			};
+		};
+		if (!_valid) exitWith {};
+
+		// --- Отслеживание попыток --------------------------------------------
+		private _successes = getVarReflect(_targ,CAUT_VAR_SUCCESSES);
+		if (isNullVar(_successes)) then {_successes = 0};
+		setVarReflect(_targ,CAUT_VAR_SUCCESSES,_successes + 1);
+
+		// --- Навык -----------------------------------------------------------
+		private _skill = CAUT_GET_HEALING_SKILL(_usr);
+		private _skillDelta = _skill - CAUT_SKILL_REFERENCE;
+
+		// --- Боль (применяется всегда, даже при провале) ---------------------
+		if callFunc(_targ,canFeelPain) then {
+			callFuncParams(_targ,playEmoteSound,"agonyscream");
+		};
+		callFuncParams(_targ,addPainLevel,_bp arg CAUT_PAIN_LEVELS);
+
+		// --- Бросок на провал (низкий шанс, зависит от навыка) ---------------
+		private _failChance = CAUT_FAIL_BASE;
+		if (_skillDelta > 0) then {
+			modvar(_failChance) - (_skillDelta * CAUT_FAIL_SKILL_REDUCTION);
+		} else {
+			modvar(_failChance) - (_skillDelta * CAUT_FAIL_SKILL_INCREASE);
+		};
+		_failChance = (_failChance max CAUT_FAIL_MIN) min CAUT_FAIL_MAX;
+
+		private _actionText = if (_isStump) then {"прижечь культю"} else {"прижечь рану"};
+
+		if ((random 1) < _failChance) exitWith {
+			private _meSayTarget = if (_isSelf) then {"себя"} else {callFuncParams(_targ,getNameEx,"кого")};
+			callFuncParams(_usr,meSay,"пытается " + _actionText + " у " + _meSayTarget + comma + " но безуспешно.");
+			setVarReflect(_targ,CAUT_VAR_SUCCESSES,_successes);
+		};
+
+		// Определяем тяжесть для модификатора смерти
+		private _severity = 0;
+		if (_isStump) then {
+			_severity = 2; // культя всегда считается тяжёлой
+		} else {
+			private _partObj = callFuncParams(_targ,getPart,_bp);
+			if (!isNullObject(_partObj)) then {
+				_severity = [_partObj, _targ, _bp] call caut_classifyBleedingSeverity;
+			};
+		};
+		private _sevBonus = [_severity] call caut_severityDeathBonus;
+
+		private _deathBase = if (_isSelf) then {CAUT_DEATH_BASE_SELF} else {CAUT_DEATH_BASE_OTHER};
+		private _deathChance = _deathBase
+			+ (_successes * CAUT_DEATH_ESCALATION)
+			+ _sevBonus;
+
+		// Модификатор навыка на шанс смерти
+		if (_skillDelta > 0) then {
+			modvar(_deathChance) - (_skillDelta * CAUT_SKILL_DEATH_REDUCTION);
+		} else {
+			modvar(_deathChance) - (_skillDelta * CAUT_SKILL_DEATH_INCREASE);
+		};
+		_deathChance = (_deathChance max 0.01) min CAUT_DEATH_CAP;
+
+		if ((random 1) < _deathChance) exitWith {
+			callFuncParams(_targ,meSay,"умирает от болевого шока.");
+			callFuncParams(_targ,Die,di_partDamage);
+		};
+
+		// --- Применяем лечение ------------------------------------------------
+		if (_isStump) then {
+			callFuncParams(_targ,setDamageArtery,_bp arg false);
+		} else {
+			private _partObj = callFuncParams(_targ,getPart,_bp);
+			if (!isNullObject(_partObj)) then {
+				[_partObj, _targ, _bp] call caut_clearBleedingOnPart;
+			};
+		};
+
+		private _meSayTarget = if (_isSelf) then {"себя"} else {callFuncParams(_targ,getNameEx,"кого")};
+		private _successText = if (_isStump) then {"прижигает культю"} else {"прижигает рану"};
+		callFuncParams(_usr,meSay,_successText + " у " + _meSayTarget);
+	};
+
 	func(canIgniteArea)
 	{
 		objParams();
@@ -271,7 +500,7 @@ endclass
 class(Sigarette) extends(Torch)
 	var(name,"Сигарета");
 	var(desc,"Для перекура самое то!");
-	var(light,LIGHT_SIGARETTE);
+	var(light,"SLIGHT_LEGACY_SIGARETTE" call lightSys_getConfigIdByName);
 	var(allowedSlots,[INV_FACE]);
 	var(size,ITEM_SIZE_TINY);
 	var(weight,gramm(1.08));
@@ -333,6 +562,14 @@ class(SigaretteDisabled) extends(Sigarette)
 	var(lightIsEnabled,false);
 endclass
 
+class(SigaretteButt) extends(Sigarette)
+	var(name,"Окурок");
+	var(model,"relicta_models2\misc\s_cigarette_end\s_cigarette_end.p3d");
+	var(canRestoreLight,false);
+	var(fuelLeft,0);
+	var(lightIsEnabled,false);
+endclass
+
 class(Samokrutka) extends(Sigarette)
 	var(name,"Грибная самокрутка");
 	var(model,"relicta_models2\misc\s_joint\s_joint.p3d");
@@ -343,11 +580,20 @@ class(SamokrutkaDisabled) extends(Samokrutka)
 	var(lightIsEnabled,false);
 endclass
 
+class(SamokrutkaButt) extends(Samokrutka)
+	var(name,"Окурок");
+	var(model,"relicta_models2\misc\s_joint_end\s_joint_end.p3d");
+	var(canRestoreLight,false);
+	var(fuelLeft,0);
+	var(lightIsEnabled,false);
+endclass
+
 class(SmokingPipe) extends(Sigarette)
 	var(name,"Курительная трубка");
 	var(desc,"Лучше для курения не придумешь!");
 	var(model,"relicta_models\models\interier\props\treasure\pipe\pipe.p3d");
 	getter_func(fuelEmptyModel,"relicta_models\models\interier\props\treasure\pipe\pipe.p3d");
+	var(fuelLeft,60 * 15);
 endclass
 
 class(SmokingPipeDisabled) extends(SmokingPipe)
@@ -364,9 +610,18 @@ class(Candle) extends(Sigarette)
 	var(dr,1);
 	var(size,ITEM_SIZE_SMALL);
 	var(weight,gramm(45));
-	var(light,LIGHT_CANDLE);
+	var(light,"SLIGHT_LEGACY_CANDLE" call lightSys_getConfigIdByName);
 	getterconst_func(getHandAnim,ITEM_HANDANIM_TORCH);
 	var(fuelLeft,60 * 30);
+
+	func(onUpdate)
+	{
+		objParams();
+		#ifdef SP_MODE
+			sp_checkWSim("light");
+		#endif
+		super();
+	};
 
 	func(onFuelEmpty)
 	{
@@ -401,7 +656,7 @@ class(LampKerosene) extends(Torch)
 	var(size,ITEM_SIZE_LARGE);
 	var(weight,gramm(520));
 	getter_func(objectHealthType,OBJECT_TYPE_COMPLEX);
-	var(light,LIGHT_LAMP_KEROSENE);
+	var(light,"SLIGHT_LEGACY_LAMP_KEROSENE" call lightSys_getConfigIdByName);
 	getterconst_func(getHandAnim,ITEM_HANDANIM_LAMP);
 	var(fuelLeft,60 * 60 * 1.3);
 
@@ -444,7 +699,7 @@ class(Match) extends(Sigarette)
 	var(weight,gramm(5));
 	var(dr,0);
 	var(size,ITEM_SIZE_TINY);
-	var(light,LIGHT_MATCH);
+	var(light,"SLIGHT_LEGACY_MATCH" call lightSys_getConfigIdByName);
 	var(lightIsEnabled,false);
 	var(canRestoreLight,true);
 	var(fuelLeft,randInt(30,60));

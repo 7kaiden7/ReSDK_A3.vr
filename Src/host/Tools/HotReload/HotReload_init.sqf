@@ -1,12 +1,12 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
 #include "..\..\engine.hpp"
 #include "..\..\oop.hpp"
 
-fileWatcher_enableSystem = true;
+fileWatcher_enableSystem = "enableFWS" call sdk_hasSystemFlag;
 
 fileWatcher_autoReloadObjects = true;
 

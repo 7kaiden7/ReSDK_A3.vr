@@ -1,10 +1,11 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
 #include "..\..\engine.hpp"
 #include "..\..\oop.hpp"
+#include "..\..\text.hpp"
 #include <..\GameConstants.hpp>
 #include "..\..\PointerSystem\pointers.hpp"
 #include "..\..\ServerRpc\serverRpc.hpp"
@@ -34,7 +35,7 @@ class(Item) extends(IDestructible) attribute(GenerateWeaponModule)
 
 	getter_func(canApplyDamage,true);
 
-	verbList("pickup twohands",GameObject);
+	verbList("pickup twohands description3d",GameObject);
 	editor_attribute("EditorVisible" arg "custom_provider:size") editor_attribute("Tooltip" arg "Размер предмета")
 	var(size,ITEM_SIZE_TINY);//объём предмета
 
@@ -42,6 +43,8 @@ class(Item) extends(IDestructible) attribute(GenerateWeaponModule)
 	var(loc,objNull); //локация объекта. Данное поле по соглашению публично только для чтения. Установка значения ТОЛЬКО через setLoc()
 	editor_attribute("InternalImpl")
 	var(slot,-1); //если loc==mob тогда slot айди слота инвентаря
+	//проверяет находится ли предмет в слотах брони или одежды
+	getter_func(isInSlot,array_exists(INV_LIST_TORSO + INV_LIST_FACE,getSelf(slot)));
 
 	getterconst_func(isRadio,false);
 
@@ -98,7 +101,12 @@ class(Item) extends(IDestructible) attribute(GenerateWeaponModule)
 		private _snd = callSelfReflect("get"+_category+"sound");
 		//Для мультипараметров
 		if equalTypes(_snd,[]) then {
-			_snd params ["_s","_p","_md","_vl"];
+			#ifdef SP_MODE
+			private _md = null;
+			private _lv = null;
+			private _p = null;
+			#endif
+			_snd params ["_s",["_p",null],["_md",null],["_vl",null]];
 			callSelfParams(playSound, _s arg _p arg _md arg _vl); //parametrize called
 		} else {
 			callSelfParams(playSound, _snd arg _pitch arg _maxDist arg _vol);
@@ -706,8 +714,72 @@ class(Item) extends(IDestructible) attribute(GenerateWeaponModule)
 		// отдается только половина от микробов источника
 		private _newMe = clamp(_germsMe + floor(_germHis * 0.25),0,GERM_COUNT_MAX);
 		private _newHim = clamp(_germHis + floor(_germsMe * 0.15),0,GERM_COUNT_MAX);
-		setSelf(germs,_newMe);
-		setVar(_p,germs,_newHim);
+		callSelfParams(setGerms,_newMe);
+		callFuncParams(_p,setGerms,_newHim);
+	};
+
+	//examine3d
+	getterconst_func(getExamine3dItemType,"obj"); //one of "obj","cloth","armor","backpack","mask","helmet"
+	
+	func(getExamine3dItemModel)
+	{
+		objParams();
+		private _etype = callSelf(getExamine3dItemType);
+		
+		//проверка корректности типа
+		if !array_exists(["obj" arg "cloth" arg "armor" arg "backpack" arg "mask" arg "helmet"],_etype) exitWith {
+			"" //в любом случае на клиенте обработается неверный тип формы
+		};
+		if equals(_etype,"obj") exitWith {getSelf(model)};
+		getSelf(armaClass)
+		
+	};
+	func(examine3dItem)
+	{
+		objParams_1(_usr);
+		private _dynDisp = getVar(_usr,_internalDynamicND);
+
+		private _getInfo = {
+			private _ctx = getSelf(context);
+
+			[
+				callFunc(_ctx,getExamine3dItemModel)
+				,format["%1",getVar(_ctx,name)]
+				,callFunc(_ctx,getExamine3dItemType)
+			]
+		};
+		private _handleInp = { objParams_2(_usr,_inp); };
+		private _ctx = this;
+		private _dist = callFuncParams(_usr,getDistanceTo,this) + 0.5;
+		callFuncParams(_dynDisp,setNDOptions,"Examine3d" arg _dist arg getSelf(pointer) arg _getInfo arg _handleInp arg _ctx);
+		
+		callFuncParams(_dynDisp,openNDisplayInternal,_usr arg getVar(_usr,owner));
+		
+		//starting netdisplay handler (because opened as internal (usr is checked target))
+		private _ctxParams = [this,_usr,_dynDisp,getSelf(loc)];
+		startAsyncInvoke
+		{
+			params ["_item","_usr","_dynDisp","_curLoc"];
+			private _maxDist = getVar(_dynDisp,ndInteractDistance);
+			//already closed from clientside
+			if (count getVar(_dynDisp,ndOpenedBy) == 0) exitWith {true};
+			_state = false;
+			call {
+				if isNullReference(_item) exitWith {_state = true};
+				//localtion changed
+				if not_equals(_curLoc,getVar(_item,loc)) exitWith {_state = true};
+				//too far
+				if (callFuncParams(_usr,getDistanceTo,_item) > _maxDist) exitWith {_state = true};
+			};
+			if (_state) then {
+				if (count getVar(_dynDisp,ndOpenedBy) > 0) then {
+					callFuncParams(_dynDisp,closeNDisplayServer,_usr);
+				};
+			};
+			_state
+		},{}, //in action block do nothing
+		_ctxParams
+		endAsyncInvoke
 	};
 
 endclass
@@ -724,7 +796,14 @@ class(ItemRadio) extends(Item)
 	getterconst_func(isRadio,true);
 	var(radioIsEnabled,true);
 
-	var(radioSettings,[10 arg "someencoding" arg -10 arg 5 arg null arg 300 arg 0]);
+	func(getDescFor)
+	{
+		objParams_1(_usr);
+		super() + sbr + ifcheck(getSelf(radioIsEnabled),"Лампочка горит","Лампочка не горит");
+	};
+
+	var(radioSettings,[10 arg "radio_enc_def" arg 1 arg 5 arg null arg 150]);
+	var(radioType,RADIO_TYPE_WALKIETALKIE);
 
 	func(InitModel)
 	{
@@ -774,6 +853,46 @@ class(ItemRadio) extends(Item)
 
 		_vObj
 	};
+
+	func(onMainAction)
+	{
+		objParams_1(_usr);
+		callSelfParams(radioItemSetMode,!getSelf(radioIsEnabled));
+	};
+	getter_func(getMainActionName,ifcheck(getSelf(radioIsEnabled),"Выключить","Включить"));
+
+	func(radioItemSetMode)
+	{
+		objParams_1(_mode);
+		private _isEnabled = getSelf(radioIsEnabled);
+		if (_isEnabled == _mode) exitWith {false;};
+		setSelf(radioIsEnabled,_mode);
+		
+		private _vObj = getSelf(loc); //mesh or mob
+		if callSelf(isInWorld) then {
+		
+			if (!_mode) then {
+				//_vObj setVariable ["radio",null];
+				//_vObj setvariable ["flags",0.1];
+				[_vObj,false] call noe_updateObjectRadio;
+			} else {
+				_vObj setVariable ["radio",callSelf(getRadioData)];
+				[_vObj,true] call noe_updateObjectRadio;
+			};
+			
+			[_vObj,CHUNK_TYPE_ITEM,true] call noe_replicateObject;
+		} else {
+			private _slot = getSelf(slot);
+			if (_slot >= 0) then {
+				callFuncParams(_vObj,syncSmdSlot,_slot);
+			};
+		};
+
+		callSelfParams(playSound, "electronics\click" arg getRandomPitch arg 3);
+
+		true;
+	};
+
 
 	#include "..\Interfaces\IRadio.Interface"
 
@@ -1249,6 +1368,16 @@ class(SystemHandItem) extends(SystemItem)
 		getSelf(pointer), //prob pointer prefix ! -> !0x1aba
 		getSelf(model) //todo replace to dummy model
 		]
+	};
+
+	func(getIcon)
+	{
+		objParams();
+		if callSelf(isGrabProcess) exitWith {
+			private _sidePostfix = ifcheck(getSelf(side)==SIDE_LEFT,"_l","_r");
+			PATH_PICTURE("inventory\pull"+_sidePostfix+".paa")
+		};
+		super();
 	};
 
 endclass

@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -84,6 +84,9 @@ oop_getTypeSize = {
 };
 
 oop_getTypeSizeFull = {
+	#ifdef SP_MODE
+	if (true) exitWith {-1};
+	#endif
 	if (_this isequaltype nullPtr) exitWith {PTR_SIZE}; //4 for x32
 	if (_this isEqualType true) exitWith {1};
 	if (_this isEqualType 0) exitWith {4};

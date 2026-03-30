@@ -1,8 +1,9 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
+//! This file not used.
 
 le_lastChunkItem = null;
 le_lastChunkStructure = null;

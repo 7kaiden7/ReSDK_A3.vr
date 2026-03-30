@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -223,7 +223,7 @@ anim_syncAnim = {
 	if !isNullVar(_flag_check_canwalk_local_player) then {
 		#define __compareanims(idx) ((_anims select idx) == "nl" && ((_blender select idx) == 1))
 		cd_fw_forceWalk = (__compareanims(2) || __compareanims(3));
-		if ([_mob,"ghost_flag",VST_GHOST_EFFECT] call le_vst_hasVarExt) then {
+		if ([_mob,"VST_GHOST_EFFECT"] call vst_containsConfig) then {
 			cd_fw_forceWalk = false;
 		};
 		_mob call cd_fw_syncForceWalk;
@@ -343,4 +343,37 @@ anim_doParry = {
 	#ifndef ANIMATOR_EDITOR
 	invokeAfterDelayParams(_onEndAnim,0.4,[_mob]);
 	#endif
+};
+
+
+//! todo implement new attaching logics
+
+//с помощью этого метода можно контролирвать анимированные атачи
+anim_addAttach = {
+	params ["_dest","_ctxAtt"];
+	_dest attachTo _ctxAtt;
+	private _mob = _ctxAtt select 0;
+	private _fd = _mob getvariable "__anim_internal_att_frdt";
+	if isNullVar(_fd) then {
+		_fd = createhashMap;
+		_mob setvariable ["__anim_internal_att_frdt",_fd];
+	};
+	_fd set [hashValue _dest,[_dest,_ctxAtt]];
+};
+
+anim_removeAttach = {
+	params ["_dest","_src"];
+	private _fd = _src getvariable "__anim_internal_att_frdt";
+	if isNullVar(_fd) exitWith {};
+	_fd deleteAt (hashValue _src);
+};
+
+anim_syncOnFrameAttaches = {
+	params ["_mob"];
+	//{_x setposatl (getposatl _x); _x attachto [_obj,[0,0,0],"head",true]} foreach (attachedobjects _obj);
+	{
+		_y params ["_dt","_ca"];
+		_dt setposatl (getposatl _dt);
+		_dt attachto _ca;
+	} foreach (_mob getvariable "__anim_internal_att_frdt");
 };

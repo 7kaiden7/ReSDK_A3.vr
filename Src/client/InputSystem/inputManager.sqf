@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -7,6 +7,8 @@
 #include "..\..\host\keyboard.hpp"
 #include "..\WidgetSystem\widgets.hpp"
 //invokeAfterDelay({inventory_isHoldMode = true},2);
+
+decl(bool(any;int;bool;bool;bool))
 onGameInputs_Down = {
 	params ["","_key","_shift","_ctrl","_alt"];
 
@@ -18,6 +20,21 @@ onGameInputs_Down = {
 		call openInventory;
 		false
 	};
+
+	#ifdef SP_DEBUG
+	if (_key == KEY_ADD) exitWith {
+		if !(call sp_ai_debug_isCapturing) then {
+			sp_ai_debug_captureMove = _ctrl;
+		};
+		call sp_ai_debug_processCaptureSwitch;
+	};
+	if (_key == KEY_NUMPADENTER) exitWith {
+		call sp_ai_debug_playLastAnim;
+	};
+	if (_key == KEY_G && {call sp_ai_debug_isCapturing}) exitWith {
+		call sp_ai_debug_addScriptedState;
+	};
+	#endif
 
 	#ifdef EDITOR
 	//editorDebug functionality
@@ -38,6 +55,7 @@ onGameInputs_Down = {
 };
 
 //клавиши в режиме игры
+decl(bool(any;int;bool;bool;bool))
 onGameKeyInputs = {
 	params ["","_key","_shift","_ctrl","_alt"];
 
@@ -122,7 +140,7 @@ onGameKeyInputs = {
 	};
 
 	// next all debuger inputs
-#ifdef DEBUG
+#ifdef EDITOR
 
 	if (_key == KEY_U) exitWith {
 		call proxEd_openEditor;
@@ -163,6 +181,7 @@ onGameKeyInputs = {
 };
 
 //мышь в режиме игры
+decl(bool(any;int;any;any;bool;bool;bool))
 onGameMouseInputs = {
 	params ["","_button", "", "", "_shift", "_ctrl", "_alt"];
 

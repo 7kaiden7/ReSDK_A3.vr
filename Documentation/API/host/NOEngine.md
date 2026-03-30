@@ -870,7 +870,7 @@ Replaced value:
 ```sqf
 0.6
 ```
-File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 139](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L139)
+File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 148](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L148)
 ## RAY_SIZE_Z
 
 Type: constant
@@ -882,7 +882,7 @@ Replaced value:
 ```sqf
 200
 ```
-File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 149](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L149)
+File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 158](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L158)
 ## point(pos)
 
 Type: constant
@@ -896,7 +896,7 @@ Replaced value:
 ```sqf
 arrow = "Sign_Arrow_F" createVehicle [0,0,0]; arrow pos;
 ```
-File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 157](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L157)
+File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 166](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L166)
 ## col(_r,_g,_b)
 
 Type: constant
@@ -912,7 +912,7 @@ Replaced value:
 ```sqf
 
 ```
-File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 158](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L158)
+File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 167](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L167)
 ## point(pos)
 
 Type: constant
@@ -926,7 +926,7 @@ Replaced value:
 ```sqf
 
 ```
-File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 160](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L160)
+File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 169](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L169)
 ## col(_r,_g,_b)
 
 Type: constant
@@ -942,7 +942,7 @@ Replaced value:
 ```sqf
 
 ```
-File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 161](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L161)
+File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 170](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L170)
 ## noe_registerObject
 
 Type: function
@@ -963,7 +963,7 @@ Description: выводим регистрацию объекта
 - Param: _ptr
 - Param: _deleteVisual (optional, default true)
 
-File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 63](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L63)
+File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 66](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L66)
 ## noe_unloadVisualObject
 
 Type: function
@@ -972,7 +972,7 @@ Description:
 - Param: _visObj
 - Param: _cht (optional, default -1)
 
-File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 98](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L98)
+File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 107](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L107)
 ## noe_loadVisualObject
 
 Type: function
@@ -983,7 +983,7 @@ Description: загружает визуальный объект в мир (п�
 - Param: _dir (optional, default random 360)
 - Param: _vup (optional, default vec3(0, expected types: 0)
 
-File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 113](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L113)
+File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 122](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L122)
 ## noe_loadVisualObject_OnPutdown
 
 Type: function
@@ -992,7 +992,7 @@ Description: загружает визуалку ИТЕМА при выклад�
 - Param: _vObj
 - Param: _posData
 
-File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 126](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L126)
+File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 135](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L135)
 ## noe_visual_getRelRadiusPos
 
 Type: function
@@ -1002,7 +1002,7 @@ Description:
 - Param: _dirPos (optional, default random 360)
 - Param: _dropRad (optional, default DROP_RADIUS)
 
-File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 141](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L141)
+File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 150](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L150)
 ## noe_loadVisualObject_OnDrop
 
 Type: function
@@ -1014,7 +1014,7 @@ Description:
 - Param: _goDir (optional, default random 360)
 - Param: _isSafePutdown (optional, default false)
 
-File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 146](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L146)
+File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 155](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L155)
 ## noe_registerLightAtObject
 
 Type: function
@@ -1025,7 +1025,7 @@ Description: регистрирует освещение на объекте. Н
 - Param: _light
 - Param: _useUpdate (optional, default true)
 
-File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 218](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L218)
+File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 227](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L227)
 ## noe_unregisterLightAtObject
 
 Type: function
@@ -1035,7 +1035,7 @@ Description: снимает регистрацию света
 - Param: _chunkType
 - Param: _useUpdate (optional, default true)
 
-File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 245](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L245)
+File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 254](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L254)
 ## noe_syncLightAtObject
 
 Type: function
@@ -1045,7 +1045,7 @@ Description:
 - Param: _light
 - Param: _updateByteArr (optional, default false)
 
-File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 270](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L270)
+File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 279](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L279)
 ## noe_updateObjectRadio
 
 Type: function
@@ -1054,7 +1054,7 @@ Description: Обновляет информацию о радио. Небезо
 - Param: _obj
 - Param: _mode
 
-File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 287](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L287)
+File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 296](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L296)
 ## noe_replicateObject
 
 Type: function
@@ -1064,7 +1064,7 @@ Description: Реплицирует изменённое состояние об
 - Param: _chunkType
 - Param: _doUpdateByteArr (optional, default false)
 
-File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 299](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L299)
+File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 308](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L308)
 ## noe_replicateTransform
 
 Type: function
@@ -1074,7 +1074,7 @@ Description:
 - Param: _chunkType
 - Param: _doUpdateByteArr (optional, default false)
 
-File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 362](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L362)
+File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 372](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L372)
 ## noe_updateObjectByteArr
 
 Type: function
@@ -1082,7 +1082,7 @@ Type: function
 Description: Сохраняет данные об объекте в специальном массиве
 - Param: _obj
 
-File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 428](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L428)
+File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 441](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L441)
 ## noe_serializeChunkInfoToPacket
 
 Type: function
@@ -1092,7 +1092,7 @@ Description:
 - Param: _clientTick
 - Param: _cbPacket
 
-File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 548](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L548)
+File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 561](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L561)
 ## noe_serializeObjectInfoPacket
 
 Type: function
@@ -1101,7 +1101,7 @@ Description: Сериализует в пакет информацию об об
 - Param: _packet
 - Param: _visObj
 
-File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 568](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L568)
+File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 581](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L581)
 ## noe_prepareInfoToRemoveObject
 
 Type: function
@@ -1110,7 +1110,7 @@ Description: подготовка пакета объекта для удале�
 - Param: _packet
 - Param: _ptr
 
-File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 575](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L575)
+File: [host\NOEngine\NOEngine_ObjectRegisterModel.sqf at line 588](../../../Src/host/NOEngine/NOEngine_ObjectRegisterModel.sqf#L588)
 # NOEngine_Shared.sqf
 
 ## noe_posToChunk

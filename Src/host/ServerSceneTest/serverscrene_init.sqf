@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -395,7 +395,7 @@ for "_i" from 1 to 5 do {
 	zv = [selectRandom ["Zvak","Bryak"],_backpack getVariable 'link'] call createItemInContainer;
 };
 
-_backp = ["SmallBackpack",_playerObject,INV_BACKPACK] call createItemInInventory;
+_backp = ["LeatherBackpackBrown",_playerObject,INV_BACKPACK] call createItemInInventory;
 for "_i" from 1 to 5 do {
 	[selectRandom ["Zvak","Bryak"],_backp] call createItemInContainer;
 };

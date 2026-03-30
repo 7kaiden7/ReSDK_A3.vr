@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -318,7 +318,7 @@ addCommandWithDescription("jobban",ACCESS_ADMIN,"Открывает меню д�
 
 				//private _cliTarget = _name call cm_findClientByName;
 				//if isNullReference(_cliTarget) exitwith {_exitText = "Не удалось найти клиента по имени '"+_name+"' в онлайне"};
-				if equals([_name arg ""]call db_NickToUid,"") exitwith {
+				if equals([_name arg ""]call db_NickToDisId,"") exitwith {
 					_exitText = "Ник не найден в базе";
 				};
 				
@@ -390,11 +390,11 @@ addCommandWithDescription("jobban",ACCESS_ADMIN,"Открывает меню д�
 
 addCommandWithDescription("showbans",ACCESS_ADMIN,"Показывает информацию о забаненных ролях человека")
 {
-	private _uid = [args,""] call db_NickToUid;
-	if (_uid == "") exitwith {};
+	private _disId = [args,""] call db_NickToDisId;
+	if (_disId == "") exitwith {};
 
 	private _text = format["Заблокированные роли для %1:",args];
-	modvar(_text) + sbr + (([_uid,{
+	modvar(_text) + sbr + (([_disId,{
 		/* 
 	_jobClass - класснейм роли бана
 	_addedDate - когда добавлен
@@ -453,8 +453,8 @@ commands_internal_convertSettingsToRuName = {
 
 addCommandWithDescription("bancharsetting",ACCESS_ADMIN,"Забанить человеку определенную настройку персонажа. В параметрах указывается имя аккаунта")
 {
-	private _uid = [args,""] call db_NickToUid;
-	if (_uid == "") exitwith {
+	private _disId = [args,""] call db_NickToDisId;
+	if (_disId == "") exitwith {
 		callFuncParams(thisClient,localSay,"Неизвестное имя" arg "system");
 	};
 
@@ -522,8 +522,8 @@ addCommandWithDescription("bancharsetting",ACCESS_ADMIN,"Забанить чел
 
 addCommandWithDescription("unbancharsetting",ACCESS_ADMIN,"Разбанить человеку определенную настройку персонажа")
 {
-	private _uid = [args,""] call db_NickToUid;
-	if (_uid == "") exitwith {
+	private _disId = [args,""] call db_NickToDisId;
+	if (_disId == "") exitwith {
 		callFuncParams(thisClient,localSay,"Неизвестное имя" arg "system");
 	};
 	private _cli = args call cm_findClientByName;

@@ -1,5 +1,6 @@
-#include <..\NetDisplay.h>
 
+
+#include "BaseDisplay.sqf"
 
 //include all displays here
 #include "PowerConsole.sqf"
@@ -10,11 +11,10 @@
 #include "ElecticalHacking.sqf"
 #include "ChemicalBlender.sqf"
 #include "ChemReactionsInfo.sqf"
-#include "Book.sqf"
 #include "Paper.sqf"
 #include "HeadConsole.sqf"
 #include "MerchantConsole.sqf"
-
+#include "Examine3d.sqf"
 
 #include "MobInventory.sqf"
 

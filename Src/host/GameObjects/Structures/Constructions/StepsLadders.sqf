@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -27,6 +27,11 @@ endclass
 editor_attribute("EditorGenerated")
 class(SmallSteelRustyStairs) extends(StepsLadder)
 	var(model,"ml\ml_object_new\ml_object_2\l01_props\stair01.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
+class(SmallSteelRustyStairsDouble) extends(SmallSteelRustyStairs)
+	var(model,"ml_exodusnew\mostyobes.p3d");
 endclass
 
 editor_attribute("EditorGenerated")
@@ -76,8 +81,19 @@ class(SteelRustyStairs) extends(StepsLadder)
 endclass
 
 editor_attribute("EditorGenerated")
+class(SteelRustyStairsCorner) extends(SteelRustyStairs)
+	var(model,"ml_shabut\exoduss\metallest1.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
 class(StoneSmallLadder) extends(StepsLadder)
 	var(model,"csa_constr\csa_obj\lest_pod_2x4.p3d");
 	var(name,"Ступеньки");
+	var(material,"MatBeton");
+endclass
+
+editor_attribute("EditorGenerated")
+class(StoneMediumLadder) extends(StoneSmallLadder)
+	var(model,"csa_constr\csa_obj\lest_pod_3x4.p3d");
 	var(material,"MatBeton");
 endclass

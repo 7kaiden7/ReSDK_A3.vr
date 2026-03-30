@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -9,7 +9,9 @@
 #include <..\LightEngine\LightEngine.hpp>
 #include <..\ClientRpc\clientRpc.hpp>
 #include <..\Interactions\interact.hpp>
+#include "..\..\host\ServerVoice\ReVoicer.hpp"
 
+namespace(SyncMobData,smd_)
 
 #include <..\..\host\CombatSystem\CombatSystem.hpp>
 
@@ -22,8 +24,11 @@
 */
 
 // smd_allInGameMobs - global list of all ingame mobs
+//smd_allInGamePlayerMobs - global list of all ingame mobs that are players
+
 
 //ассоциативный список переменная слежения, метод выполнения при изменении состояния
+decl(string[][])
 smd_list_variables = [
 	["smd_face","onChangeFace"], //срабатывает при изменении лица
 	["smd_faceAnim","onChangeFaceAnim"], //срабатывает при изменеии лицевой анимации
@@ -38,12 +43,17 @@ smd_list_variables = [
 	["smd_visibility","onVisiblility"],
 	["smd_interp","onInterpolate"], //поднятие и положение предметов
 	["smd_animSpeed","onAnimSpeed"], //изменение скорости анимации персонажа
+	["smd_decals","onDecals"], //изменение декалей
 	["smd_chatMessage","onChatMessage"], //text chat system chatMessage
 	["smd_voiceBlob","onVoiceBlobInit"],
 	["smd_isPrintingSay","onIsPrintingSay"]
 	//["smd_voicePref","onChangeVoicePref"] // > [vol,canspeak,underwatereffect]
 	//["smd_radioPref","onChangeRadioPref"] // > []
 ];
+
+decl(string[][])
+smd_list_allSlots = [];
+
 //adding inventory slots
 smd_list_allSlots = INV_LIST_ALL apply {["smd_s" + str _x,"onChangeSlotData"]};
 smd_list_variables append smd_list_allSlots;
@@ -62,8 +72,11 @@ if (!isMultiplayer) then {
 };
 
 //updater code
+decl(int)
 smd_handle_update = -1;
-smd_isProcessed = {smd_handle_update != -1};
+decl(bool())
+smd_isProcessed = { smd_handle_update != -1 };
+decl(void())
 smd_startUpdate = {
 	if (smd_handle_update != -1) then {
 		call smd_stopUpdate;
@@ -77,6 +90,7 @@ smd_startUpdate = {
 };
 
 // завершение обновления системы SMD
+decl(void())
 smd_stopUpdate = {
 	if (smd_handle_update == -1) exitWith {};
 	stopUpdate(smd_handle_update);
@@ -100,6 +114,7 @@ smd_stopUpdate = {
 	} foreach smd_allInGameMobs;
 };
 //выгрузка визуальных эффектов с привязкой к старому локальному игроку
+decl(void())
 smd_unloadVST = {
 	params ["_prevPlayer"];
 	private __LOCAL_PLAYER__ = _prevPlayer; //external reference
@@ -110,17 +125,88 @@ smd_unloadVST = {
 };
 
 // Обработчик обновления, вызываемый в каждом кадре
+decl(void())
 smd_onUpdate = {
-	#include "smd_onUpdate.sqf"
-};
-_smdInitDelay = {
-	log("Starting sync mob data service");
+	{
+		_mob = _x;
+
+		if ((_mob getVariable ["__smd_lastUpdate",0]) != (_mob getvariable ["__smd_local_lastUpdate",0])) then {
+			_mob setVariable ["__smd_local_lastUpdate",_mob getVariable "__smd_lastUpdate"];
+			//do sync update
+			{
+				if !isNull(_mob getvariable (_x select 0)) then {
+					[_mob,_x select 0] call smd_syncVar;
+				};
+			} foreach smd_list_variables;
+		};
+		
+		//regular check
+		{
+
+			_var = _x select 0;
+			if !isNull(_mob getvariable _var) then {
+				_fnc = _x select 1;
+				if not_equals(_mob getvariable _var,_mob getvariable [(smd_local_prefix + _var) arg 0]) then {
+					[_mob,_var,_fnc] call smd_onUpdateSetting;
+				};
+			};
+
+		} foreach smd_list_variables;
+		
+		//update NGO in grabbed state
+		if (_mob getVariable ["__loc_smd_isgrb",false]) then {
+			_p = _mob getVariable "__loc_smd_grb_pool";
+			if (_mob distance player < 10) then {
+				if (count _p == 0) then {
+				
+					{
+						_ong = [_mob,null,true] call NGOExt_create;
+						[_ong] call interact_addOnScreenCapturedObject;
+						_p pushBack (_ong);
+						_ong hideObject true;					
+						_ong attachTo [_mob,_x select 2,_x select 0,true];
+						_ong setObjectScale (_x select 1);
+					} foreach [
+						["head",0.02,[-0.05,-0.1,0.1]],
+						["spine3",0.03,[0,0,0]],
+						["pelvis",0.03,[0,0,0]],
+						["leftleg",0.02,[0,0,0]],
+						["rightleg",0.02,[0,0,0]],
+						["leftshoulder",0.015,[0,0,0]],
+						["rightshoulder",0.015,[0,0,0]],
+						["leftforearm",0.012,[0,0,-.08]],
+						["rightforearm",0.012,[0,0,-.08]],
+						["leftforearmroll",0.012,[0,0,0]],
+						["rightforearmroll",0.012,[0,0,0]]
+					];
+				
+					#ifdef EDITOR
+					{[_x,[1,0,0,1],10] call debug_addRenderObject}foreach _p;
+					#endif
+				};
+				
+			} else {
+				{
+					[_x] call interact_removeOnScreenCapturedObject;
+					deleteVehicle _x;
+				} foreach _p;
+				_mob setVariable ["__loc_smd_grb_pool",[]];
+			};
+		};
+		
+
+	} foreach smd_allInGameMobs;
 
 };
-call _smdInitDelay;
+// _smdInitDelay = {
+// 	log("Starting sync mob data service");
+
+// };
+// call _smdInitDelay;
 //invokeAfterDelay(_smdInitDelay,5);
 
 //Выполняет принудительную синхрозинацию переменной по её названию или названию функции
+decl(void(actor;string;bool))
 smd_syncVar = {
 	params ["_mob","_varName",["_findByFunctionName",false]];
 
@@ -136,6 +222,7 @@ smd_syncVar = {
 };
 
 // Обновление настроек SMD
+decl(void(actor;string;any))
 smd_onUpdateSetting = {
 	params ["_mob","_varName","_func"];
 
@@ -149,6 +236,7 @@ smd_onUpdateSetting = {
 };
 
 //событие смены лица
+decl(void(actor;string))
 smd_onChangeFace = {
 	params ["_mob","_ctx"];
 
@@ -175,12 +263,14 @@ smd_onChangeFace = {
 };
 
 //Лицевая анимация
+decl(void(actor;string))
 smd_onChangeFaceAnim = {
 	params ["_mob","_ctx"];
 	_mob setMimic _ctx;
 };
 
 // Изменения наличия частей тела
+decl(void(actor;any))
 smd_onChangeBodyParts = {
 	params ["_mob","_ctx"];
 
@@ -203,6 +293,7 @@ smd_onChangeBodyParts = {
 };
 
 // Изменение и синхрозинация анимации персонажа
+decl(void(actor;any))
 smd_onChangeCustomAnim = {
 	params ["_mob","_ctx"];
 	//ctx is vec3: _ani,_blen,_prfx
@@ -214,6 +305,7 @@ smd_onChangeCustomAnim = {
 };
 
 // Изменение статуса боевого режима
+decl(void(actor;bool))
 smd_onChangeCombat = {
 	params ["_mob","_ctx"];
 
@@ -228,6 +320,7 @@ smd_onChangeCombat = {
 };
 
 //smd_attdam
+decl(void(actor;any[]))
 smd_onAttackOrDamage = {
 	params ["_mob","_ctx"];
 
@@ -240,14 +333,24 @@ smd_onAttackOrDamage = {
 		_ctx params ["","","_slotHandAtt","_enumAtt","_probEff"];
 
 		//apply attack particles (лязг метала прим.)
+		private _canPlayAnim = equals(player,_mob);
+		
+		#ifdef SP_MODE
+		_canPlayAnim = true;
+		#endif
 
-		if equals(player,_mob) then {
+		if (_canPlayAnim) then {
 			//Подавление применения анимации при anim::syncAnim()
 			_mob setVariable ["__SMDINT_isSupressedAnimSync",true];
 			//play attack anim
 			[_mob,_slotHandAtt,_enumAtt] call anim_doAttack;
 
 			_mob setVariable ["__SMDINT_isSupressedAnimSync",false];
+
+			//пропуск тряски камеры для неигрока
+			#ifdef SP_MODE
+			if not_equals(player,_mob) exitWith {};
+			#endif
 
 			//apply cam shake for attack
 			if isNullVar(_probEff) then {
@@ -289,12 +392,12 @@ smd_onAttackOrDamage = {
 
 			};
 			if (_damageType == WOUND_TYPE_BLEEDING) exitWith {
-				[SHOT_MEATSPLAT,_mob,[_selection]] call le_doshot;
+				["BFX_MEATSPLAT",_mob,[_selection]] call bfx_doShot;
 			};
 			//specials
 			//-100 - destroy or loss limb
 			if (_damageType == -100) exitWith {
-				[SHOT_DESTROYLIMB,_mob,[_selection]] call le_doshot;
+				["BFX_DESTROYLIMB",_mob,[_selection]] call bfx_doShot;
 			};
 		};
 
@@ -367,6 +470,8 @@ smd_onAttackOrDamage = {
 	};
 };
 
+//выключение процессирования слотов на персонаже. например выключает рендер слотов для спрятанных
+decl(void(actor;bool))
 smd_setSlotDataProcessor = {
 	params ["_mob","_mode"];
 	if (!call smd_isProcessed) exitWith {
@@ -387,7 +492,7 @@ smd_setSlotDataProcessor = {
 				_srcObj = _mob getvariable (smd_local_prefix + _var + "_obj");
 				if !isNullReference(_srcObj) then {
 					if (_srcObj call vs_isWorldRadioObject) then {
-						[_srcObj] call vs_unloadWorldRadio;
+						[_srcObj,true] call vs_unloadWorldRadio;
 					};
 					deleteVehicle _srcObj;
 				};
@@ -401,6 +506,7 @@ smd_setSlotDataProcessor = {
 
 };
 
+decl(void(mesh))
 smd_internal_deleteAttachments_rec = {
 	{
 		_x call smd_internal_deleteAttachments_rec;
@@ -409,6 +515,7 @@ smd_internal_deleteAttachments_rec = {
 };
 
 //событие смены предмета в слоте
+decl(void(actor;any))
 smd_onChangeSlotData = {
 	params ["_mob","_ctx"];
 
@@ -435,13 +542,27 @@ smd_onChangeSlotData = {
 
 	if !isNullReference(_prevObject) then {
 		//Updated at 0.7.690
-		// - scripted emitters not contains preframe update: addEventOnDestroySource
+		// - scripted emitters unload
 		if ([_prevObject] call le_isLoadedLight) then {
 			[_prevObject] call le_unloadLight;
 		};
 		
 		if (_prevObject call vs_isWorldRadioObject) then {
-			[_prevObject] call vs_unloadWorldRadio;
+			//фикс гонки данных когда NOE обновление пришло раньше чем мы успели обновить слот инвентаря
+			//? пока не знаю как элегантно решить эту проблему
+			private _ptr = (_prevObject call vs_getObjectRadioData) get "ptr";
+			if (_ptr in vs_allRadioSpeakers) then {
+				//радио есть в мире - нам не нужно выгружать его
+				//оно вызывало vs_loadWorldRadio для нового объекта
+				//У этого просто очищаем инвентарные данные без удаления радиострима
+				[_prevObject,true,false] call vs_unloadWorldRadio;
+			} else {
+				//а здесь мы обрабатываем случай свапа радио между слотами. гонка тоже может быть
+				if !(_ptr in vs_allInventoryRadios) then {
+					//радио не в инвентаре - удаляем его
+					[_prevObject,true] call vs_unloadWorldRadio;
+				};
+			};
 		};
 		
 		//fix 0.7.358 - shortsword in left hand after disable two-handed mode
@@ -493,21 +614,22 @@ smd_onChangeSlotData = {
 		_object = [_mob,_model,_slotId] call proxIt_loadConfig;
 
 		if (!isNullReference(_object) && _cfgLight != -1) then {
-			private _smd_slotId = _slotId;
 			[_cfgLight,_object] call le_loadLight;
 		};
 	};
 
 
 	//radio setting
-	//[int freq, float volume,float canHearUnits, [prob pos.x,..pos.z], float dist, int type]
+	//[string freq, float volume,float dist, uint type, [prob pos.x,..pos.z] | null]
 	if not_equals(_cfgRadio,-1) then {
-		//_cfgRadio params ["_freq","_vol","_hearDist",["_pos",[0,0,0]],"_dist","_raType"];
-		if isNull(_cfgRadio select 3) then {
-			_cfgRadio set [3,[0,0,0]];
-		};
+		//_cfgRadio params ["_freq","_vol","_hearDist","_raType",["_pos",[0,0,0]]];
+		#ifdef EDITOR
+		_cfgRadio = array_copy(_cfgRadio);
+		#endif
+		private _ptr = _cfgRadio deleteAt 0;
+		_cfgRadio set [3,RADIO_TYPE_ENUM_TO_STRING(_cfgRadio select 3)];
 
-		[_object,_cfgRadio,_mob getvariable "voiceptr",_isPlayer] call vs_loadWorldRadio;
+		[_object,_cfgRadio,_ptr,true] call vs_loadWorldRadio;
 	};
 
 
@@ -515,17 +637,26 @@ smd_onChangeSlotData = {
 };
 
 //проверяет является ли объект смд слотом
+decl(void(actor))
 smd_isSMDObjectInSlot = {
 	!isNull(_this getvariable "_pit_lastattachdata")
 };
 
+decl(void(actor))
+smd_getSMDObjectSlotId = {
+	_this getvariable "_pit_slotId"
+};
+
+decl(void(actor;any))
 smd_onStun = {
 	params ["_mob","_ctx"];
 };
+
 //проверяет застанен ли персонаж
-smd_isStunned = {player getVariable ["smd_isStunned",false]};
+decl(bool())
+smd_isStunned = { player getVariable ["smd_isStunned",false] };
 
-
+decl(void(actor;bool))
 smd_onGrabbed = {
 	params ["_mob","_ctx"];
 	if (_ctx) then {
@@ -555,21 +686,27 @@ smd_onGrabbed = {
 	};
 };
 
+decl(bool(actor))
 smd_isPulling = {
 	params ["_mob"];
 	!isNull(_mob getvariable "__loc_pull_ptr");
 };
+
+decl(string(actor))
 smd_getPullingObjectPtr = {
 	params ["_mob"]; 
 	_mob getvariable "__loc_pull_ptr"
 };
 
+decl(void(actor;float;vector3;bool))
 smd_pullSetTransformValues = {
 	params ["_mob","_t","_v",["_networkSync",false]];
 	_mob setvariable ["_glob_smd_pull_zpos",_t,_networkSync];
 	_mob setvariable ["_glob_smd_pull_rot",_v,_networkSync];
 };
+
 //can be call only on local client
+decl(void(actor;string;float|vector3;bool))
 smd_pullUpdateTransform = {
 	params ["_mob","_mode","_val",["_netSync",true]];
 	if (_mode == "zpos") exitWith {
@@ -587,6 +724,8 @@ smd_pullUpdateTransform = {
 	};
 	errorformat("smd_pullUpdateTransform() - wrong mode %1",_mode);
 };
+
+decl(any[](actor))
 smd_pullGetTransformInfo = {
 	params ["_mob"];
 	private _tpRet = [_mob getvariable ["_glob_smd_pull_zpos",0],_mob getvariable ["_glob_smd_pull_rot",[0,0,0]]];
@@ -595,11 +734,13 @@ smd_pullGetTransformInfo = {
 	_tpRet
 };
 
+decl(mesh(actor))
 smd_pullGetHeplerObject = {
 	params ["_mob"];
 	_mob getvariable "__loc_pull_obj" getvariable ["_vtarg",objNull];
 };
 
+decl(void(actor;any))
 smd_onPull = {
 	params ["_mob","_ctx"];
 	
@@ -848,18 +989,23 @@ smd_onPull = {
 };
 
 //TODO replace to header
+enum(VisibilityMode,VISIBILITY_MODE_)
 #define VISIBILITY_MODE_DEFAULT 0
 #define VISIBILITY_MODE_GHOST 1
 #define VISIBILITY_MODE_STEALTH 2
 #define VISIBILITY_MODE_ADMIN 3
 #define VISIBILITY_MODE_CUSTOM 4
+enumend
+
 //todo change to bitflags
+decl(map<int;int[]>)
 smd_internal_map_vis = createHashMapFromArray [
 	[VISIBILITY_MODE_DEFAULT,[VISIBILITY_MODE_DEFAULT]],
 	[VISIBILITY_MODE_GHOST,[VISIBILITY_MODE_DEFAULT,VISIBILITY_MODE_GHOST]],
 	[VISIBILITY_MODE_ADMIN,[VISIBILITY_MODE_DEFAULT,VISIBILITY_MODE_GHOST,VISIBILITY_MODE_STEALTH,VISIBILITY_MODE_ADMIN]]
 ];
 
+decl(void(actor;any[]))
 smd_onVisiblility = {
 	params ["_mob","_ctx"];
 	_ctx params ["_visLevel",["_customMobs",[]]];
@@ -874,6 +1020,7 @@ smd_onVisiblility = {
 	};
 };
 
+decl(void(actor;any[]))
 smd_onVisualStates = {
 	params ["_mob","_ctx"];
 
@@ -886,17 +1033,18 @@ smd_onVisualStates = {
 
 	private _prevlv = _mob getVariable ["__lv_visstates",[]];
 	{
-		ifcheck(equalTypes(_x,[]),vec3(_x select 0,_mob,_x select 1),vec2(_x,_mob)) call le_vst_remove;
+		ifcheck(equalTypes(_x,[]),vec3(_x select 0,_mob,_x select 1),vec2(_x,_mob)) call vst_remove;
 	} foreach _prevlv;
 
 	{
-		ifcheck(equalTypes(_x,[]),vec3(_x select 0,_mob,_x select 1),vec2(_x,_mob)) call le_vst_create;
+		ifcheck(equalTypes(_x,[]),vec3(_x select 0,_mob,_x select 1),vec2(_x,_mob)) call vst_create;
 	} foreach _ctx;
 	//do sync data
 	_mob setVariable ["__lv_visstates",array_copy(_ctx)];
 };
 
 //check if unit have visual state [player,VST_HUMAN_STEALTH] call smd_hasVisualState;
+decl(bool(actor;string))
 smd_hasVisualState = {
 	params ["_mob","_state"];
 
@@ -905,6 +1053,7 @@ smd_hasVisualState = {
 	}) != 1;
 };
 
+decl(void(actor;any[]))
 smd_onInterpolate = {
 	params ["_mob","_data"];
 	_data = array_copy(_data);
@@ -913,11 +1062,20 @@ smd_onInterpolate = {
 	[_mob,_data] call noe_client_interp_start;
 };
 
+decl(void(actor;float))
 smd_onAnimSpeed = {
 	params ["_mob","_val"];
 	_mob setAnimSpeedCoef _val;
 };
 
+decl(void(actor;any[]))
+smd_onDecals = {
+	params ["_mob","_ctx"];
+	//_ctx params ["_body","_arms","_legs"];
+	[_mob,_ctx] call dec_updateUniformRender;
+};
+
+decl(mesh(actor;int))
 smd_getObjectInSlot = {
 	params ["_mob","_slot"];
 
@@ -926,6 +1084,7 @@ smd_getObjectInSlot = {
 	_src
 };
 
+decl(int(actor;int))
 smd_getRedirectOnTwoHanded = {
 	params ["_mob","_slot"];
 	private _obj = _mob getVariable (smd_local_prefix + "smd_s" + str _slot + "_obj");
@@ -933,6 +1092,7 @@ smd_getRedirectOnTwoHanded = {
 	_obj getVariable ["__loc_smd_istwohanded_real_idx",_slot]
 };
 
+decl(void())
 smd_reloadMobsLighting = {
 	{
 		_mob = _x;
@@ -956,6 +1116,7 @@ smd_reloadMobsLighting = {
 	} foreach smd_allInGameMobs;
 };
 
+decl(void(actor;mesh;mesh))
 smd_createOffGeom = {
 	params ["_user","_srcObj","_oGeom"];
 	startAsyncInvoke
@@ -984,6 +1145,7 @@ smd_createOffGeom = {
 	endAsyncInvoke
 };
 
+decl(void(actor;any[]))
 smd_onChatMessage = {
 	params ["_mob","_ctx"];
 	
@@ -1019,11 +1181,13 @@ smd_onChatMessage = {
 };
 
 //["_voiceType","_basePitch","_baseSpeed"]
+decl(void(actor;any))
 smd_onVoiceBlobInit = {
 	params ["_mob","_ctx"];
 	_mob setvariable ["__local_mob_voiceblobParams",_ctx];
 };
 
+decl(void(actor;any))
 smd_onIsPrintingSay = {
 	params ["_mob","_ctx"];
 	

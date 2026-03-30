@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -11,6 +11,9 @@ var(slots,INV_LIST_ALL);
 
 
 var(defaultUniform,"");//дефолтная форма (женское тело или бомжиные обноски)
+
+//контроллер слоёв отображения (волосы, бороды и т.д.)
+var(overlayController,struct_new(OverlayLayerController));
 
 region(Low level inventory api)
 	func(getSlotInfoForInventory)
@@ -52,15 +55,33 @@ region(Low level inventory api)
 	{
 		objParams();
 		private _stack = [];//key lh,rh,ts,hd
+		
 		private _ret = null;
+		
+		private _countParts = 0;
+		private _accVal = 0;
+
 		{
 			_ret = callFunc(_x,getGermOpacityData);
 			if !isNullVar(_ret) then {
 				_stack pushBack _ret;
 			};
+			
+			if !isNullReference(_x) then {
+				INC(_countParts);
+				_accVal = _accVal + callFunc(_x,getGermDecalVisibility);
+			};
 		} foreach (values getSelf(bodyParts));
 
+		if (_countParts > 0) then {
+			_accVal = _accVal / _countParts;
+		};
+
 		callSelfParams(sendInfo,"updateGermsInv" arg _stack);
+
+		//! когда персонажи без одежды будут иметь свою модель (ретекстур голого персонажа) - можно вернуть это с правками
+		//! Сейчас грязь хранится на самой одежде
+		//callSelfParams(syncSmdVar,"decals" arg _accVal);
 	};
 
 region(Getters and checkers)
@@ -284,7 +305,7 @@ region(Getters and checkers)
 	//_item может быть строкой, кодом или объектом
 	func(hasItem)
 	{
-		params ['this',"_item",["_checkSubTypes",false]];
+		params ['this',"_item",["_checkSubTypes",false],["_checkInContainers",true]];
 
 		private _checkMethod = if equalTypes(_item,"") then {
 			if (_checkSubTypes) then {
@@ -322,9 +343,11 @@ region(Getters and checkers)
 			};
 
 			if callFunc(_itmSlot,isContainer) then {
-				{
-					if (_x call _checkMethod) exitWith {_hasItem = true};
-				} foreach getVar(_itmSlot,content);
+				if (_checkInContainers) then {
+					{
+						if (_x call _checkMethod) exitWith {_hasItem = true};
+					} foreach getVar(_itmSlot,content);
+				};
 			};
 
 		} forEach INV_LIST_ALL;

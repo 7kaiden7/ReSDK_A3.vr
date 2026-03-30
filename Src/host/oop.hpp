@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -15,7 +15,7 @@
 
 #define nullPtr locationnull
 
-#ifdef EDITOR
+#ifdef EDITOR_OR_SP_MODE
 	#define __testSyntaxClass __classcandef = isnil{_class}; if (!__classcandef) exitWith {errorformat("Syntax error - keyword 'endclass' not found in (%1)",_class); setLastError(format vec2("Syntax error - keyword 'endclass' not found in (%1)",_class));};
 #else
 	#define __testSyntaxClass
@@ -59,7 +59,7 @@
 #define attributeParams(name,params) _attributes pushBack ['name',[params]];
 
 //доступно только в режиме редактора
-#ifdef EDITOR
+#ifdef EDITOR_OR_SP_MODE
 	//Тут задекларен атрибут для членов класса. Все атрибуты наследуются в дочернии классы. Пример использования:
 	// editor_attribute("atrname")
 	#define editor_attribute(key_s) _editor_next_attr pushBack [key_s];
@@ -73,7 +73,8 @@
 
 //CONST DISABLED
 //const modif. Create const inside type: const var(PI,3.14);
-#define const _isConstant = true;
+//!do not enable after lang spec
+//#define const _isConstant = true; assert(false);
 	#define __set_const_value(var,val) _pt_obj setvariable ['cst_##var',val]
 
 #define __internal_flag_processor(flagname,act) if (!isnil 'flagname') then {act; flagname = nil}

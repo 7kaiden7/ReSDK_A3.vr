@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -10,7 +10,7 @@ struct(GasBase)
 	def(affectedReagent) "ReagentBase" //реагент реакции
 
 	//типы визуала частиц
-	def(particleTypes) vec3(SLIGHT_ATMOS_SMOKE_1,SLIGHT_ATMOS_SMOKE_2,SLIGHT_ATMOS_SMOKE_3)
+	def(particleTypes) vec3("SLIGHT_ATMOS_SMOKE_1" call lightSys_getConfigIdByName,"SLIGHT_ATMOS_SMOKE_2" call lightSys_getConfigIdByName,"SLIGHT_ATMOS_SMOKE_3" call lightSys_getConfigIdByName)
 
 	def(getParticleBySize)
 	{

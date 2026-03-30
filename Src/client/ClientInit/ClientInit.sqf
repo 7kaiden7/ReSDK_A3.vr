@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -54,6 +54,8 @@ if (isMultiplayer) then {
 if (!_canload_) exitWith {error("Unknown reason of cannot load client")};
 
 player allowDamage false;
+
+call vs_audio_init;
 
 client_sys_loaded = true; //flag for skip static asserts on client
 
@@ -112,8 +114,10 @@ if (isMultiplayer) then {
 };
 
 if (!isMultiplayer) then {
-    //против задержки пакетов
-    invokeAfterDelayParams({rpcSendToServer("onClientReady",_this)},0.3,_data)
+    #ifndef SP_MODE
+        //против задержки пакетов
+        invokeAfterDelayParams({rpcSendToServer("onClientReady",_this)},0.3,_data)
+    #endif
 } else {
     rpcSendToServer("onClientReady",_data);
 };

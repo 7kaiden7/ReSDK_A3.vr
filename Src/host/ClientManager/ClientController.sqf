@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -12,7 +12,7 @@
 cm_switchLocality = {
 	params ["_unit", "_player"];
 	
-	#ifdef EDITOR
+	#ifdef EDITOR_OR_SP_MODE
 	if (true) exitWith {_unit setVariable ["OriginalOwner", owner _unit, true];};
 	#endif
 	
@@ -34,7 +34,7 @@ rpcAdd("setNewOwner",cm_setOwner);
 
 _connectToMob = {
 	params ["_mob","_curClient"];
-	#ifndef EDITOR
+	#ifndef EDITOR_OR_SP_MODE
 	if (typeof _mob != BASIC_MOB_TYPE || typeof _curClient == BASIC_MOB_TYPE) exitWith {
 		errorformat("rpc::connectToMob() - Error types: mob::%1; client::%2",typeof _mob arg typeof _curClient);
 	};	
@@ -44,7 +44,7 @@ _connectToMob = {
 
 _disconnectFromMob = {
 	params ["_client","_curMob"];
-	#ifndef EDITOR
+	#ifndef EDITOR_OR_SP_MODE
 	if (typeof _client == BASIC_MOB_TYPE || typeof _curMob != BASIC_MOB_TYPE) exitWith {
 		errorformat("rpc::disconnectFromMob() - Error types: client::%1; mob::%2",typeof _client arg typeof _curMob);
 	};
@@ -64,6 +64,14 @@ _prepareClient = {
 	setVar(_mob,client,this);
 	//odata = getSelf(actor);
 	callFunc(_mob,onConnected);
+
+	cm_allInGamePlayerMobs pushback getVar(_mob,owner);
+	netSetGlobal(smd_allInGamePlayerMobs,cm_allInGamePlayerMobs);
+
+	//обновляем счетчик активности региона
+	if not_equals(getVar(_mob,__curRegion),"") then {
+		[getVar(_mob,__curRegion),+1] call ai_modifyRegionRefCount;
+	};
 	
 }; rpcAdd("prepareClient",_prepareClient);
 

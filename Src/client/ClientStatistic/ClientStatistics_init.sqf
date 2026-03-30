@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -18,6 +18,11 @@
 			!isMultiplayer &&
 			"enableLogVars" call sdk_hasSystemFlag
 		) then {[true] call clistat_setLogVars;};
+
+		if (
+			!isMultiplayer &&
+			"showMemUsageInfo" call sdk_hasSystemFlag
+		) then {call cli_mem_init;};
 	}; invokeAfterDelay(_aftCheck,2);
 
 #endif

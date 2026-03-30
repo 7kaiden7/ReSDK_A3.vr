@@ -1,26 +1,41 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
+#include "..\..\host\lang.hpp"
 
+namespace(InteractEmote_interactEmote_)
+
+decl(bool)
+interactEmote_disableGlobal = false;
+
+decl(bool)
 interactEmote_isLoadedMenu = false;
 
+decl(string)
 interactEmote_inputText = "";
 
+decl(int)
 interactEmote_curTabIdx = 0;
 
+decl(string[][])
 interactEmote_actions = [["Эмоции","Эмоция:emt_1"]];
-interactEmote_generatedActs = [];
+decl(any[])
+interactEmote_generatedActs = []; //not used
+decl(widget[])
 interactEmote_act_widgets = [];
 
+macro_const(interactEmote_zoneSizeHeight)
 #define INTERACT_EMOTE_SIZE_H 40
+macro_const(interactEmote_zoneSizeWidth)
 #define INTERACT_EMOTE_SIZE_W 40
 /*
 for "_i" from 1 to 50 do {
 	(interactEmote_actions select 0) pushBack ("Действие "+str _i +":fuck");
 };*/
 
+decl(void())
 interactEmote_load = {
 	private _d = getDisplay;
 
@@ -59,6 +74,7 @@ interactEmote_load = {
 	// _buttonSend ctrlSetTextColorSecondary _zCol;
 
 	_ctg setVariable ["input",_input];
+	_ctg setVariable ["buttonSend",_buttonSend];
 
 	_input ctrlAddEventHandler ["MouseButtonUp",{
 		params ["","_key"];
@@ -66,6 +82,7 @@ interactEmote_load = {
 	}];
 	_input ctrlAddEventHandler ["KeyUp",{
 		params ["_w","_key"];
+		if (interactEmote_disableGlobal) exitWith {};
 		if (_key == KEY_BACKSPACE) exitWith {
 			forceUnicode 0;
 			_text = ctrlText _w;
@@ -129,6 +146,7 @@ interactEmote_load = {
 	[_t,[0,0.25,0,0.4],[0,0.35,0,0.5]] call widgetSetMouseMoveColors;
 	_t setvariable ["actionmode",-1];
 	_allevs pushBack _t;
+	_ctg setVariable ["ctgPrevActionButton",_t];
 
 	_t = [_d,TEXT,[100-30,0,30,100],_ctgCategs] call createWidget;
 	//[_t,"<t align='center'>" + sgt +"</t>"] call widgetSetText;
@@ -136,6 +154,7 @@ interactEmote_load = {
 	[_t,[0,0.25,0,0.4],[0,0.35,0,0.5]] call widgetSetMouseMoveColors;
 	_t setvariable ["actionmode",1];
 	_allevs pushBack _t;
+	_ctg setVariable ["ctgNextActionButton",_t];
 	
 	_t = [_d,BACKGROUND,[30,0,40,100],_ctgCategs] call createWidget;
 	//<img image='%2' size='1.4'/>
@@ -175,6 +194,7 @@ interactEmote_load = {
 };
 
 //открыть лист категорий
+decl(void(bool))
 interactEmote_onListCategoryes = {
 	params ["_mode"];
 	private _d = getDisplay;
@@ -248,18 +268,21 @@ interactEmote_onListCategoryes = {
 	_obj setVariable ["isloadedlist",_mode];
 };
 
+decl(void())
 interactEmote_cleanupInputText = {
 	((call interactEmote_getInputTextParams) select 0) ctrlSetText "";
 	interactEmote_inputText = "";
 };
 
 //Получение виджета инпута и текста в нём
+decl(tuple<widget;string>())
 interactEmote_getInputTextParams = {
 	private _inp = getDisplay getVariable "ieMenuCtg" getVariable "input";
 	[_inp,ctrlText _inp]
 };
 
 //Обработчик строки инпута. Возврат bool значений означает ошибку текста
+decl(bool(string))
 interactEmote_handleInputText = {
 	private _text = _this;
 	forceUnicode 0;
@@ -308,6 +331,7 @@ interactEmote_handleInputText = {
 	_text
 };
 
+decl(bool(string))
 interactEmote_onSendEmote = {
 	private _text = _this;
 
@@ -323,11 +347,12 @@ interactEmote_onSendEmote = {
 	true
 };
 
+decl(void(display))
 interactEmote_onMouseMoving = {
 	params ["_display"];
 
 	if (isDragProcess) exitWith {};
-
+	if (interactEmote_disableGlobal) exitWith {};
 	_ctg = _display getVariable "ieMenuCtg";
 
 	if ((_ctg getVariable "checkedPos") call isMouseInsidePosition &&
@@ -347,6 +372,7 @@ interactEmote_onMouseMoving = {
 	};
 };
 
+decl(void(int;bool))
 interactEmote_switchActionMenu = {
 	params ["_mode",["_isSetMode",false]];
 
@@ -367,6 +393,7 @@ interactEmote_switchActionMenu = {
 	call interactEmote_loadActions;
 };
 
+decl(void())
 interactEmote_loadActions = {
 	private _acts = if (count interactEmote_actions == 0) then {
 		["Нет действий"]
@@ -445,9 +472,14 @@ interactEmote_loadActions = {
 
 	//now resize background
 	[_ctg getVariable "background",[0,0,100,(if (_itmPerLine==1) then {_lastY+_biasY} else {_lastY+_sizeH+_biasY}) max 100]] call widgetSetPosition;
+
+	#ifdef SP_MODE
+	call sp_gui_syncInventoryVisible;
+	#endif
 };
 
 //Отправка эмоута
+decl(void(string))
 interactEmote_doEmoteAction = {
 	params ["_act"];
 	if (["emoteAction"] call input_spamProtect) exitWith {};
@@ -470,20 +502,23 @@ interactEmote_doEmoteAction = {
 	};
 };
 
+//not used
+decl(any[])
 interactEmote_unloadActions = {
 	private _acts = _this;
 };
 
-
-_loadEmotes = {
+decl(void(any[]))
+interactEmote_RpcLoadEmotes = {
 	interactEmote_actions = _this;
 
 	if (interact_isOpenMousemode) then {
 		call interactEmote_loadActions;
 	};
-}; rpcAdd("loadEmotes",_loadEmotes);
+}; rpcAdd("loadEmotes",interactEmote_RpcLoadEmotes);
 
-_updateCateg = {
+decl(void(string;any[]))
+interactEmote_RpcUpdateCateg = {
 	params ["_cat","_list"];
 	//trace("START UPDATE")
 	private _doReload = false;
@@ -524,4 +559,4 @@ _updateCateg = {
 		call interactEmote_loadActions;
 	};
 
-}; rpcAdd("updateEmoteCat",_updateCateg);
+}; rpcAdd("updateEmoteCat",interactEmote_RpcUpdateCateg);

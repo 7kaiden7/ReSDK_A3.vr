@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -139,8 +139,14 @@ function(sim_internal_processLaunchSim)
 	if (cfg_sim_startWithLogVars) then {
 		__systemFlags pushBack "enableLogVars";
 	};
+	if (cfg_sim_startWithMemUsageInfo) then {
+		__systemFlags pushBack "showMemUsageInfo";
+	};
 	if (cfg_sim_disableRayCastSphere) then {
 		__systemFlags pushBack "disableRayCastSphere";
+	};
+	if (cfg_sim_enableFWS) then {
+		__systemFlags pushBack "enableFWS";
 	};
 
 	{

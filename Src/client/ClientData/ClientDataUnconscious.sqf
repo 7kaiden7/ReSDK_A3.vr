@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -10,12 +10,20 @@
 */
 #include <..\WidgetSystem\widgets.hpp>
 
+#include "..\..\host\lang.hpp"
+namespace(clientData,cd_)
+
 // Задержка между проверками. Каждые 100 мс
+macro_const(cd_unconsciousCheckDelay)
 #define __UNCONSCIOUS_DELAY__ 0.1
 
+decl(bool)
 cd_isUnconscious = false; //в бессознанке
+decl(bool)
 cd_internal_uncState = false; //внутрення переменная перехода состояния
-_onUnconsciousCode = {
+
+decl(void())
+cd_onUnconsciousCode = {
 
 	// faster
 	if not_equals(cd_isUnconscious,cd_internal_uncState) then {
@@ -23,10 +31,11 @@ _onUnconsciousCode = {
 		[cd_isUnconscious] call cd_onUnconsciousEvent;
 	};
 
-}; startUpdate(_onUnconsciousCode,__UNCONSCIOUS_DELAY__);
+}; startUpdate(cd_onUnconsciousCode,__UNCONSCIOUS_DELAY__);
 
 //fired when unc state is changed
 //например замутить персонажа, закрыть все дисплеи и тд.
+decl(void(bool))
 cd_onUnconsciousEvent = {
 	params ["_isUncState"];
 

@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -127,6 +127,15 @@ core_settings_list_default = [
 				}
 			]
 		],
+		//todo implement in game and editor
+		// ["system_mainEditorName",
+		// 	[
+		// 		"testing list",
+		// 		"select any element",
+		// 		["Code.exe","list"] + list_variants_addrange(["Code.exe" arg "Cursor.exe"]),
+		// 		validate_list_str
+		// 	]
+		// ],
 		["system_enableKeymapInfoOnVcomLoad",
 			[
 				"Показать информацию о клавишах в редакторе эмиттеров и позиций модели",
@@ -363,9 +372,16 @@ core_settings_list_default = [
 		],
 		["sim_startWithLogVars",
 			[
-				"Показывать окно отлдаки в симуляции",
+				"Показывать окно отладки в симуляции",
 				"Показывает окно отладки во время симуляции в котором содержатся различные статистики",
 				[true,"check"],validate_check
+			]
+		],
+		["sim_startWithMemUsageInfo",
+			[
+				"Показывать информацию о затратах памяти в симуляции",
+				"Показывает окно с информацией о затратах памяти во время симуляции",
+				[false,"check"],validate_check
 			]
 		],
 		["sim_disableRayCastSphere",
@@ -373,6 +389,13 @@ core_settings_list_default = [
 				"Выключить отображение сферы при взаимодействии с миром",
 				"Отключает отображение сферы при взаимодействии с миром в режиме симуляции.",
 				[false,"check"],validate_check
+			]
+		],
+		["sim_enableFWS",
+			[
+				"Включить отcлеживание изменений в симуляции",
+				"При старте симуляции включает отслеживание изменений файлов",
+				[true,"check"],validate_check
 			]
 		],
 	["region","Map",""],

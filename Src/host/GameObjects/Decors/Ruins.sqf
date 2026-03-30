@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -14,6 +14,51 @@ class(BigRuins) extends(BigConstructions)
 	var(name,"Крупные руины");
 	var(material,"MatBeton"); 
 	editor_only(var(desc,"Остатки разрушенного здания для декорации. Не разрушаемы");) 
+endclass
+
+editor_attribute("EditorGenerated")
+class(MediumBrownHouseRuins) extends(BigRuins)
+	var(model,"ca\structures_e\housec\house_c_1_v2_ruins_ep1.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
+class(MediumSquareHouseRuins) extends(BigRuins)
+	var(model,"ca\structures_e\housec\house_c_4_ruins_ep1.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
+class(LargeYellowHouseRuin) extends(BigRuins)
+	var(model,"a3\structures_f\ind\factory\factory_main_ruins_f.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
+class(WhiteDestroyedHouse) extends(BigRuins)
+	var(model,"ca\buildings2\houseblocks\houseblock_c\houseblock_c5_ruins.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
+class(WhiteDestroyedHouse4) extends(WhiteDestroyedHouse)
+	var(model,"ca\buildings2\houseblocks\houseblock_d\houseblock_d1_ruins.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
+class(WhiteDestroyedHouse3) extends(WhiteDestroyedHouse)
+	var(model,"a3\structures_f_enoch\ruins\houseruin_big_05_f.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
+class(WhiteDestroyedHouse2) extends(WhiteDestroyedHouse)
+	var(model,"ca\buildings2\houseblocks\houseblock_a\houseblock_a3_ruins.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
+class(LargeSteelShedRuins) extends(BigRuins)
+	var(model,"a3\structures_f\ind\concretemixingplant\cmp_shed_ruins_f.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
+class(GreenBrickWallDestroyed) extends(BigRuins)
+	var(model,"ca\structures\castle\a_castle_wall1_20_ruins.p3d");
 endclass
 
 editor_attribute("EditorGenerated")

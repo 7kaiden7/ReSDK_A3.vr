@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -20,6 +20,16 @@ VERB(description)
 		if (_text == "") exitWith {};
 		rpcSendToObject(callbackObject,"chatPrint",[_text arg "info"]);
 
+ENDVERB
+
+VERB(description3d)
+	cond
+		skipCond(!isTypeOf(usr,Mob));
+		skipCond(!isTypeOf(src,Item));
+	act
+		callSelfParams(examine3dItem,usr);
+	name
+		setName("Осмотреть");
 ENDVERB
 
 /*VERB(changeatt)

@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -1149,7 +1149,7 @@ class(MerchantConsole) extends(ElectronicDevice)
 	regItem(MC_CAT_CLOTH,"BalaclavaMask",pick vec2("BalaclavaMask","BalaclavaMask2"),2,4,2,7)
 	regItem(MC_CAT_CLOTH,"BrownBandannaMask",pick vec2("BrownBandannaMask","BlackBandannaMask"),1,2,2,7)
 	regItemDef(MC_CAT_CLOTH,"WorkerCap",3,5,3,6)
-	regItemDef(MC_CAT_CLOTH,"HatOldUshanka",3,6,3,5)
+	regItemDef(MC_CAT_CLOTH,"HatUshankaUp2",3,6,3,5)
 	regItemDef(MC_CAT_CLOTH,"WoolCoat",8,12,5,7)
 	regItem(MC_CAT_CLOTH,"CitizenCloth1","CitizenCloth"+str randInt(1,22),2,4,3,10)
 
@@ -1219,7 +1219,12 @@ class(MerchantConsole) extends(ElectronicDevice)
 	regItemDef(MC_CAT_FOOD,"Egg",3,8,8,17)
 
 	regItemDef(MC_CAT_CONTAINERS,"CoinBag",3,5,5,7)
-	regItemDef(MC_CAT_CONTAINERS,"SmallBackpack",8,12,3,7)
+	regItemDef(MC_CAT_CONTAINERS,"LeatherBackpackBrown",8,12,3,7)
+	regItemDef(MC_CAT_CONTAINERS,"LeatherBackpackBlack",8,12,3,7)
+	regItemDef(MC_CAT_CONTAINERS,"BigLeatherBackpackBrown",10,14,2,5)
+	regItemDef(MC_CAT_CONTAINERS,"BigLeatherBackpackBlack",10,14,2,5)
+	regItemDef(MC_CAT_CONTAINERS,"Satchel",8,12,3,7)
+
 	regItemDef(MC_CAT_CONTAINERS,"Briefcase",10,15,1,8)
 	regItemDef(MC_CAT_CONTAINERS,"Suitcase",10,15,1,8)
 	regItemDef(MC_CAT_CONTAINERS,"SteelBrownContainer",10,15,1,8)
@@ -1558,7 +1563,7 @@ class(MerchantConsoleOkopovo) extends(MerchantConsole)
 	regItemDef(MC_CAT_CLOTH,"ArmorLite",15,15,50,100)
 	regItemDef(MC_CAT_CLOTH,"ArmorMedium",30,30,50,100)
 	regItemDef(MC_CAT_CLOTH,"ArmorHeavy",40,40,50,100)
-	regItemCustomName(MC_CAT_CLOTH,"Ушанка","HatOldUshanka",1,1,50,100)
+	regItemCustomName(MC_CAT_CLOTH,"Ушанка","HatUshankaUp2",1,1,50,100)
 	regItemDef(MC_CAT_CLOTH,"CombatHat",15,15,50,100)
 
 	regItemDef(MC_CAT_OTHER,"RopeItem",5,5,10,20)
@@ -1615,7 +1620,7 @@ class(MerchantConsoleOkopovo) extends(MerchantConsole)
 	regItemDef(MC_CAT_FOOD,"SpirtBottle",4,7,1,20)
 	regItemDef(MC_CAT_FOOD,"MilkBottle",15,20,1,15)
 
-	regItemDef(MC_CAT_CONTAINERS,"SmallBackpack",25,25,1,10)
+	regItemDef(MC_CAT_CONTAINERS,"LeatherBackpackBrown",25,25,1,10)
 	regItemDef(MC_CAT_CONTAINERS,"FabricBagBig1",15,15,1,10)
 	regItemDef(MC_CAT_CONTAINERS,"ShuttleBag",10,10,1,5)
 	regItemDef(MC_CAT_CONTAINERS,"MedicalBag",7,7,1,5)

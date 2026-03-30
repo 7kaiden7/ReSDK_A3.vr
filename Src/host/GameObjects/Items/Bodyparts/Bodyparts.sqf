@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -611,6 +611,9 @@ class(BodyPart) extends(Item)
 		]
 	};
 
+	getter_func(getGermDecalIndex,0); //0 - body, 1 - arms, 2 - legs
+	getter_func(getGermDecalVisibility,GERM_CONV_VALUE_TO_VISIBILITY_DECAL(getSelf(germs)));
+
 	func(updateGermsAt)
 	{
 		objParams_1(_p);
@@ -635,6 +638,7 @@ class(Body) extends(BodyPart)
 	
 	var(bodyPartIndex,BP_INDEX_TORSO);
 	var(partGermKey,"bd");
+	getter_func(getGermDecalIndex,0);
 	
 	var(organs,null);
 	
@@ -686,7 +690,7 @@ class(Body) extends(BodyPart)
 				_ctx
 			};
 			
-			callFuncParams(getSelf(loc),updateVisualState,VST_ATTACHED_OBJECTS arg _handle arg []);
+			callFuncParams(getSelf(loc),updateVisualState,"VST_ATTACHED_OBJECTS" arg _handle arg []);
 			
 			callFuncParams(getSelf(loc),playSound,"flesh\flesh"+str pick[1 arg 2] arg getRandomPitchInRange(.85,1.6));
 		};
@@ -718,7 +722,7 @@ class(Body) extends(BodyPart)
 			_ctx
 		};
 		
-		callFuncParams(getSelf(loc),updateVisualState,VST_ATTACHED_OBJECTS arg _handle arg [_ctxUpdate]);
+		callFuncParams(getSelf(loc),updateVisualState,"VST_ATTACHED_OBJECTS" arg _handle arg [_ctxUpdate]);
 		
 		callFuncParams(getSelf(loc),playSound,"flesh\flesh"+str pick[1 arg 2] arg getRandomPitchInRange(.85,1.6));
 	};
@@ -1086,6 +1090,8 @@ class(Arm) extends(ITwoSidedBodyPart)
 		private _hkey = ["lh","rh"] select sideToIndex(getSelf(side));
 		setSelf(partGermKey,_hkey);
 	};
+
+	getter_func(getGermDecalIndex,1);
 	
 endclass
 
@@ -1103,7 +1109,8 @@ class(Leg) extends(ITwoSidedBodyPart)
 		setSelf(bodyPartIndex,_idx);
 	};
 	
-	
+	getter_func(getGermDecalIndex,2);
+
 	func(onBodyPartPostUnlinked)
 	{
 		objParams_1(_usr);

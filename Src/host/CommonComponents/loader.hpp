@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -23,4 +23,5 @@ importCommon("DateTime.sqf");
 importCommon("Replicator.sqf");
 importCommon("AttackTypesAssoc.sqf");
 importCommon("Pencfg.sqf");
+importCommon("LightCfg.sqf");
 importCommon("StructLib.sqf");

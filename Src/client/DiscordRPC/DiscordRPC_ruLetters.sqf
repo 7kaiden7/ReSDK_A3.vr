@@ -1,8 +1,11 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
+#include <..\..\host\lang.hpp>
+
+namespace(DiscordRPC,discrpc_)
 
 //http://www.online-decoder.com/ru utf-8 -> win-1251
 private _maplet = discrpc_list_ruLetters;

@@ -1,11 +1,10 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
 #include <..\..\..\engine.hpp>
 #include <..\..\..\oop.hpp>
-#include <..\..\..\..\client\LightEngine\LightEngine.hpp>
 #include <..\..\GameConstants.hpp>
 #include <..\..\..\text.hpp>
 
@@ -21,6 +20,9 @@ class(ICampfireStruct) extends(ILightibleStruct)
 	func(onTriggerActivated)
 	{
 		objParams_1(_usr);
+		#ifdef SP_MODE
+			sp_checkWSim("burn");
+		#endif
 		
 		//призраки не горят...
 		if isTypeOf(_usr,MobGhost) exitWith {};
@@ -44,7 +46,7 @@ class(Campfire) extends(ICampfireStruct)
 	
 	var(name,"Костёр");
 	var(desc,"Главный источник тепла и света.");
-	var(light,LIGHT_CAMPFIRE);
+	var(light,"SLIGHT_LEGACY_CAMPFIRE" call lightSys_getConfigIdByName);
 	var(model,"a3\structures_f\civ\camping\fireplace_f.p3d");
 	var(material,"MatStone");
 	getterconst_func(getCoefAutoWeight,10);
@@ -115,7 +117,10 @@ class(Campfire) extends(ICampfireStruct)
 	func(onUpdate)
 	{
 		updateParams();
-
+		#ifdef SP_MODE
+			sp_checkWSim("light");
+		#endif
+		
 		callSelf(handleIgniteArea);
 		modSelf(fuelLeft,-1);
 
@@ -161,7 +166,7 @@ endclass
 class(CampfireBig) extends(Campfire)
 	var(name,"Большой костёр");
 	var(desc,"Он достаточно хорошо закидан различными горящими материалами, что позволит осветить и согреть окружение на долгий срок.");
-	var(light,LIGHT_CAMPFIRE_BIG);
+	var(light,"SLIGHT_LEGACY_CAMPFIRE_BIG" call lightSys_getConfigIdByName);
 	var(model,"ml_shabut\drova\pepelishe.p3d");
 	var(dr,3);
 	var(fuelLeft,-1);
@@ -199,4 +204,17 @@ endclass
 
 class(CampfireBigDisabled) extends(CampfireBig)
 	var(lightIsEnabled,false);
+endclass
+
+class(Brazier) extends(CampfireBig)
+	var(name,"Жаровня");
+	var(desc,null);
+	var(model,"sterben_top\am_items\props\wastes\firepita\firepita.p3d");
+endclass
+
+class(TorchPost) extends(CampfireBig)
+	var(name,"Большой факел");
+	var(desc,null);
+	var(model,"sterben_top\am_items_2\props\furniture\home\lamps\oasistorchoff.p3d");
+	var(light,"SLIGHT_TORCH_POST" call lightSys_getConfigIdByName);
 endclass

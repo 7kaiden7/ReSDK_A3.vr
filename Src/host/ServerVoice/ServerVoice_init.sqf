@@ -1,9 +1,13 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
 #include <..\engine.hpp>
+#include <..\ServerRpc\serverRpc.hpp>
+#include <..\Networking\Network.hpp>
+
+#include "revoice_server.sqf"
 
 vsm_map_freqAndCode = createHashMap; //карта ассоциаций кода и частоты
 vsm_map_inverted = createHashMap; //инвертированная карта
@@ -65,6 +69,7 @@ vsm_generateFrequencies = {
 
 //initialize voice manager
 vsm_Init = {
+	//!this function not called
 	if (!canSuspend) exitWith {
 		error("vm::Init() - only in thread expected");
 	};
@@ -100,6 +105,7 @@ vsm_Init = {
 
 	TF_Radio_Count = [];
 
+	/*
 	while {true} do {
 		call TFAR_fnc_processGroupFrequencySettings;
 		_allUnits = allUnits;
@@ -168,7 +174,7 @@ vsm_Init = {
 		} count _allUnits;
 		sleep 1;
 	};
-
+	*/
 };
 
 

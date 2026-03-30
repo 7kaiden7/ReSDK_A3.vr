@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -106,7 +106,7 @@ class(MobGhost) extends(BasicMob)
 
 		if callSelf(isGameplayGhost) then {
 
-			callSelfParams(addVisualState,VST_GHOST_EFFECT);
+			callSelfParams(addVisualState,"VST_GHOST_EFFECT");
 
 			callSelfParams(addAction,"Призрак" arg "Время?" arg "ghost_getdeadtime");
 
@@ -301,10 +301,10 @@ class(MobObserver) extends(MobGhost)
 		callSelfParams(addAction,"Наблюдатель" arg "Разбанить роль" arg "admin_cmdjobunban");
 		callSelfParams(addAction,"Наблюдатель" arg "Админ.сообщение игроку" arg "admin_cmdadminmes");
 		callSelfParams(addAction,"Наблюдатель" arg "Ночное зрение" arg "admin_nightvision");
-		//callSelfParams(addVisualState,VST_GHOST_EFFECT arg ["no_gray"]);
+		//callSelfParams(addVisualState,"VST_GHOST_EFFECT" arg ["no_gray"]);
 
 		//очень временное решение инвиза
-		callSelfParams(addVisualState,VST_HUMAN_STEALTH);
+		callSelfParams(addVisualState,"VST_HUMAN_STEALTH");
 
 		//
 	};
@@ -341,12 +341,12 @@ class(MobObserver) extends(MobGhost)
 		};
 		if (["cmdjobunban"] call ie_action_check) exitwith {
 			private _h = {
-				private _uid = [_value] call db_NickToUid;
-				if (_uid == "") exitwith {
+				private _disId = [_value] call db_NickToDisId;
+				if (_disId == "") exitwith {
 					callSelf(CloseMessageBox);
 					callSelfParams(localSay,"Неверное имя" arg "system");
 				};
-				private _list = [_uid,{
+				private _list = [_disId,{
 					format["%1 (%2)|%3 %1",
 						_jobClass,
 						getVar(_jobClass call gm_getRoleObject,name),

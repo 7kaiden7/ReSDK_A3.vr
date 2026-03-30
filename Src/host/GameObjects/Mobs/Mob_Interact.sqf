@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -330,7 +330,7 @@ func(onInteractWith)
 			
 			callFuncParams(_with,interactTo,this arg _usr);
 		};
-		if (isTypeOf(_with,Key) || isTypeOf(_with,Lockpick)) exitwith {
+		if (isTypeOf(_with,Key) || isTypeOf(_with,Lockpick) || isTypeOf(_with,KeyChain)) exitwith {
 			if ( 
 				callSelf(isHandcuffed) && 
 				getVar(_usr,curTargZone) in [TARGET_ZONE_ARM_L,TARGET_ZONE_ARM_R]
@@ -1121,10 +1121,10 @@ region(stealth system)
 		if equals(_mode,getSelf(isStealthEnabled)) exitWith {};
 
 		if (_mode) then {
-			callSelfParams(addVisualState,VST_HUMAN_STEALTH);
+			callSelfParams(addVisualState,"VST_HUMAN_STEALTH");
 		} else {
 			callSelfParams(fastSendInfo,"hud_light" arg 0); //drop lighting mode
-			callSelfParams(removeVisualState,VST_HUMAN_STEALTH);
+			callSelfParams(removeVisualState,"VST_HUMAN_STEALTH");
 		};
 		setSelf(isStealthEnabled,_mode);
 	};
@@ -1457,9 +1457,9 @@ region(viewing object)
 				};
 				true
 			} count _selectionsNames;
-			_viewmode = linearConversion[0,count _selectionsNames,_countView,VISIBILITY_MODE_NONE,VISIBILITY_MODE_FULL];
+			_visMode = linearConversion[0,count _selectionsNames,_countView,VISIBILITY_MODE_NONE,VISIBILITY_MODE_FULL];
 			#ifdef _mob_internal__log_canseeobject__
-			traceformat("COUNT %1 from %2; viewmode: %3",_countView arg count _selectionsNames arg vec4("NO","LOW","MED","FULL") select _viewmode);
+			traceformat("COUNT %1 from %2; viewmode: %3",_countView arg count _selectionsNames arg vec4("NO","LOW","MED","FULL") select _visMode);
 			#endif
 
 		} else {
@@ -1497,13 +1497,13 @@ region(viewing object)
 				true
 			} count _bY;
 
-			_viewmode = linearConversion[0,7,_countView,VISIBILITY_MODE_NONE,VISIBILITY_MODE_FULL];
+			_visMode = linearConversion[0,7,_countView,VISIBILITY_MODE_NONE,VISIBILITY_MODE_FULL];
 			#ifdef _mob_internal__log_canseeobject__
-			traceformat("COUNT %1 from %2; viewmode: %3",_countView arg 8 arg vec4("NO","LOW","MED","FULL") select _viewmode);
+			traceformat("COUNT %1 from %2; viewmode: %3",_countView arg 8 arg vec4("NO","LOW","MED","FULL") select _visMode);
 			#endif
 		};
 		if _needFullSearch then {
-			refset(_ref_viewmode,_viewmode);
+			refset(_ref_viewmode,_visMode);
 		};
 		_retval
 	};

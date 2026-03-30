@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -19,7 +19,7 @@ class(RPreyNomadBase) extends(BasicRole)
 		objParams_1(_mob);
 		if prob(60) then {
 			[
-			pick["HatOldUshanka","HatUshanka","WorkerCap","WorkerCoolCap","HatGrayOldUshanka"],
+			pick["HatUshankaUp2","HatUshanka","WorkerCap","WorkerCap2","HatUshankaUp"],
 			_mob,INV_HEAD
 			] call createItemInInventory;
 		};

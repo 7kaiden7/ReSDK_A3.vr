@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -297,6 +297,21 @@ class(ElectricalShield) extends(ElectronicDeviceNode)
 		};
 	};
 
+endclass
+
+editor_attribute("EditorGenerated")
+class(ElectricalShieldSmall2) extends(ElectricalShield)
+	var(model,"metro_ob\model\big_box.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
+class(ElectricalShieldBlock) extends(ElectricalShield)
+	var(model,"ml_exodusnew\svetonychka\svetonychka.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
+class(ElectricalShieldRed) extends(ElectricalShield)
+	var(model,"ml_shabut\elboxxx\elbox.p3d");
 endclass
 
 class(ElectricalShieldSmall) extends(ElectricalShield)

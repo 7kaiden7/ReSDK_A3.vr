@@ -1,34 +1,66 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
+#include "..\..\host\lang.hpp"
+namespace(EscapeMenu,esc_)
+
 #include <..\WidgetSystem\widgets.hpp>
 
+macro_const(esc_menu_size_x)
 #define ESC_MENU_SIZE_X 20
+macro_const(esc_menu_size_y)
 #define ESC_MENU_SIZE_Y 30
+macro_const(esc_menu_default_button_bias_x)
 #define ESC_MENU_DEFAULT_BUTTON_BIAS_X 5
+macro_const(esc_menu_default_button_bias_y)
 #define ESC_MENU_DEFAULT_BUTTON_BIAS_Y 5
 
+macro_const(esc_menu_background_color_t3)
 #define ESC_MENU_BACKGROUND_COLOR_T3 0.4
 
-#define handleSettings(closerEv,OpenerEv) addOpenerAndActivator(OpenerEv); addCloseEventToSetting(closerEv)
+inline_macro
+#define handleSettings(closerEv,OpenerEv) ([closerEv,OpenerEv] call esc_internal_handleSettings)
+	inline_macro
 	#define addOpenerAndActivator(id) getDisplay createDisplay  "RscDisplayInterrupt"; ctrlActivate (findDisplay 49 displayCtrl id)
+	inline_macro
 	#define addCloseEventToSetting(id) (findDisplay id) displayAddEventHandler ["Unload",{(findDisplay 49) closeDisplay 0}]
+macro_const(esc_menu_ces_video)
 #define ces_video 5
+	macro_const(esc_menu_set_ca_video)
 	#define set_ca_video 301
+macro_const(esc_menu_ces_audio)
 #define ces_audio 6
+	macro_const(esc_menu_set_ca_audio)
 	#define set_ca_audio 302
+macro_const(esc_menu_ces_input)
 #define ces_input 4
+	macro_const(esc_menu_set_ca_input)
 	#define set_ca_input 303
-
+decl(bool)
 esc_isMenuOpened = false;
+decl(widget[])
 esc_widgets = [widgetNull];
 
-
+macro_func(esc_getEscapeCtg,widget())
 #define getEscapeCtg (esc_widgets select 0)
 
+decl(void(int;int))
+esc_internal_handleSettings = {
+	params ["_closerEv","_openerEv"];
+	addOpenerAndActivator(_openerEv); 
+	addCloseEventToSetting(_closerEv);
+	if (_closerEv == ces_video) then {
+		(findDisplay _closerEv) displayAddEventHandler ["Unload",{
+			(findDisplay 49) closeDisplay 0;
+			//fix #599
+			[true] call pp_reload;
+		}];
+	};
+};
 
+decl(any[])
 esc_buttonsData = [
 	["Продолжить","Преставление продолжается...",{nextFrame(esc_closeMenu)}],
 	["Настройки реликты","Специализированные настройки для реликты:\nУправление, звук, уровень графики",{
@@ -40,6 +72,7 @@ esc_buttonsData = [
 	["Выход","Спектакль окончен",{nextFrame(esc_confirmExit)}]
 ];
 
+decl(void(bool))
 esc_openMenu = {
 	params [["_isOpenedInLobby",false]];
 
@@ -99,6 +132,7 @@ esc_openMenu = {
 };
 
 //подтверждение выхода
+decl(void())
 esc_confirmExit = {
 	
 	if (isLobbyOpen) exitWith {
@@ -123,7 +157,11 @@ esc_confirmExit = {
 	private _back = [_d,BACKGROUND,WIDGET_FULLSIZE,_ctgIn] call createWidget;
 	_back setBackgroundColor [ESC_MENU_BACKGROUND_COLOR_T3,ESC_MENU_BACKGROUND_COLOR_T3,ESC_MENU_BACKGROUND_COLOR_T3,0.85];
 	_txt = [_d,TEXT,[0,0,100,30],_ctgIn] call createWidget;
+	#ifdef SP_MODE
+	[_txt,"<t align='center' size='0.8'>Вы уверены? Вы сможете начать заново с любой из пройденных вами глав.</t>"] call widgetSetText;
+	#else
 	[_txt,"<t align='center' size='0.8'>Вы уверены? Ваш персонаж останется в мире и с ним может произойти всё что угодно.</t>"] call widgetSetText;
+	#endif
 
 	_accept = [_d,BUTTON,[5,35,40,60],_ctgIn] call createWidget;
 	_back = [_d,BUTTON,[55,35,40,60],_ctgIn] call createWidget;
@@ -162,6 +200,7 @@ esc_confirmExit = {
 	}];
 };
 
+decl(void())
 esc_closeMenu = {
 	
 	if (!(call widget_antiGammaCheck)) exitWith {
@@ -191,34 +230,59 @@ esc_closeMenu = {
 #include <..\InputSystem\inputKeyHandlers.hpp>
 #include <..\..\host\keyboard.hpp>
 
+macro_func(esc_getSettingsCtg,widget())
 #define getSettingsCtg (esc_settings_widgets select 0)
+macro_func(esc_getSettingsList,widget())
 #define getSettingsList (esc_settings_widgets select 1)
+macro_func(esc_getSettingsAccept,widget())
 #define getSettingsAccept (esc_settings_widgets select 2)
+macro_func(esc_getSettingsAbort,widget())
 #define getSettingsAbort (esc_settings_widgets select 3)
 
+macro_func(esc_getAllSettingsToFade,widget[]())
 #define ESC_GET_ALL_SETTINGS_TO_FADE [getSettingsAbort,getSettingsAccept,getSettingsList,getSettingsCtg]
 
+macro_const(esc_settings_size_x)
 #define SETTINGS_SIZE_X 60
+macro_const(esc_settings_size_y)
 #define SETTINGS_SIZE_Y 60
+macro_const(esc_settings_menu_background_color_t3)
 #define SETTINGS_MENU_BACKGROUND_COLOR_T3 ESC_MENU_BACKGROUND_COLOR_T3
 
 #include "EscapeMenu_settingsKeyboard.sqf"
 #include "EscapeMenu_settingsGame.sqf"
 #include "EscapeMenu_settingsGraphics.sqf"
 
-
+decl(widget[])
 esc_settings_widgets = [widgetNull,widgetNull,widgetNull,widgetNull];
 //Порядок настроек строго фиксирован и связан с ServerClient::clientSettings
+decl(any[])
 esc_settings_names = [
 	//Название,событие нажатия, событие загрузки,
 	["Управление",esc_settings_loader_keyboard,esc_settings_event_onSyncKeyboard],
 	["Графика",esc_settings_loader_graphic,{}],
 	["Игра",esc_settings_loader_game,esc_settings_event_onSyncGame]
 ];
+decl(int)
 esc_settings_curIndex = -1;
 
+decl(bool(int))
+esc_settings_beginLoadSection = {
+	params ["_newIndex"];
+	if (esc_settings_curIndex == _newIndex) exitWith {false};
+
+	if (esc_settings_curIndex == 2) then {
+		call esc_settings_game_onLeaveSection;
+	};
+
+	esc_settings_curIndex = _newIndex;
+	true
+};
+
+decl(float)
 cd_settingsVersion = 1.0;
 
+decl(void())
 esc_settings_open = {
 
 	#ifdef EDITOR
@@ -277,9 +341,11 @@ esc_settings_open = {
 	esc_settings_widgets = [_ctg,_ctgIn,_accept,_abort];
 
 	esc_settings_curIndex = -1;
+	cd_voipSessionPrepared = false;
 	call esc_settings_loader_keyboard;
 };
 
+decl(void(bool))
 esc_settings_close = {
 	params [["_isSaved",false]];
 	
@@ -304,8 +370,10 @@ esc_settings_close = {
 	};
 	
 	_isSaved call esc_settings_game_unloading;
+	cd_voipSessionPrepared = false;
 };
 
+decl(void())
 esc_settings_clearSettingList = {
 	private _ctg = getSettingsList;
 	{

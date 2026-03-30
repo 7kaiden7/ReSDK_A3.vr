@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -16,6 +16,19 @@ class(SmallFloor) extends(Constructions)
 	editor_only(var(desc,"Обычное напольное покрытие");)
 	var(material,"MatWood");
 	var(dr,2);
+endclass
+
+editor_attribute("EditorGenerated")
+class(SmallSteelBridge) extends(SmallFloor)
+	var(name,"Мостик");
+	var(model,"ml\ml_object_new\model_14_10\reshetkad6.p3d");
+	var(material,"MatMetal");
+endclass
+
+editor_attribute("EditorGenerated")
+class(StonebrickFloor) extends(SmallFloor)
+	var(material,"MatStone");
+	var(model,"a3\structures_f\dominants\castle\castle_01_step_f.p3d");
 endclass
 
 editor_attribute("EditorGenerated")
@@ -108,6 +121,24 @@ class(WoodenSmallFloor) extends(SmallFloor)
 endclass
 
 editor_attribute("EditorGenerated")
+class(WoodenMediumFloor) extends(WoodenSmallFloor)
+	var(model,"ml_shabut\exoduss\mostevich_cergevich.p3d");
+endclass
+
+//!warning no geometry
+class(WoodenMediumFloor2) extends(WoodenMediumFloor)
+	var(model,"apalon\metro_a3\redgates\woodbri.p3d");
+endclass
+
+class(WoodenPallet) extends(SmallFloor)
+	var(model,"ca\misc\paletaa.p3d");
+endclass
+
+class(WoodenPallet1) extends(WoodenPallet)
+	var(model,"a3\structures_f\civ\constructions\pallet_f.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
 class(ThickConcreteFloorSmall) extends(SmallFloor)
 	var(model,"csa_constr\csa_obj\pod_6x6.p3d");
 	var(name,"Бетон");
@@ -155,6 +186,11 @@ class(MediumSteelFloor) extends(SmallSteelPlate)
 endclass
 
 editor_attribute("EditorGenerated")
+class(SmallSteelFloor) extends(MediumSteelFloor)
+	var(model,"ml_exodusnew\hodmetal.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
 class(SmallSteelPlate2) extends(SmallSteelPlate)
 	var(model,"ml\ml_object_new\ml_object_2\l01_props\gate_bridge.p3d");
 endclass
@@ -188,6 +224,7 @@ editor_attribute("EditorGenerated")
 class(BigConcretePanel) extends(ConcretePanel)
 	var(model,"a3\structures_f_enoch\infrastructure\roads\concretepanels_02_four_f.p3d");
 endclass
+
 editor_attribute("EditorGenerated")
 class(SmallConcretePanel) extends(ConcretePanel)
 	var(model,"a3\structures_f_exp\infrastructure\pavements\gardenpavement_01_f.p3d");

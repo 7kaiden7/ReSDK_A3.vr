@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -149,7 +149,9 @@ Core_internal_map_events = createHashMapFromArray [
 	["onEntityAdded",[]],
 	["onEntityRemoved",[]],
 
-	["onMouseAreaPressed",[]] //событие при отпускании мыши по зоне 52(MouseArea)
+	["onMouseAreaPressed",[]], //событие при отпускании мыши по зоне 52(MouseArea)
+
+	["onEditorLoaded",[]] //событие загрузки редактора // params ["_isreload"]
 ];
 
 addMissionEventHandler ["draw3D",{
@@ -385,4 +387,4 @@ function(Core_getStackTrace)
 ["WorkspaceHelper"] call rescript_initScript;
 ["FileWatcher"] call rescript_initScript;
 ["VisualScripting"] call rescript_initScript;
-call nbp_initDebugger;
+//call nbp_initDebugger;

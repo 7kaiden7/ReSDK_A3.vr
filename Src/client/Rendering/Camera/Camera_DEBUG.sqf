@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -7,8 +7,8 @@
 #include <CameraControl.hpp>
 
 /*
-	FOR DEBUG ONLY
-	DO NOT INCLUDE THIS FILE IN CLIENTSIDE
+	!FOR DEBUG ONLY
+	!DO NOT INCLUDE THIS FILE IN CLIENTSIDE
 
 */
 

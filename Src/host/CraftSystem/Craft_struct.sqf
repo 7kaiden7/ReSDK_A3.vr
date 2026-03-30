@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -312,8 +312,8 @@ struct(ICraftRecipeBase)
 		if !isNullVar(value) then {
 			value = [value,"rta",'getVar(_this,rta)'] call regex_replace;
 			//rnd replace
-			value = [value,"\birnd\(([^\d]*(\d+)[^\d]*(\d+)[^\d]*)\)",'randInt($2,$3)'] call regex_replace;
-			value = [value,"\brnd\(([^\d]*(\d+)[^\d]*(\d+)[^\d]*)\)","rand($2,$3)"] call regex_replace;
+			value = [value,"\birnd\(([^\d]*(\d+(?:\.\d+)?)[^\d]*(\d+(?:\.\d+)?)[^\d]*)\)",'randInt($2,$3)'] call regex_replace;
+			value = [value,"\brnd\(([^\d]*(\d+(?:\.\d+)?)[^\d]*(\d+(?:\.\d+)?)[^\d]*)\)",'rand($2,$3)'] call regex_replace;
 
 			value = [value,"from_skill\(([^)]*)\)","(linearconversion [1,20,_InternalCraftSkill,$1,true])"] call regex_replace;
 

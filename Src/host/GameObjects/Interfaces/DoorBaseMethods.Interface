@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 interfaceHeader
@@ -65,8 +65,8 @@ func(setDoorOpen)
 	private _oldState = getSelf(isOpen);
 	if getSelf(isLocked) exitWith {
 		if (!_oldState) then {
-			_snd = "doors\locked" + str pick [1 arg 2];
-			_rpith = getRandomPitchInRange(0.6,1.3);
+			private _snd = "doors\locked" + str pick [1 arg 2];
+			private _rpith = getRandomPitchInRange(0.6,1.3);
 			callSelfParams(playSound,_snd arg _rpith);
 		};
 	};
@@ -74,15 +74,27 @@ func(setDoorOpen)
 	setSelf(lastDoorChangeOpenTime,tickTime + 0.4);
 
 	setSelf(isOpen,_mode);
+	
+	//сохраняем старую позицию до анимации
+	private _oldPos = getposasl callSelf(getBasicLoc);
+	
 	callSelf(animateSource);
+
+	//request update region для старой и новой позиции
+	[_oldPos] call ai_nav_requestUpdateRegion;
+	[getposasl callSelf(getBasicLoc)] call ai_nav_requestUpdateRegion;
 
 	private _snd = if (_mode) then {
 		callSelf(getOpenSoundParams);
 	} else {
 		callSelf(getCloseSoundParams);
 	};
-
-	_snd params ["_sound","_pitch","_dist","_vol"];
+	#ifdef SP_MODE
+	private _pitch = null;
+	private _dist = null;
+	private _vol = null;
+	#endif
+	_snd params ["_sound",["_pitch",null],["_dist",null],["_vol",null]];
 
 	callSelfParams(playSound, _sound arg _pitch arg _dist arg _vol);
 };
@@ -128,6 +140,29 @@ func(onInteractWith)
 			callFuncParams(_usr,worldSay,callFuncParams(_usr,getNameEx,"кто") + _locktext arg "act");
 		};
 	};
+	
+	if isTypeOf(_with,KeyChain) then {
+		if getSelf(isLockBreaked) exitWith {
+			callFuncParams(_usr,localSay,"Замок выломан" arg "error");
+		};
+
+		if equals(getVar(_with,content),[]) exitWith {
+			private _errmes = pick ["В связке нет ключей.","Там нет ни одного ключа.","В связке ключей пусто."];
+			callFuncParams(_usr,localSay,_errmes arg "error");
+		};
+
+		if equals(getVar(_with,keyOwners) arrayIntersect getSelf(keyTypes),[]) exitWith {
+			private _errmes = pick ["В связке нет подходящего ключа.","Эти ключи не отсюда.","Этими ключами не открыть."];
+			callFuncParams(_usr,localSay,_errmes arg "error");
+		};
+		private _lockstate = getSelf(isLocked);
+
+		if (callSelfParams(setDoorLock,!_lockstate)) then {
+			private _locktext = if (_lockstate) then {" отпирает дверь."} else {" запирает дверь."};
+			callFuncParams(_usr,worldSay,callFuncParams(_usr,getNameEx,"кто") + _locktext arg "act");
+		};
+	};
+
 	if isTypeOf(_with,Crowbar) then {
 		if getSelf(isLockBreaked) exitWith {
 			callFuncParams(_usr,localSay,"Замок выломан" arg "error");

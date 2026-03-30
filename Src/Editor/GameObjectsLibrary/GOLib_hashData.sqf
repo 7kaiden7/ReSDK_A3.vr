@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -271,10 +271,11 @@ function(golib_deserializeHashData)
 //Регистрация нового объекта созданного перетаскиванием мыши
 function(golib_initHashData)
 {
-	params ["_worldObj","_go",["_applyToWorldObject",true]];
+	params ["_worldObj","_go",["_applyToWorldObject",true],["_postInitCode",{}]];
 	private _mapData = createHashMap;
 	_mapData set ["class",_go];
 	_mapData set ["customProps",createHashMap];
+	_mapData call _postInitCode;
 	if (_applyToWorldObject) then {
 		[_worldObj,_mapData] call golib_setHashData;
 	};
@@ -314,13 +315,13 @@ function(golib_getCustomProps)
 
 function(golib_getActualDataValue)
 {
-	params ["_obj","_field"];
+	params ["_obj","_field",["_compileResult",true]];
 	_field = tolower _field;
 	private _hd = [_obj,false] call golib_getHashData;
 	if (_field in (_hd get "customProps")) then {
 		(_hd get "customProps") get _field;
 	} else {
-		[_hd get "class",_field,true] call oop_getFieldBaseValue;
+		[_hd get "class",_field,_compileResult] call oop_getFieldBaseValue;
 	};
 }
 

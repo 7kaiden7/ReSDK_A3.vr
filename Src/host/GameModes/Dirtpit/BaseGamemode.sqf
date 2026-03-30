@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -762,7 +762,7 @@ class(GMStationIdeologyCavecity) extends(GMStationIdeology)
 				};
 				for "_x" from 1 to randInt(10,15) do {
 					[
-						pick ["HatOldUshanka","HatUshanka","WorkerCap","WorkerCoolCap","HatGrayOldUshanka"],
+						pick ["HatUshankaUp2","HatUshanka","WorkerCap","WorkerCap2","HatUshankaUp"],
 					_cont] call createItemInContainer;
 				};
 				continue;

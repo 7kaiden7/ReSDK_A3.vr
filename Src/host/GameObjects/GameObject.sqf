@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -675,7 +675,7 @@ class(GameObject) extends(ManagedObject)
 		desc:Получает расстояние до цели в метрах
 		type:get
 		lockoverride:1
-		in:GameObject:Объект-цель:Объект, до которого расчитывается расстояние
+		in:GameObject:Объект-цель:Объект, до которого рассчитывается расстояние
 		in:bool:2d расстояние:При включении данной опции расстояние будет вычислено только по двум координатам, т.е. высота не будет учитываться.
 		return:float:Расстояние до цели
 	" node_met
@@ -929,6 +929,9 @@ region(Nearest game objects)
 		private _algGet = ifcheck(_retByType,{isTypeStringOf(_this,_checkedType)},{callFunc(_this,isMob)});
 		{
 			_x = _x getVariable "link";
+			#ifdef EDITOR_OR_SP_MODE
+			if isNullVar(_x) then {continue};
+			#endif
 			if (_x call _algGet) then {_list pushBack _x};
 		} foreach (_ownerObj nearObjects _radius);
 		if (_excludeThis) then {
@@ -1023,7 +1026,7 @@ endregion
 	" node_met
 	func(playSound)
 	{
-		params ['this',"_path",["_pitch",1],["_maxDist",50],["_vol",1],"_atPos",["_hasRTProcess",true]];
+		params ['this',"_path",["_pitch",1],["_maxDist",50],["_vol",1],"_atPos",["_hasRTProcess",true],["_offset",0]];
 		FHEADER;
 		private _source = if !isNullVar(_atPos) then {
 			_atPos
@@ -1040,6 +1043,9 @@ endregion
 		};
 
 		private _data = [_path arg _source arg _vol arg _pitch arg _maxDist];
+		if (_offset > 0) then {
+			_data append [null,_offset]; //null is file extension
+		};
 
 		private _srcObj = callSelf(getBasicLoc);
 		
@@ -1359,7 +1365,7 @@ class(IDestructible) extends(GameObject)
 	{
 		objParams();
 		private _script = getSelf(__script);
-		if !isNullReference(_srcipt) then {
+		if !isNullReference(_script) then {
 			delete(_script);
 		};
 
@@ -1479,12 +1485,15 @@ class(IDestructible) extends(GameObject)
 	//set new position with interpolation
 	func(changePosition)
 	{
-		objParams_1(_pos);
+		objParams_2(_pos,_interp);
 		if !callSelf(isInWorld) exitWith {};
-		
-		{
-			callFuncParams(_x,interpolate,"auto_trans_fall" arg this arg getSelf(pointer));
-		} foreach callSelfParams(getNearMobs,20);
+		if isNullVar(_interp) then {_interp = true};
+
+		if (_interp) then {
+			{
+				callFuncParams(_x,interpolate,"auto_trans_fall" arg this arg getSelf(pointer));
+			} foreach callSelfParams(getNearMobs,20);
+		};
 
 		callSelfParams(setPos__,_pos);
 	};
@@ -1976,10 +1985,10 @@ class(IDestructible) extends(GameObject)
 			if (getSelf(germs) == -1) exitWith {};
 			private _prob = ifcheck(equals(getSelf(attachedWeap),weaponModule(WeapHandyItem)),50,5);
 			if prob(_prob) then {
-				setSelf(germs,randInt(1,30));
+				callSelfParams(setGerms,randInt(1,30));
 			};
 		} else {
-			setSelf(germs,randInt(-10,50) max 0);
+			callSelfParams(setGerms,randInt(-10,50) max 0);
 		};
 
 
@@ -2063,7 +2072,7 @@ class(IDestructible) extends(GameObject)
 		if (_doSound) then {
 			private _sound = ifcheck(_useBlockSound,callFunc(_mat,getResistSound),callFunc(_mat,getDamageSound));
 			if (_sound == stringEmpty) exitWith {};
-			callSelfParams(playSound,_sound arg randInt(0.85,1.15) arg 15 arg null arg _pos);
+			callSelfParams(playSound,_sound arg rand(0.85,1.15) arg 15 arg null arg _pos);
 		};
 	};
 
@@ -2232,7 +2241,19 @@ class(IDestructible) extends(GameObject)
 	func(addGerms)
 	{
 		objParams_1(_val);
-		setSelf(germs,getSelf(germs) + clamp(_val,0,GERM_COUNT_MAX));
+		callSelfParams(setGerms,getSelf(germs) + _val);
+	};
+
+	func(setGerms)
+	{
+		objParams_1(_val);
+		setSelf(germs,clamp(_val,0,GERM_COUNT_MAX));
+		callSelf(onGermsChanged);
+	};
+
+	func(onGermsChanged)
+	{
+		objParams();
 	};
 
 	//функция, получающая с помощью рейкаста объект, на котором лежит этот объект

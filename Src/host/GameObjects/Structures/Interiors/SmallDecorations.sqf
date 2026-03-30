@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -20,6 +20,12 @@ class(InterierProp) extends(SmallDecorations)
 	var(name,"Предмет интерьера");
 	editor_only(var(desc,"Различные украшения интерьера");)
 	var(material,"MatGlass");
+endclass
+
+editor_attribute("EditorGenerated")
+class(Wheelcart) extends(InterierProp)
+	var(model,"a3\structures_f\civ\constructions\wheelcart_f.p3d");
+	var(name,"Телега");
 endclass
 
 class(Vase) extends(InterierProp) 
@@ -59,6 +65,10 @@ endclass
 editor_attribute("EditorGenerated")
 class(PictureTwoMans) extends(PictureIcon)
 	var(model,"ml\ml_plakats\pictures\picture_02.p3d");
+endclass
+
+class(PictureMan) extends(PictureIcon)
+	var(model,"a3\props_f_aow\civilian\gallery\galleryframe_01_large_portrait_f.p3d");
 endclass
 
 editor_attribute("EditorGenerated")
@@ -169,6 +179,11 @@ class(SmallSign) extends(SmallDecorations)
 	var(material,"MatWood");
 	getterconst_func(getCoefAutoWeight,50);
 	var(dr,1);
+endclass
+
+editor_attribute("EditorGenerated")
+class(SmallVentilationGrate) extends(SmallSign)
+	var(model,"metro_ob\model\l19_cell_type_03.p3d");
 endclass
 
 editor_attribute("EditorGenerated")
@@ -350,4 +365,8 @@ endclass
 editor_attribute("EditorGenerated")
 class(OldTombstoneGrave) extends(OldTombstone)
 	var(model,"a3\structures_f_exp\cultural\cemeteries\grave_07_f.p3d");
+endclass
+editor_attribute("EditorGenerated")
+class(OldTombstoneGrave2) extends(OldTombstoneGrave)
+	var(model,"a3\structures_f_exp\cultural\cemeteries\grave_04_f.p3d");
 endclass

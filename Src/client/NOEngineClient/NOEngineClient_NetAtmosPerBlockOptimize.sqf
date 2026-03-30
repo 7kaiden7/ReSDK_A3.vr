@@ -1,18 +1,27 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
+#include <..\..\host\lang.hpp>
+
+namespace(NOEngine.Client.NetAtmos.Optimizer,nat_pbo_)
+
 #include "NOEngineClient_NetAtmos.hpp"
-#include "..\LightEngine\ScriptedEffects.hpp"
+decl(thread_handle)
 nat_pbo_threadHandle = threadNull;
 
+decl(float)
 nat_pbo_lastUpd = 0;
+decl(float)
 nat_pbo_prevCallTime = 0;
 
+decl(vector3)
 nat_pbo_boundingOffsetMin = vec3(-ATMOS_SIZE_HALF,-ATMOS_SIZE_HALF,-ATMOS_SIZE_HALF);
+decl(vector3)
 nat_pbo_boundingOffsetMax = vec3(ATMOS_SIZE_HALF,ATMOS_SIZE_HALF,ATMOS_SIZE_HALF);
 
+decl(void())
 nat_pbo_renderThread = {
 	_dt = tickTime-nat_pbo_lastUpd;
 	if (_dt > 0) then {
@@ -33,7 +42,7 @@ nat_pbo_renderThread = {
 
 		{
 			_vlt = _y select NAT_CHUNKDAT_OBJECT;
-			//if !(_vlt getv(cfg) in [SLIGHT_ATMOS_FIRE_3,SLIGHT_ATMOS_SMOKE_3]) then {continue};
+			//if !(_vlt getv(cfg) in ["SLIGHT_ATMOS_FIRE_3" call lightSys_getConfigIdByName,"SLIGHT_ATMOS_SMOKE_3" call lightSys_getConfigIdByName]) then {continue};
 
 			_p = _vlt getv(centerPos);
 			_buff pushBack [
@@ -49,14 +58,15 @@ nat_pbo_renderThread = {
 	criticalSectionEnd
 };
 
+decl(void(struct_t.AtmosVirtualLight;bool))
 nat_pbo_cullProc = {
-	params ["_vlight","_isvisible"];
-	_vlight callp(setHidden,!_isvisible);
+	params ["_vlight","_isVisible"];
+	_vlight callp(setHidden,!_isVisible);
 };
 
 #ifdef ENABLE_PERBLOCK_ZPASS_CULLING
 
-private _looped = {while {true}do{call nat_pbo_renderThread}};
+private _looped = { while {true} do {call nat_pbo_renderThread} };
 nat_pbo_threadHandle = threadStart(threadNew(_looped));
 
 #endif

@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -14,6 +14,7 @@ verb_inverted_list = createHashMap;
 private _verbLastIndex = 0;
 
 verb(description,"Показать описание",noargs)
+verb(description3d,"Осмотреть",noargs)
 verb(standupfromchair,"Встать",noargs)
 verb(smell,"Понюхать",noargs)
 verb(clean,"Очистить от грязи",noargs)

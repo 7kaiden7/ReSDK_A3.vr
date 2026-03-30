@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -19,6 +19,13 @@ endclass
 editor_attribute("InterfaceClass")
 editor_attribute("TemplatePrefab")
 class(FortificationConstruction) extends(Constructions) var(name,"Оборонительное сооружение"); editor_only(var(desc,"Оборонные заграждения");) endclass
+
+editor_attribute("EditorGenerated")
+class(FortRampart) extends(FortificationConstruction)
+	var(model,"ca\misc_e\fort_rampart_ep1.p3d");
+	var(name,"Вал");
+	var(material,"MatDirt");
+endclass
 
 editor_attribute("EditorGenerated")
 class(ConcreteTreePlanter) extends(FortificationConstruction)

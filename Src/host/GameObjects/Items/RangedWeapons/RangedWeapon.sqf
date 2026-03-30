@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -241,7 +241,7 @@ class(IRangedWeapon) extends(Item)
 	func(getAttackVisualData)
 	{
 		objParams();
-		0
+		""
 	};
 
 	getter_func(getShootSoundDistance,80);

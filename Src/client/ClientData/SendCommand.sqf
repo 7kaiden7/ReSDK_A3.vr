@@ -1,13 +1,24 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
+#include "..\..\host\lang.hpp"
+namespace(ClientData,cd_)
+
 #include <..\WidgetSystem\widgets.hpp>
 
+macro_const(cd_SC_SIZE_W)
 #define SC_SIZE_W 40
+macro_const(cd_SC_SIZE_H)
 #define SC_SIZE_H 30
+
+macro_const(cd_MAX_COMMANDS_HISTORY_COUNT)
 #define CD_MAX_COMMANDS_HISTORY_COUNT 100
+
+decl(string[])
+cd_commandHistoryBuffer = [];
+
 #ifdef EDITOR
 	if isNull(cd_commandHistoryBuffer) then {
 		cd_commandHistoryBuffer = [];
@@ -21,6 +32,7 @@
 #endif
 
 //Открывает окно отправки сообщения на сервер
+decl(void(bool))
 cd_openSendCommandWindow = {
 	
 	params [["_isLobbyContext",false]];
@@ -253,6 +265,7 @@ cd_openSendCommandWindow = {
 	//endif EDITOR
 };
 
+decl(void())
 cd_closeSendCommandWindow = {
 	if (getDisplay getVariable ["cd_sendCommand_isLobbyContext",false]) exitWith {
 
@@ -268,7 +281,12 @@ cd_closeSendCommandWindow = {
 	call displayClose;
 };
 
+decl(void())
 cd_openAhelp = {
+	#ifdef SP_MODE
+		sp_checkInput("open_ahelp",[]);
+	#endif
+
 	if (["cd_openAhelp",5] call input_spamProtect) exitWith {
 		["Подождите немного прежде чем заново попытаться открыть это окно","system"] call chatPrint; 
 	};
@@ -277,23 +295,29 @@ cd_openAhelp = {
 	rpcSendToServer("processClientCommand",_args);
 };
 
-_onLocalCmdCall = {
+decl(void(string;any))
+cd_onLocalCmdCall = {
 	params ["_cmd",["_args",0]];
 
 	_cmdcode = (cd_commands_localCommandsList get _cmd);
 	if isNullVar(_cmdcode) exitWith {
 		errorformat("onCallbackClientCommand() - command %1 not found",_cmd);
 	};
+	cd_internal_cmd_thisArguments = _args;
+	0 call (_cmdcode select 0);
 
-	_args call (_cmdcode select 0);
+}; rpcAdd("onLocalCommandCalled",cd_onLocalCmdCall);
 
-}; rpcAdd("onLocalCommandCalled",_onLocalCmdCall);
-
+decl(map<string;any>)
 cd_commands_localCommandsList = createHashMap;
 
+inline_macro
 #define localCommand(name) _cd_map_dataCode = []; cd_commands_localCommandsList set [name,_cd_map_dataCode]; _cd_map_dataCode pushBack
 
-#define arguments _args
+macro_func(cd_localCmdGetArgs,any())
+#define arguments cd_internal_cmd_thisArguments
+
+decl(any) cd_internal_cmd_thisArguments = 0;
 
 /***************************************************************************************************
 ----------------------------------------------------------------------------------------------------
@@ -363,17 +387,69 @@ localCommand("grafon")
 
 localCommand("reloadvoice")
 {
-	
-	if !isNull(vs_internal_reloadTimer) then {
-		if (vs_internal_reloadTimer) exitWith {
-			warning("localCommand::mapCmd<GameFunction>['reloadvoice'] - too fast calling command. Wait some time...");
-		};	
-		vs_canProcess = false;
-		vs_internal_reloadTimer = true;
-		invokeAfterDelay({vs_internal_reloadTimer = false; vs_canProcess = true},5);
+	if (vs_useReVoice) then {
+		if (isLobbyOpen) exitWith {
+			["Перезапуск войса в лобби невозможен","system"] call chatPrint;
+		};
+		
+		if isNull(vs_internal_reloadVoiceNew) then {
+			vs_internal_reloadVoiceNew = true;
+			if (call vs_isConnectedVoice) then {
+				["Остановка войса...","system"] call chatPrint;
+				call vs_disconnectVoiceSystem;
+			};
+			private _code = {
+				["Подключение войса...","system"] call chatPrint;
+				if (call vs_connectToVoiceSystem) then {
+					["Войс подключен!...","system"] call chatPrint;
+				} else {
+					["Ошибка подключения войса. Попробуйте снова или перезапустите игру","system"] call chatPrint;
+				};
+				vs_internal_reloadVoiceNew = null;
+			}; invokeAfterDelay(_code,2);
+		};
 	} else {
-		vs_canProcess = false;
-		vs_internal_reloadTimer = true;
-		invokeAfterDelay({vs_internal_reloadTimer = false; vs_canProcess = true},5);
+		if !isNull(vs_internal_reloadTimer) then {
+			if (vs_internal_reloadTimer) exitWith {
+				warning("localCommand::mapCmd<GameFunction>['reloadvoice'] - too fast calling command. Wait some time...");
+			};	
+			vs_canProcess = false;
+			vs_internal_reloadTimer = true;
+			invokeAfterDelay({vs_internal_reloadTimer = false; vs_canProcess = true},5);
+		} else {
+			vs_canProcess = false;
+			vs_internal_reloadTimer = true;
+			invokeAfterDelay({vs_internal_reloadTimer = false; vs_canProcess = true},5);
+		};
 	};
+	
+};
+
+localCommand("setvoipvol") 
+{
+	["В настройках Реликты (раздел Игра) вы можете более удобно настроить эту опцию","system"] call chatPrint;
+	_new = parseNumber arguments;
+	if ([_new] call vs_setMasterVoiceVolume) then {
+		vs_voipVolCurrent = _new;
+		profileNamespace setVariable ["rel_voipvol",_new];
+		saveProfileNamespace;
+	};
+};
+
+localCommand("disablecolorcorrection")
+{
+	if isNullVar(cd_colorCorrection_disabled) then {
+		cd_colorCorrection_disabled = false;
+	};
+	
+	cd_colorCorrection_disabled = !cd_colorCorrection_disabled;
+	
+	["color_default",!cd_colorCorrection_disabled] call pp_setEnable;
+	
+	private _msg = if (cd_colorCorrection_disabled) then {
+		"Цветокоррекция отключена"
+	} else {
+		"Цветокоррекция включена"
+	};
+	[_msg,"system"] call chatPrint;
 };

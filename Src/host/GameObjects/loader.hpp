@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -16,6 +16,8 @@ loadFile("src\host\GameObjects\Items\Item.sqf");
 loadFile("src\host\GameObjects\Items\Debris\Debris.sqf");
 loadFile("src\host\GameObjects\Items\Clothes\cloth.sqf");
 	loadFile("src\host\GameObjects\Items\Clothes\Armors.sqf");
+	loadFile("src\host\GameObjects\Items\Clothes\Helmets.sqf");
+	loadFile("src\host\GameObjects\Items\Clothes\Masks.sqf");
 loadFile("src\host\GameObjects\Items\MeleeWeapons\Axes.sqf");
 	loadFile("src\host\GameObjects\Items\MeleeWeapons\Swords.sqf");
 	loadFile("src\host\GameObjects\Items\MeleeWeapons\Knives.sqf");
@@ -69,6 +71,7 @@ loadFile("src\host\GameObjects\Items\Captives\CaptiveBase.sqf");
 loadFile("src\host\GameObjects\Structures\IStruct.sqf");
 loadFile("src\host\GameObjects\Structures\Constructions\Construction.sqf");
 	loadFile("src\host\GameObjects\Structures\Constructions\DirtPiles.sqf");
+	loadFile("src\host\GameObjects\Structures\Constructions\Stones.sqf");
 	loadFile("src\host\GameObjects\Structures\Constructions\Fences.sqf");
 	loadFile("src\host\GameObjects\Structures\Constructions\Floors.sqf");
 	loadFile("src\host\GameObjects\Structures\Constructions\Rails.sqf");
@@ -117,10 +120,12 @@ loadFile("src\host\GameObjects\Structures\Effects\AtmEffects.sqf");
 	loadFile("src\host\GameObjects\Structures\Effects\Zones.sqf");
 loadFile("src\host\GameObjects\Structures\ReagentContainers\ReagentContainer.sqf");
 loadFile("src\host\GameObjects\Structures\Tools\Farming.sqf");
+	loadFile("src\host\GameObjects\Structures\Tools\SewingMachine.sqf");
 	loadFile("src\host\GameObjects\Structures\Tools\DiggingAndMining.sqf");
 	loadFile("src\host\GameObjects\Structures\Tools\Spawners.sqf");
 loadFile("src\host\GameObjects\Structures\Interiors\SmallDecorations.sqf");
 	loadFile("src\host\GameObjects\Structures\Interiors\InteractibleInteriors.sqf");
+loadFile("src\host\GameObjects\Structures\Musical\Musical.sqf");
 
 
 //decorations

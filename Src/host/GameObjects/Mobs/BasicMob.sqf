@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -305,6 +305,17 @@ region(raycast)
 		objParams_1(_dist);
 		getSelf(__lastinteractdata__) set [2,_dist];
 	};
+	func(__setLastInteractTarget)
+	{
+		objParams_1(_target);
+		getSelf(__lastinteractdata__) set [4,_target];
+	};
+	func(__setLastInteractPosStartEnd)
+	{
+		objParams_1(_pos);
+		getSelf(__lastinteractdata__) set [0,_pos];
+		getSelf(__lastinteractdata__) set [1,_pos];
+	};
 
 	#define __debug_getinteractiontarget_spheres__
 	#ifdef __debug_getinteractiontarget_spheres__
@@ -476,7 +487,7 @@ region(Actions subsystem)
 		if isNullVar(_refverbs) then {
 			_refverbs = getSelf(__listactions);
 		};
-		#ifdef EDITOR
+		#ifdef EDITOR_OR_SP_MODE
 		_refverbs = array_copy(_refverbs);
 		#endif
 
@@ -656,6 +667,10 @@ region(Connect control events)
 	func(onConnected)
 	{
 		objParams();
+		
+		//установка имени для войса
+		netSyncObjVar(getSelf(owner),"rv_name",getVar(getSelf(client),name));
+
 		//загрузка действий (левое меню)
 		callSelfParams(loadActions,null);
 		//хандлер подключения
@@ -669,6 +684,9 @@ region(Connect control events)
 	{
 		objParams();
 		
+		//reset voip name
+		netSyncObjVar(getSelf(owner),"rv_name",null);
+		
 		//removing all localEffects
 		callSelf(localEffectClearAll);
 
@@ -680,6 +698,10 @@ region(Connect control events)
 		callSelf(releaseBuildingPreview);
 
 		callSelf(dropAllItemsInHands);
+
+		if not_equals(getSelf(__curRegion),"") then {
+			[getSelf(__curRegion),-1] call ai_modifyRegionRefCount;
+		};
 	};
 
 region(Mob location info: position; direction; speed)
@@ -781,7 +803,7 @@ region(Mob location info: position; direction; speed)
 		in:GameObject:Объект-цель:Объект, рядом с которым стоит вызывающий.
 		return:enum.DirectionSide:Направление вызывающего моба к цели.
 	" node_met
-	//где стоти this по отношению к цели (this спереди _target, this за спиной у target)
+	//где стоти this по отношению к цели (this спереди _target, this за спиной у target) (к this _target повернут лицом, спиной...)
 	func(getDirTo)
 	{
 		objParams_1(_target);
@@ -1110,7 +1132,7 @@ region(lighting helper)
 		) then {
 			getSelf(__lastClientLighting)
 		} else {
-			round linearConversion [10,100,(getLightingAt getSelf(owner)) select 3,0,4,true]
+			round linearConversion [10,60,(getLightingAt getSelf(owner)) select 3,0,4,true]
 		};
 		/*private _lum = parseNumber(((getLightingAt getSelf(owner)) select 3)toFixed 3);
 		private _val = (_lum / 300) max 0 min 1;
@@ -1134,7 +1156,7 @@ region(Visual states)
 			getSelf(__visualStates) pushBack [_state,_ctxParams];
 		};
 
-		#ifdef EDITOR
+		#ifdef EDITOR_OR_SP_MODE
 			callSelfParams(syncSmdVar,"visualStates" arg array_copy(getSelf(__visualStates)));
 		#else
 			callSelfParams(syncSmdVar,"visualStates" arg getSelf(__visualStates));
@@ -1147,7 +1169,7 @@ region(Visual states)
 		private _states = getSelf(__visualStates);
 		_states deleteAt (_states findif {ifcheck(equalTypes(_x,[]),equals(_x select 0,_state),equals(_x,_state))});
 
-		#ifdef EDITOR
+		#ifdef EDITOR_OR_SP_MODE
 			callSelfParams(syncSmdVar,"visualStates" arg array_copy(getSelf(__visualStates)));
 		#else
 			callSelfParams(syncSmdVar,"visualStates" arg getSelf(__visualStates));
@@ -1174,7 +1196,7 @@ region(Visual states)
 			};
 			_states set [_idx,(_states select _idx) call _eventState];
 			
-			#ifdef EDITOR
+			#ifdef EDITOR_OR_SP_MODE
 				callSelfParams(syncSmdVar,"visualStates" arg array_copy(getSelf(__visualStates)));
 			#else
 				callSelfParams(syncSmdVar,"visualStates" arg getSelf(__visualStates));
@@ -1531,6 +1553,12 @@ region(Messaging and chat managers)
 		callSelfParams(localSay,_mes arg "mind");
 	};
 
+	func(addCamShake)
+	{
+		objParams_4(_pwrPos,_pwrDir,_freq,_dur);
+		callSelfParams(sendInfo,"camshake" arg [_pwrPos arg _pwrDir arg _freq arg _dur]);
+	};
+
 region(Animator)
 
 	_anim = {
@@ -1624,7 +1652,9 @@ region(Animator)
 	func(setAnimSpeedCoef)
 	{
 		objParams_1(_val);
-
+		#ifdef EDITOR_OR_SP_MODE
+		if !callSelf(isPlayer) exitWith {};
+		#endif
 		callSelfParams(syncSmdVar,"animSpeed" arg _val);
 	};
 
@@ -2234,4 +2264,10 @@ region(previef functionality)
 
 		[this,false] call csys_onCraftEndPreview;
 	};
+
+region(ai system)
+	var(__aiagent,null);
+	getter_func(isAIAgent,!isNull(getSelf(__aiagent)));
+	var(__curRegion,""); // текущий регион в котором находится сущность
+
 endclass

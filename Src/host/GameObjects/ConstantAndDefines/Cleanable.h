@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -13,6 +13,7 @@
 #define GERM_HUMAN_COUNT_TO_NAME(val) (GERM_LIST_HUMAN_INFO select (GERM_LIST_COUNTS findif {val <= _x}))
 #define GERM_HUMAN_COUNT_TO_COLOR(val) (GERM_LIST_HUMAN_COLOR select (GERM_LIST_COUNTS findif {val <= _x}))
 #define GERM_CONV_VALUE_TO_OPACITY(val) linearConversion [0,GERM_COUNT_MAX,val,1,0.5,true]
+#define GERM_CONV_VALUE_TO_VISIBILITY_DECAL(val) linearConversion [0,GERM_COUNT_MAX,val,0,1,true]
 
 //сколько микробов должно быть для инфекции
 #define GERM_COUNT_INFECTION 25

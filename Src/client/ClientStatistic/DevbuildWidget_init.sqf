@@ -1,8 +1,8 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
-
+#include <..\..\host\lang.hpp>
 if (ISDEVBUILD) then {
 	_gui = getGUI;
 	private _ctg = [_gui,WIDGETGROUP,[0,0,100,5]] call createWidget;

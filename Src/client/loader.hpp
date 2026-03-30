@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -17,6 +17,7 @@ _prepversion = ((LoadFile "src\VERSION") splitString endl) select 0;
 _ctx = compile format["client_version = '%1+%3'; client_compiledDate = '%2'; client_isLocked = false;",_prepversion,__DATE_STR__,_sha];
 if !isNullVar(_canCallClientCode) then {call _ctx};
 allClientContents pushback _ctx;
+allClientModulePathes pushBack "runtime_version";
 
 // !!!В определении модулей не поддерживается комментирование при внешней сборке клиента!!!
 
@@ -35,8 +36,9 @@ importClient("src\client\ClientStatistic\ClientStatistics_init.sqf"); cmplog("CS
 importClient("src\client\ClientData\ClientData.sqf"); cmplog("CDat")//В этом модуле НАСТРОЙКИ. Всё что используется в них должно быть ДО этого файла
 importClient("src\client\Rendering\Camera\CameraControl.sqf"); cmplog("Camera")//только после clientData (потому что использует cd_cameraSetting)
 importClient("src\client\StaminaControl\Stamina_init.sqf"); cmplog("Stamina")//только после ClientData (потому что использует cd_stamina...)
-importClient("src\client\ParticleEngine\ParticleEngine.sqf"); cmplog("ParticleEngine")
 importClient("src\client\LightEngine\LightEngine.sqf"); cmplog("LightEngine")
+importClient("src\client\VisualState\VisualState_init.sqf"); cmplog("VST") //visual states
+importClient("src\client\BlastFx\BlastFX_init.sqf"); cmplog("BlastFX") //fast blast fx component
 importClient("src\client\ProxyItems\ProxyItems.sqf"); cmplog("ProxIt")//proxypos of items
 importClient("src\client\ProxyItems\RProx.sqf"); cmplog("RProxExtension")//proxy system v2. !load only after proxit
 importClient("src\client\SyncMobData\SMD_init.sqf"); cmplog("SMD")//synced mobs
@@ -44,6 +46,7 @@ importClient("src\client\NetDisplays\NetDisplays.sqf"); cmplog("NetDisplays")
 importClient("src\client\Hud\Hud_init.sqf"); cmplog("HUD")//ingame hud
 importClient("src\client\GeometryFixer\GeometryFixer_init.sqf");cmplog("GeoFix") //fix lag geometry
 importClient("src\client\LocalEffects\LocalEffects_init.sqf");cmplog("LocalEffects") //local effects system
+importClient("src\client\PersonClient\PersonClient_init.sqf"); cmplog("Person") //local persons subsystem
 
 importClient("src\client\NOEngineClient\NOEngineClientInit.sqf");cmplog("NOEngine")
 importClient("src\client\VoiceSystem\VoiceSystem_init.sqf"); cmplog("Voice")//tfar interface

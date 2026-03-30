@@ -1,15 +1,19 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
+#include "..\..\host\lang.hpp"
+namespace(ClientData,cd_)
 
-
+decl(float)
 cd_eyeState = 1; // 0 - ok; > 0 - closed
 
+decl(bool())
 cd_isEyesClosed = {cd_eyeState > 0};
 
-_onChangeEyeState = {
+decl(void(float;NULL|string))
+cd_onChangeEyeState = {
 	params ["_newState","_changeStateReason"];
 
 	cd_eyeState = _newState;
@@ -45,4 +49,4 @@ _onChangeEyeState = {
 			[true,_fadeInTime] call setBlackScreenGUI;
 		};
 	};
-}; rpcAdd("onChangeEyeState",_onChangeEyeState);
+}; rpcAdd("onChangeEyeState",cd_onChangeEyeState);

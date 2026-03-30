@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -105,6 +105,9 @@ struct(Craft_FailedHandler::default)
 
 			{
 				private _itm = _x;
+				
+				assert(!isNullVar(_itm));
+				assert(!isNullReference(_itm));
 
 				if ((getVar(_itm,getPos) distance _pos) > _maxDistanceRange) then {
 					_maxDistanceRange = getVar(_itm,getPos) distance _pos;

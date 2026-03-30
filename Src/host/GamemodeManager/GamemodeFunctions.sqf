@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -34,22 +34,42 @@ gm_init = {
 	
 	//Устанавливаем пре лобби таймер
 	gm_lobbyTimeLeft = PRE_LOBBY_AWAIT_TIME;
+
+	gm_lobbyLowOnlineTimeLeft = PRE_LOBBY_LOW_ONLINE_AWAIT;
 	
 	//Запускаем прелобби ожидание
 	//copied and changed from GameMode_ThreadLobby.sqf
 	private _code = {
 		FHEADER;
 		
-		#ifndef EDITOR
-		if (gm_canVote && {!isNullReference(ACCESS_ADMIN call cm_findClientByAccessLevel)}) then {
-			gm_canVote = false;
-			["Админ в чати, голосование офф.","system"] call cm_sendOOSMessage;
-		};
-		#endif
+		// #ifndef EDITOR
+		// if (gm_canVote && {!isNullReference(ACCESS_ADMIN call cm_findClientByAccessLevel)}) then {
+		// 	gm_canVote = false;
+		// 	["Админ в чати, голосование офф.","system"] call cm_sendOOSMessage;
+		// };
+		// #endif
 		
 		if (!gm_lobbyCanProcessTime) exitWith {};
-		
+
+		#ifndef TEST_WHITELISTED
+		if (count (call cm_getAllClientsInLobby) <= 3) exitWith {
+			DEC(gm_lobbyLowOnlineTimeLeft);
+			if (gm_lobbyLowOnlineTimeLeft < 0) exitWith {
+				stopThisUpdate();
+				gm_preLobbyHandler = -1;
+				["Народа маловато. Расход!","system"] call cm_sendOOSMessage;
+				gm_lobbyCanProcessTime = false;
+				invokeAfterDelay(server_end,5);
+				RETURN(0);
+			};
+			if (gm_lobbyLowOnlineTimeLeft%60 == 0) then {
+				[format["Низкий онлайн. Если не наберется больше 3х игроков, сервер выключится через %1 секунд",gm_lobbyLowOnlineTimeLeft]] call cm_sendOOSMessage;
+			};
+		};
+		#endif
+
 		DEC(gm_lobbyTimeLeft);
+		gm_lobbyLowOnlineTimeLeft = PRE_LOBBY_LOW_ONLINE_AWAIT;
 		
 		//Каждые 5 секунд проверяем пора ли кончать раунд
 		if (gm_lobbyTimeLeft%6==5) then {
@@ -73,6 +93,15 @@ gm_init = {
 
 		if (gm_lobbyTimeLeft < 0) then {
 			
+			//по истечению таймера и если игроков мало, то выключаемся
+			if (count _allClients <= 3) exitWith {
+				stopThisUpdate();
+				gm_preLobbyHandler = -1;
+				["Народа маловато. Расход!","system"] call cm_sendOOSMessage;
+				gm_lobbyCanProcessTime = false;
+				invokeAfterDelay(server_end,5);
+				RETURN(0);
+			};
 			
 			// После конца таймера мы хардкорно выбираем режим
 			//gm_canVote
@@ -100,66 +129,10 @@ gm_init = {
 			RETURN(0);
 		};
 		
-		{
-			netSendVar("lobby_timeLeft",gm_lobbyTimeLeft,callFunc(_x,getOwner));
-		} foreach _allClients;
+		[] call gm_syncLobbyTimer;
 
 	};
 	gm_preLobbyHandler = startUpdate(_code,1);
-};
-
-gm_showVoteMessage = {
-	params ["_client"];
-	
-	/*private _txt = "<t size='1.5'>Доступно голосование:" + sbr + sbr+"<t size='1.2' align='center'>";
-	private _gobj = nullPtr;
-	{
-		_gobj = missionNamespace getVariable ["story_" + _x,nullPtr];
-		if isNullReference(_gobj) then {continue};
-		modvar(_txt) + format["%1: %2",getVar(_gobj,name),_forEachIndex + 1] + sbr;
-	} foreach gm_allowedModes;
-	modvar(_txt) + "</t>"+sbr+"Для голосования используйте окно комманд: votemode число</t>";
-	callFuncParams(_client,localSay,_txt arg "system");*/
-	callFuncParams(_client,addSystemAction,"system" arg "system_votemode" arg "ГОЛОСОВАНИЕ!");
-};
-
-gm_getCanVoteCondition = {
-	private _countLobbyClients = count (call cm_getAllClientsInLobby);
-	private _output = _countLobbyClients <= ((count gm_votedClients)*70/100) && _countLobbyClients > 5;
-	#ifdef EDITOR
-	_output = count gm_votedClients > 0;
-	#endif
-	_output
-};
-
-gm_voteProcess = {
-	private _canVote = call gm_getCanVoteCondition;
-	
-	if (_canVote) then {
-		private _maxNum = 0;
-		private _maxMode = "";
-		private _listMaxModes = [];
-		{
-			if (_y > _maxNum) then {
-				_maxNum = _y;
-				//_maxMode = _x;
-				_listMaxModes = [_x];
-			} else {
-				if (_y == _maxNum) then {_listMaxModes pushBack _x};
-			};
-		} foreach gm_voteMap;
-		if (count _listMaxModes > 0) then {
-			gm_votedMode = pick _listMaxModes;
-		} else {
-			gm_votedMode = gm_defaultMode;
-		};
-		// if (_maxNum == 0) exitWith {
-		// 	_canVote = false;
-		// 	false;
-		// };
-		_canVote = true;
-	};
-	_canVote
 };
 
 //Выполняет рестарт раунда
@@ -246,6 +219,20 @@ gm_startMainThread = {
 	};
 };
 
+/* Синхронизирует gm_lobbyTimeLeft клиентам.
+ С параметром _client - отправляет конкретному клиенту. 
+ Без параметров - рассылает всем клиентам в лобби. */
+gm_syncLobbyTimer = {
+	params ["_client"];
+	if !isNullVar(_client) then {
+		netSendVar("lobby_timeLeft",gm_lobbyTimeLeft,callFunc(_client,getOwner));
+	} else {
+		{
+			netSendVar("lobby_timeLeft",gm_lobbyTimeLeft,callFunc(_x,getOwner));
+		} foreach (call cm_getAllClientsInLobby);
+	};
+};
+
 gm_startLobbyThread = {
 	private _code = {
 		#include "GameMode_ThreadLobby.sqf"
@@ -317,23 +304,19 @@ gm_initGameMode = {
 	//Загрузка карты
 	//Загрузка самой реликтовской карты
 	["    Строим Сеть...","system"] call cm_sendLobbyMessage;
+	private _errMapLoading = false;
 	if isNullVar(__DO_NOT_CREATE_MAP__) then {
 		private _mapName = callFunc(gm_currentMode,getMapName);
 		if (_mapName != "") then {
-			[_mapName] call mapManager_load;
+			private _loaded = [_mapName] call mapManager_load;
+			if (!_loaded) then {
+				_errMapLoading = true;
+				["<t size='2'>Карта не установлена. Требуется перезапуск</t>","system"] call cm_sendLobbyMessage;
+				setLastError("Map loading '"+_mapName+"' error; See console for more details");
+			};
 		};
 	};
-	
-	#ifdef EDITOR
-	["Campfire",[1931.15,2214.4,5.36588],null,false] call createStructure;
-	
-	//Загрузим в первый раз карту
-	if (!isMultiplayer) then {
-		//old loader not used
-		//["src\host\MapManager\Maps\testmap.sqf"] call MapManager_loadmap;
-		vasya setPosATL vec3(1935.4,2216.2,5.36289);
-	};
-	#endif
+	if (_errMapLoading) exitWith {};
 	
 	["    Придумываем должности...","system"] call cm_sendLobbyMessage;
 	{
@@ -363,7 +346,7 @@ gm_initGameMode = {
 
 	//Проверяем дефолтные роли из режима
 	{
-		[_x] call gm_validateRolesOnPickGameMode;
+		[_x] call gm_validateAvailableRoles;
 	} foreach cm_allClients;
 
 	[GAME_STATE_LOBBY] call gm_onChangeState;
@@ -414,7 +397,7 @@ gm_loadGamemode = {
 
 	//Проверяем дефолтные роли из режима
 	{
-		[_x] call gm_validateRolesOnPickGameMode;
+		[_x] call gm_validateAvailableRoles;
 	} foreach cm_allClients;
 
 	[GAME_STATE_LOBBY] call gm_onChangeState;

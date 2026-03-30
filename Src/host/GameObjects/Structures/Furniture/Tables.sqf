@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -17,6 +17,12 @@ class(TableBase) extends(Furniture)
 	var(dr,2);
 	getter_func(isMovable,true);
 	getterconst_func(getCoefAutoWeight,30);
+endclass
+
+editor_attribute("EditorGenerated")
+class(SteelTableHandmade) extends(TableBase)
+	var(model,"ml\ml_object_new\ml_object_2\l00_intro_props\l01_tir_stol.p3d");
+	var(material,"MatMetal");
 endclass
 
 editor_attribute("EditorGenerated")
@@ -56,6 +62,20 @@ endclass
 editor_attribute("EditorGenerated")
 class(WoodenOfficeTable4) extends(WoodenOfficeTable)
 	var(model,"ml\ml_object_new\model_14_10\stolik.p3d");
+endclass
+
+class(WoodenOfficeTable5) extends(WoodenOfficeTable)
+	var(model,"ml_shabut\furniture\paranormaltable.p3d");
+endclass
+
+class(LuxuryWoodenTable) extends(TableBase)
+	var(name, "Роскошный стол")
+	var(desc, "Такой могут позволить себе только богачи...")
+	var(model,"ml_shabut\furniture\dhangar_psacistul.p3d");
+endclass
+
+class(LuxuryWoodenTable1) extends(LuxuryWoodenTable)
+	var(model,"ca\buildings\furniture\dhangar_psacistul.p3d");
 endclass
 
 editor_attribute("EditorGenerated")
@@ -101,4 +121,27 @@ endclass
 editor_attribute("EditorGenerated")
 class(SmallWoodenTable) extends(MediumWoodenTable)
 	var(model,"a3\structures_f_epa\civ\camping\woodentable_small_f.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
+class(SmallWoodenTable4) extends(SmallWoodenTable)
+	var(model,"ca\structures\furniture\tables\lobby_table\lobby_table.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
+class(ReadingWoodenTable) extends(SmallWoodenTable)
+	var(model,"ml\ml_object_new\model_14_10\stol.p3d");
+	var(name,"Читальный столик");
+endclass
+
+class(SmallWoodenTable1) extends(SmallWoodenTable)
+	var(model,"ca\structures\furniture\tables\table_drawer\table_drawer.p3d");
+endclass
+
+class(SmallWoodenTable2) extends(SmallWoodenTable)
+	var(model,"ca\buildings\furniture\stul_hospoda.p3d");
+endclass
+
+class(SmallWoodenTable3) extends(SmallWoodenTable)
+	var(model,"ca\buildings\furniture\kitchen_table_a.p3d");
 endclass

@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -53,10 +53,23 @@ class(OldGreenToiletBowl) extends(IChair)
 	var(model,"ml\ml_object_new\model_24\tolchek.p3d");
 	var(material,"MatMetal");
 	var(name,"Туалет");
+	var(desc,"Сюда нужно справить нужду");
 	getter_func(isMovable,false);
 	getter_func(getChairOffsetPos,[-0.0479994 arg -0.0999994 arg -1.1]);
 	getterconst_func(getChairOffsetDir,180);
 	getterconst_func(getCoefAutoWeight,20);
+endclass
+
+class(OldLightToilet) extends(OldGreenToiletBowl)
+	var(model,"ca\structures\furniture\bathroom\toilet_b_02\toilet_b_02.p3d");
+	var(material,"MatBeton");
+	getter_func(getChairOffsetPos,[0 arg 0.05 arg -0.06]);
+	getterconst_func(getChairOffsetDir,0);
+endclass
+
+editor_attribute("EditorGenerated")
+class(OldLightToilet2) extends(OldLightToilet)
+	var(model,"ca\buildings\furniture\toilet_b.p3d");
 endclass
 
 editor_attribute("EditorGenerated")
@@ -89,6 +102,11 @@ class(ArmChair) extends(IChair)
 	var(model,"a3\props_f_orange\furniture\armchair_01_f.p3d");
 endclass
 
+editor_attribute("EditorGenerated")
+class(ArmChair2) extends(ArmChair)
+	var(model,"ml_exodusnew\kreslishko.p3d");
+endclass
+
 class(ArmChairBrown) extends(IChair)
 	getterconst_func(getChairOffsetDir,180);
 	getterconst_func(getChairOffsetPos,vec3(0,-0.1,0));
@@ -101,24 +119,92 @@ class(LobbyChair) extends(IChair)
 	var(model,"ca\structures\furniture\chairs\lobby_chair\lobby_chair.p3d");
 endclass
 
-editor_attribute("Deprecated" arg "Заменить на BrownLeatherChair. Будет удален с редактором 1.20")
-class(BumArmChair) extends(IChair)
+class(BrownLeatherChair) extends(IChair)
 	getterconst_func(getChairOffsetPos,vec3(0,0.2,-0.5));
 	getterconst_func(restBias,vec3(0,0.8,0));
 	var(model,"smg_metro_building\drugoe\smg_bomjkreslo.p3d");
 	var(dr,1);
 endclass
-	class(BrownLeatherChair) extends(BumArmChair)
-		var(model,"smg_metro_building\drugoe\smg_bomjkreslo.p3d");
-	endclass
 
 class(GreenArmChair) extends(IChair)
 	getterconst_func(getChairOffsetPos,vec3(0,-0.25,-0.4));
 	getterconst_func(getChairOffsetDir,180);
 	var(model,"ml\ml_object_new\model_14_10\diwan.p3d");
 endclass
-	//EQUALS
-	editor_attribute("Deprecated" arg "Заменить на GreenArmChair. Будет удален с редактором 1.20")
-	class(GreenChair) extends(GreenArmChair)
-		var(model,"ml\ml_object_new\model_14_10\diwan.p3d");
-	endclass
+
+class(Bath) extends(IChair)
+	var(model,"ca\structures\furniture\bathroom\bath\bath.p3d");
+	var(name,"Ванна");
+	var(desc,"Такое только у настоящих богачей!")
+	var(material,"MatStone");
+
+	getterconst_func(getChairOffsetPos,vec3(0.25,0,-0.2));
+	getterconst_func(getChairOffsetDir,-90);
+
+	getter_func(getChairSitdownAnimation,[
+		"Acts_SittingWounded_breath"
+	]);
+
+	var(sourceMatter,"Water");
+	func(onInteractWith)
+	{
+		objParams_2(_with,_usr);
+		if isTypeOf(_with,IReagentNDItem) exitWith {
+			if !callSelfParams(canUseWaterSink,_usr) exitWith {};
+			if callFuncParams(_with,addReagent,getSelf(sourceMatter) arg getVar(_with,curTransferSize)) then {
+				callFuncParams(_usr,meSay,"наполняет " + callFunc(_with,getName));
+				callSelf(playSinkSound);
+			};
+		};
+	};
+
+	func(onClick)
+	{
+		objParams_1(_usr);
+		if !callSelfParams(canUseWaterSink,_usr) exitWith {};
+		private _pt = nullPtr;
+		{
+			_pt = callFuncParams(_usr,getPart,_x);
+			if !isNullReference(_pt) then {
+				callFuncParams(_pt,setGerms,(getVar(_pt,germs) - randInt(40,60)) max 0);
+			};
+		} foreach BP_INDEX_ALL;
+
+		if !isNullReference(_pt) then {
+			callFunc(_usr,syncGermsVisual);
+			private _m = pick["моется","принимает ванную","очищается водой","запускает водяные брызги","плещется","плавает"];
+			callFuncParams(_usr,meSay,_m);
+			callSelf(playSinkSound);
+		};
+	};
+
+	func(canUseWaterSink)
+	{
+		objParams_1(_usr);
+		if (getSelf(hp)<=(getSelf(hpMax)/3)) exitWith {
+			private _m = pick["слишком сильно повреждено."];
+			callFuncParams(_usr,localSay,callSelf(getName) + " "+_m arg "error");
+			false;
+		};
+
+		if !callFunc(_usr,isConnected) exitWith {
+			private _m = pick["Нужно сначала залезть в ванну."];
+			callFuncParams(_usr,localSay,_m arg "error");
+			false;
+		};
+		true
+	};
+
+	func(playSinkSound)
+	{
+		objParams();
+		callSelfParams(playSound,"reagents\sink.ogg" arg getRandomPitchInRange(0.9,1.3));
+	};
+
+endclass
+
+editor_attribute("EditorGenerated")
+class(DrinkingBowl) extends(Bath)
+	var(model,"a3\structures_f_enoch\industrial\agriculture\trough_01_f.p3d");
+	var(name,"Поилка");
+endclass

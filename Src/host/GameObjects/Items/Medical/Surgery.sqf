@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -100,7 +100,7 @@ endclass
 
 class(Forceps) extends(Item)
 	var(name,"Щипцы");
-	var(desc,"Лекарский инструмент для сшивания орагнов и конечностей.");
+	var(desc,"Лекарский инструмент для сшивания органов и конечностей.");
 	var(model,"a3\structures_f\items\tools\pliers_f.p3d");
 	var(material,"MatMetal");
 	getter_func(objectHealthType,OBJECT_TYPE_COMPLEX);

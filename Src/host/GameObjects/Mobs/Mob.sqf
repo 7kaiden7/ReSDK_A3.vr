@@ -1,11 +1,12 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
 
 #include "..\..\engine.hpp"
 #include "..\..\oop.hpp"
+#include "..\..\struct.hpp"
 #include "..\GameConstants.hpp"
 #include "..\..\PointerSystem\pointers.hpp"
 #include "..\..\ServerRpc\serverRpc.hpp"
@@ -235,7 +236,7 @@ class(Mob) extends(BasicMob)
 			callSelfParams(startUpdateMethod, "handle_falling" arg "handleFallingUpdate" arg 0);
 
 			//в редакторе все в сознании
-#ifndef EDITOR
+#ifndef EDITOR_OR_SP_MODE
 			callSelfParams(setCombatMode,false);
 
 			callSelfParams(setSleep,true);
@@ -317,6 +318,8 @@ region(Connect control events)
 		callSelf(onSyncPain);
 		callSelf(recalcBloodLoss);
 
+		netSyncObjVar(getSelf(owner),"rv_name",getVar(getSelf(client),name));
+		
 		callSelfParams(loadActions,null);
 
 		//хандлер звуков шагов

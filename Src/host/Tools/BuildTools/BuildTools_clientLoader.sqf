@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 /*
@@ -12,6 +12,24 @@ log("Compiling shared components");
 #include <..\..\CommonComponents\loader.hpp>
 
 ;
+
+//adding scripted lights
+private _ltData = ["lt_preload_cfgList = [];"];
+{
+	if !(fileExists(_x)) exitWith {
+		_clientCompileErrorCode = 103;
+		_ltData = [];
+		errorformat("Light config not found => %1",_x);
+	};
+	_ltData pushBack (
+		["lt_preload_cfgList pushBack (",str (preprocessFile _x),");"] joinString " "
+	)
+} foreach slt_internal_fileListBuffer;
+if (count _ltData == 0) exitWith {}; //fatal light loading
+allClientContents pushBack (compile(_ltData joinString endl));
+allClientModulePathes pushBack "scripted_light_configs";
+
+
 private _shCnt = count allClientContents;
 if (_shCnt == 0) exitWith {
 	error("Shared components not found or empty");
@@ -23,7 +41,7 @@ logformat("Shared components count: %1",_shCnt);
 log("Compiling client components");
 
 #ifdef DEBUG
-	#define cmplog(fcat) allClientContents pushBack (compile format['log("Init %1")',fcat]);
+	#define cmplog(fcat) allClientContents pushBack (compile format['log("Init %1")',fcat]); allClientModulePathes pushBack "internal module logging";
 #else
 	#define cmplog(fcat)
 #endif

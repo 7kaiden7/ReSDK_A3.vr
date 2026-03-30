@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -38,4 +38,5 @@ init_function(print_init_redirects)
 {
 	cprintErr = printError;
 	cprintWarn = printWarning;
+	cprint = printLog;
 }

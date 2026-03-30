@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -16,7 +16,10 @@ addCommandWithDescription("help",PUBLIC_COMMAND,"Отображает досту
 		if (!array_exists(_accessList,getVar(_client,access)) && !array_exists(_accessList,PUBLIC_COMMAND) && (selectMax _accessList > getVar(_client,access))) then {
 			//warningformat("processClientCommand() - No access to call %1 (called on %2): list access:%3; client access %4",_command arg _owner arg _accessList arg getVar(_client,access));
 		} else {
-			_list pushBack (sbr + _x + "            - " + (_y select 1));
+			_description = _y select 1;
+			if (_description != "") then {
+				_list pushBack (sbr + _x + "            - " + _description);
+			};
 		};
 	} foreach cm_commands_map;
 	_list sort true;
@@ -133,23 +136,23 @@ addCommandWithDescription("showmybans",PUBLIC_COMMAND,"Показывает ка
 	callFuncParams(thisClient,ShowMessageBox,"Text" arg _text);
 };
 
-addCommandWithDescription("discordsync",PUBLIC_COMMAND,"Привязывает дискорд к игровому аккаунту по токену")
-{
-	_h = {
-		private thisClient = ifcheck(isTypeOf(this,ServerClient),this,getSelf(client));
+// addCommandWithDescription("discordsync",PUBLIC_COMMAND,"Привязывает дискорд к игровому аккаунту по токену")
+// {
+// 	_h = {
+// 		private thisClient = ifcheck(isTypeOf(this,ServerClient),this,getSelf(client));
 		
-		//fix #236 - removing spaces,and nextlines from token
-		private _token = (_value splitString (" "+endl)) joinString "";
+// 		//fix #236 - removing spaces,and nextlines from token
+// 		private _token = (_value splitString (" "+endl)) joinString "";
 
-		private _result = [thisClient,_token] call dsm_accounts_register;
-		callFuncParams(thisClient,localSay,_result arg "system");
+// 		private _result = [thisClient,_token] call dsm_accounts_register;
+// 		callFuncParams(thisClient,localSay,_result arg "system");
 
-		callSelf(CloseMessageBox);
-	};
-	_m = "<t color='#ff0000'>Внимание! Никому не передавайте свой токен до активации.</t>"+sbr +
-	"Введите токен, который был получен от бота RELICTA в дискорде.";
-	callFuncParams(thisClient,ShowMessageBox,"Input" arg [_m arg "" arg "Активировать"] arg _h);
-};
+// 		callSelf(CloseMessageBox);
+// 	};
+// 	_m = "<t color='#ff0000'>Внимание! Никому не передавайте свой токен до активации.</t>"+sbr +
+// 	"Введите токен, который был получен от бота RELICTA в дискорде.";
+// 	callFuncParams(thisClient,ShowMessageBox,"Input" arg [_m arg "" arg "Активировать"] arg _h);
+// };
 
 addCommandWithDescription("discordgetroles",PUBLIC_COMMAND,"Получить свои роли из дискорда")
 {

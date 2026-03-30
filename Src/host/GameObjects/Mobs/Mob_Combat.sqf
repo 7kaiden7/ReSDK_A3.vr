@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -21,6 +21,9 @@ var(curTargZone,TARGET_ZONE_TORSO); // выбранная зона атаки
 var(curCombatStyle,COMBAT_STYLE_NO); //текущий боевой режим
 
 var(isReadyAttack,true); //готовность основной атаки
+
+//Обработчики события атаки (массив функций)
+var(attackHandlers,[]);
 
 //other hand vars
 var(otherAttackType,ATTACK_TYPE_THRUST);
@@ -1217,13 +1220,21 @@ func(applyDodgeVisualEffects)
 	objParams_1(_sideAttacker);
 	private _data = [COMBAT_ATTDAM_DODGE,netTickTime,_sideAttacker];
 	callSelfParams(syncSmdVar,"attdam" arg _data);
+
+	if callSelf(isAIAgent) then {
+		[getSelf(owner),_sideAttacker] call anim_doDodge;
+	};
 };
 
 func(applyParryVisualEffects)
 {
 	objParams_2(_idxHand,_enum);
 	private _data = [COMBAT_ATTDAM_PARRY,netTickTime,_idxHand,_enum];
-	callSelfParams(syncSmdVar,"attdam" arg _data)
+	callSelfParams(syncSmdVar,"attdam" arg _data);
+
+	if callSelf(isAIAgent) then {
+		[getSelf(owner),_idxHand,_enum] call anim_doParry;
+	};
 };
 
 func(applyPointVisualEffects)
@@ -1274,6 +1285,10 @@ func(applyAttackVisualEffects)
 	};
 
 	callSelfParams(syncSmdVar,"attdam" arg _data);
+
+	if callSelf(isAIAgent) then {
+		[getSelf(owner),getSelf(activeHand),_enum] call anim_doAttack;
+	};
 };
 
 
@@ -1424,10 +1439,10 @@ region(shooting)
 			modvar(_mod) + 1; //маневр
 		};
 
-		private _isMob = callFunc(_targ,isMob);
+		private _isMob = callFunc(_target,isMob);
 
 		//высчитываем модификатор дистанции
-		private _distMod = [callSelfParams(getDistanceTo,_target),ifcheck(_isMob,callFunc(_targ,getRealSpeed),0)] call gurps_getDistanceModificator;
+		private _distMod = [callSelfParams(getDistanceTo,_target),ifcheck(_isMob,callFunc(_target,getRealSpeed),0)] call gurps_getDistanceModificator;
 
 		modvar(_mod) + _distMod;
 
@@ -1445,7 +1460,7 @@ region(shooting)
 		};
 
 		private _mePos = ((getPosATL callSelf(getBasicLoc)) select 2);
-		private _targPos = ((getPosATL callFunc(_targ,getBasicLoc)) select 2);
+		private _targPos = ((getPosATL callFunc(_target,getBasicLoc)) select 2);
 		//TODO прверка выше/ниже цели
 
 		//куда атакуем
@@ -1771,4 +1786,45 @@ region(shooting)
 			false
 		};
 		true
+	};
+
+	//Подписка на событие атаки
+	//Параметры обработчика: [_attacker, _weapon, _optItem]
+	func(addAttackHandler)
+	{
+		objParams_1(_handler);
+		if !equalTypes(_handler,{}) exitWith {
+			errorformat("Mob::addAttackHandler() - handler must be code, got %1",typeName _handler);
+			-1
+		};
+		(getSelf(attackHandlers)) pushBack _handler;
+	};
+
+	//Отписка от события атаки
+	//Принимает либо индекс обработчика, либо ссылку на код
+	func(removeAttackHandler)
+	{
+		objParams_1(_handlerOrIndex);
+		if equalTypes(_handlerOrIndex,0) then {
+			(getSelf(attackHandlers)) deleteAt _handlerOrIndex;
+		} else {
+			array_remove((getSelf(attackHandlers)),_handlerOrIndex);
+		};
+	};
+
+	//Вызов всех обработчиков атаки
+	//Вызывается из DODamageInfo::updateLastAttacker
+	func(invokeAttackHandlers)
+	{
+		objParams_3(_attacker,_weapon,_optItem);
+		//Итерируем по копии массива чтобы избежать пропуска элементов
+		//при модификации оригинального массива из обработчика
+		private _handlers = array_copy(getSelf(attackHandlers));
+		{
+			if !equalTypes(_x,{}) then {
+				errorformat("Mob::invokeAttackHandlers() - handler is not code, got %1",typeName _x);
+			} else {
+				[_attacker,_weapon,_optItem] call _x;
+			};
+		} forEach _handlers;
 	};

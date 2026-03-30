@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -22,6 +22,11 @@ class(SteelGridDoor) extends(DoorStatic)
 	
 	var(stBreakBonus,0);
 	getter_func(canBreakDoor,true);
+endclass
+
+editor_attribute("EditorGenerated")
+class(SteelStrongDoor) extends(SteelGridDoor)
+	var(model,"ml\ml_object_new\model_14_10\dwerca.p3d");
 endclass
 
 class(SteelGreenDoor) extends(SteelGridDoor)

@@ -1,11 +1,13 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
 #include <..\..\host\engine.hpp>
 #include <..\..\host\text.hpp>
 #include <..\ClientRpc\clientRpc.hpp>
+
+namespace(OneSync;os_)
 
 /*
 	OneSync - модуль синхронизации.
@@ -36,10 +38,13 @@
 #include "OneSync_light.sqf"
 #include "OneSync_steps.sqf"
 
+decl(string[])
 os_list_services = ["falling","light","steps" /*,"mobcollision" Коллизия сломана*/];
 
+decl(bool)
 os_isActive = false;
 
+decl(void())
 os_start = {
 
 	if (os_isActive) exitWith {
@@ -58,6 +63,7 @@ os_start = {
 	os_isActive = true;
 };
 
+decl(void())
 os_stop = {
 	if (!os_isActive) exitWith {
 		error("[OS::STOP]: All services already stopped");

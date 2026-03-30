@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -50,12 +50,12 @@ function(widget_winapi_internal_validateByteCount)
 
 function(widget_winapi_openTreeView)
 {
-	params ["_refOut",["_header","Выбор"],["_desc","Выберите элемент"],["_itemTree",""],["_curItem",""]];
+	params ["_refOut",["_header","Выбор"],["_desc","Выберите элемент"],["_itemTree",""],["_curItem",""],["_multiple",false]];
 	if isNullVar(_refOut) exitWith {false};
 	if (tickTime < widget_winapi_lastpressTree) exitWith {false};
 
 	//private _cachedMousePos = getMousePosition; //replaced inside c#-side
-	private _result = ["OOPBuilder","tree",[_header,_desc,_itemTree,_curItem],true] call rescript_callCommand;
+	private _result = ["OOPBuilder","tree",[_header,_desc,_itemTree,_curItem,_multiple],true] call rescript_callCommand;
 	
 	widget_winapi_lastpressTree = tickTime + 0.3;
 	

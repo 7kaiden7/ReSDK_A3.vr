@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -17,6 +17,16 @@ class(ShelfBase) extends(Furniture)
 	var(material,"MatWood");
 	var(dr,1);
 	getterconst_func(getCoefAutoWeight,10);
+endclass
+
+editor_attribute("EditorGenerated")
+class(ClosedWoodenBox) extends(ShelfBase)
+	var(model,"a3\props_f_exp\commercial\market\woodencrate_01_f.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
+class(WoodenShelf) extends(ShelfBase)
+	var(model,"ml\ml_object_new\model_05\polka_2.p3d");
 endclass
 
 editor_attribute("EditorGenerated")
@@ -49,7 +59,7 @@ class(Sink) extends(ShelfBase)
 		{
 			_pt = callFuncParams(_usr,getPart,_x);
 			if !isNullReference(_pt) then {
-				setVar(_pt,germs,(getVar(_pt,germs) - randInt(40,60)) max 0);
+				callFuncParams(_pt,setGerms,(getVar(_pt,germs) - randInt(40,60)) max 0);
 			};
 		} foreach [BP_INDEX_ARM_R,BP_INDEX_ARM_L,BP_INDEX_HEAD];
 
@@ -79,6 +89,11 @@ class(Sink) extends(ShelfBase)
 endclass
 
 editor_attribute("EditorGenerated")
+class(Sink2) extends(Sink)
+	var(model,"ca\structures\furniture\bathroom\basin_a\basin_a.p3d");
+endclass
+
+editor_attribute("EditorGenerated")
 class(Shower) extends(Sink)
 	var(model,"ml\ml_object_new\model_05\dysh.p3d");
 	var(name,"Мытьё");
@@ -100,6 +115,14 @@ endclass
 editor_attribute("EditorGenerated")
 class(WoodenSmallShelf1) extends(WoodenSmallShelf)
 	var(model,"a3\structures_f_epb\furniture\shelveswooden_f.p3d");
+endclass
+
+class(WoodenSmallShelf2) extends(WoodenSmallShelf)
+	var(model,"ca\structures_e\misc\misc_interier\rack_ep1.p3d");
+endclass
+
+class(WoodenSmallShelf3) extends(WoodenSmallShelf)
+	var(model,"relicta_models\models\interier\bookshelf.p3d");
 endclass
 
 editor_attribute("EditorGenerated")
@@ -127,4 +150,9 @@ class(Shelves) extends(ShelfBase)
 	var(material,"MatMetal");
 	var(name,"Полки");
 	getter_func(isMovable,true);
+endclass
+
+editor_attribute("EditorGenerated")
+class(Shelves2) extends(Shelves)
+	var(model,"ca\structures\furniture\cases\case_d\case_d.p3d");
 endclass

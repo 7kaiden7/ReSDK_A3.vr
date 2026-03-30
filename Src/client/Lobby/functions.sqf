@@ -1,23 +1,28 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
 #include "..\..\host\engine.hpp"
 #include "..\..\host\keyboard.hpp"
 #include "..\WidgetSystem\widgets.hpp"
-#include <..\Chat\Chat.hpp>
 
+namespace(Lobby,lobby_)
 
+macro_const(lobby_color_background)
 #define BACKGROUND_COLOR [0,0,0,0.7]
+macro_const(lobby_time_onload)
 #define TIME_ONLOAD 2.2
 
+macro_func(lobby_getLoadingTimeout,float())
 #define LOBBY_LOADING_TIME rand(10,20)
+macro_const(lobby_hint_time_minimum)
 #define LOBBY_HINT_TIME_MINIMUM 2.5
+macro_const(lobby_hint_time_per_symbol)
 #define LOBBY_HINT_TIME_PER_SYMBOL 0.07
 
 
-
+decl(void(...any[]))
 lobbyOpen = {
 
 	private _settings = _this;
@@ -28,7 +33,7 @@ lobbyOpen = {
 		};
 		call inventory_resetPositionHandWidgets;call closeInventory_handle;
 	};
-	if (isCraftOpen) then {call craft_close};
+	if (craft_isMenuOpen) then {call craft_close};
 	if (esc_isMenuOpened) then {call esc_closeMenu};
 	if (nd_isOpenDisplay) then {call nd_onClose};
 	if (chat_isHistoryOpen) then {chat_isHistoryOpen = false; call displayClose};
@@ -371,10 +376,31 @@ lobbyOpen = {
 	"lobby" call client_setState;
 
 	call lobby_initLoadingScreen;
+
+	#ifdef SP_MODE
+		private _b = [_d,BACKGROUND,WIDGET_FULLSIZE] call createWidget;
+		_b setBackgroundColor [0,0,0,1];
+		_b ctrlEnable true;
+		ctrlSetFocus _b;
+		startAsyncInvoke
+		{
+			params ["_b"];
+			if !isNullReference(_b) then {
+				ctrlSetFocus _b;
+			};
+
+			isNullReference(_b)
+		},{},
+		[_b]
+		endAsyncInvoke
+		
+	#endif
 };
 
+decl(bool)
 lobby_isMusicEnabled = true;
 
+decl(void(bool))
 lobby_handleMusic = {
 	params ["_mode"];
 	if (_mode) then {
@@ -392,6 +418,7 @@ lobby_handleMusic = {
 	};
 };
 
+decl(void(bool))
 lobby_onLoad = {
 	private _isOpenMode = _this;
 
@@ -426,10 +453,11 @@ lobby_onLoad = {
 	getTextFieldWg commit TIME_ONLOAD;
 
 	if (_isOpenMode) then {
-		getChatAllText() call chat_onRenderLobby;
+		(call chat_getAllText) call chat_onRenderLobby;
 	};
 };
 
+decl(void())
 lobby_initLoadingScreen = {
 	if (!isMultiplayer) exitwith {};
 	#ifdef DEBUG
@@ -535,6 +563,7 @@ lobby_initLoadingScreen = {
 	invokeAfterDelayParams(_aftercallCode,_EXREF_TIME,[_txt arg _newidx arg _algPickRand arg _aftercallCode]);
 };
 
+decl(void(...any[]))
 lobby_loadSettings = {
 
 	{
@@ -542,6 +571,7 @@ lobby_loadSettings = {
 	} foreach _this;
 };
 
+decl(void(string))
 lobby_onSendChatMessage = {
 	private _text = _this;
 
@@ -556,8 +586,10 @@ lobby_onSendChatMessage = {
 	//[profileNameSteam + ": " + _text] call chatPrint;
 };
 
+decl(bool)
 lobby_internal_progressclose = false;
 
+decl(void())
 lobbyClose = {
 	if (lobby_internal_progressclose) exitWith {};
 	
@@ -587,6 +619,7 @@ lobbyClose = {
 	invokeAfterDelay(_postCode,TIME_ONLOAD * 1.5);
 };
 
+decl(void(int;int))
 lobby_onChangeGameState = {
 	params ["_oldState","_newState"];
 
@@ -619,6 +652,7 @@ lobby_onChangeGameState = {
 };
 
 //коллбэк сервера на показ списка ролей
+decl(void(any[]|int))
 lobby_openSelectLateRole = {
 	_data = _this;
 
@@ -707,6 +741,7 @@ lobby_openSelectLateRole = {
 
 }; rpcAdd("onSelectLateRole",lobby_openSelectLateRole);
 
+decl(void())
 lobby_onSelectedLateRole = {
 
 	_list = getMainWid("currentControl");

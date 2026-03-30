@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -13,7 +13,7 @@ class(SignBar) extends(StreetLampEnabled)
 	var(desc,"Знаменитый Бар ""Кабак""! Эта вывеска так приятно переливается своими цветами и будто зазывает каждого прохожего внутрь.");
 	editor_attribute("EditorVisible" arg "type:string") editor_attribute("Tooltip" arg "Описание таблички в выключенном состоянии")
 	var(descDisabled,"Знаменитый Бар ""Кабак""! Судя по отсуствию красивой подсветки заведение сейчас не работает.");
-	var(light,LIGHT_SIGN_BAR);
+	var(light,"SLIGHT_LEGACY_SIGN_BAR" call lightSys_getConfigIdByName);
 	var(edIsEnabled,true);
 	var(edReqPower,80);
 	var(model,"ca\signs2\sign_bar_ru.p3d");
@@ -48,6 +48,24 @@ class(SignTableKabak) extends(IStruct)
 	var(dr,1);
 endclass
 
+editor_attribute("EditorGenerated")
+class(SignTableKuznya) extends(SignTableKabak)
+	var(model,"ml\ml_object_new\model_05\kyznya.p3d");
+	var(name,"Кузня");
+	var(material,"MatMetal");
+endclass
+
+editor_attribute("EditorGenerated")
+class(SignTableGostinitca) extends(SignTableKabak)
+	var(model,"ca\signs2\signb_pub_ru3.p3d");
+	var(name,"Гостиница");
+endclass
+
+editor_attribute("EditorGenerated")
+class(SignTableGostinitca2) extends(SignTableGostinitca)
+	var(model,"ca\signs2\signb_pub_ru2.p3d");
+endclass
+
 
 //крест лекарни
 class(SignMedical) extends(SignBar)
@@ -56,5 +74,5 @@ class(SignMedical) extends(SignBar)
 	var(name,"Лекарня");
 	var(edReqPower,80);
 	var(desc,"Иногда лечат, иногда - калечат...");
-	var(light,LIGHT_SIGN_MEDICAL);
+	var(light,"SLIGHT_LEGACY_SIGN_MEDICAL" call lightSys_getConfigIdByName);
 endclass

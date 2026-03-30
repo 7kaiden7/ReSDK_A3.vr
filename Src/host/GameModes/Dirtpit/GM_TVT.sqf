@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -425,7 +425,7 @@ class(GMTVTGame) extends(GMStationBase)
 	func(pickHeadUniform)
 	{
 		objParams();
-		private _l = ["hatshemag","hatoldushanka","workercap","cookercap","","","",""];
+		private _l = ["hatshemag","HatUshankaUp2","workercap","cookercap","","","",""];
 		if (getSelf(stage)>=1) then {
 			_l pushBack "CombatHat";
 			_l pushBack "CombatHat";
@@ -513,7 +513,7 @@ class(GMTVTGame) extends(GMStationBase)
 			};
 			callSelfParams(pickFirstWeapon,_mob arg getVar(_mob,mainHand));
 			//Разведчик
-			_m = ["SmallBackpack",_mob,INV_BACKPACK] call createItemInInventory;
+			_m = ["LeatherBackpackBrown",_mob,INV_BACKPACK] call createItemInInventory;
 			_itm = ["CampfireCreator",_m] call createItemInContainer;
 			setVar(_itm,fuelLeft,60*randInt(10,20));
 			["MatchBox",_cloth] call createItemInContainer;

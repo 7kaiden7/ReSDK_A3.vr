@@ -1,22 +1,31 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
-#include <engine.h>
-#include <script.h>
-#include <VoiceSystem_widgetEnums.h>
+#define USE_REVOICE_BACKEND
 
-//Включенный флаг отключает компиляцию старых функций
-#define VOICE_DISABLE_LEGACYCODE
+//#include <engine.h>
+#include <..\..\host\engine.hpp>
+#include <..\..\host\lang.hpp>
+
+namespace(VoiceSystem,vs_)
 
 //Новый алгоритм затухания звука
+macro_def(vs_use_new_algoritm_voice_intersection)
 #define VOICE_USE_NEW_ALGORITM_VOICE_INTERSECTION
 
-#include "VoiceSystem_keysConstant.sqf"
-#include "VoiceSystem_uncategorized.sqf"
-//Всё что не влезло в первый файл по препроцессору влезет во вторую часть
-#include "VoiceSystem_part2.sqf"
+#ifdef USE_REVOICE_BACKEND
+    vs_useReVoice = true;
+#else
+    vs_useReVoice = false;
+#endif
 
-//Публичный интерфейс управления
-#include "VoiceSystem_publicInterface.sqf"
+#ifdef USE_REVOICE_BACKEND
+    #include "ReVoice\ReVoice_init.sqf"
+#else
+    #include "VoiceSystem_uncategorized.sqf"
+
+    //Публичный интерфейс управления
+    #include "VoiceSystem_publicInterface.sqf"
+#endif

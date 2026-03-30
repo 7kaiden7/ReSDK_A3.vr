@@ -12,18 +12,18 @@ class EditorData
 	};
 	class LayerIndexProvider
 	{
-		nextID=4459;
+		nextID=4578;
 	};
 	class Camera
 	{
-		pos[]={3895.0403,29.303802,4050.1289};
-		dir[]={-0.1066445,-0.20558596,0.97293794};
-		up[]={-0.022407938,0.97857797,0.20443669};
-		aside[]={0.99413031,-3.7397258e-06,0.10898154};
+		pos[]={3893.5654,29.303802,4045.2417};
+		dir[]={-0.63143039,-0.39136878,-0.66960752};
+		up[]={-0.26852939,0.92016941,-0.2847642};
+		aside[]={-0.72761548,-6.4083579e-06,0.68611228};
 	};
 };
 binarizationWanted=0;
-sourceName="ReSDK_A3";
+sourceName="resdk_fork";
 addons[]=
 {
 	"A3_Characters_F",
@@ -850,7 +850,7 @@ class Mission
 			flags=4;
 			class Attributes
 			{
-				init="{createHashMapFromArray[[""customProps"",createHashMapFromArray[]],[""missionName"",""Army""],[""version"",4]]}";
+				init="{createHashMapFromArray[[""customProps"",createHashMapFromArray[]],[""missionName"",""Army""],[""version"",5]]}";
 			};
 			id=2205;
 			type="Land_Orange_01_F";
@@ -29727,7 +29727,7 @@ class Mission
 									side="Empty";
 									class Attributes
 									{
-										init="{createHashMapFromArray[[""customProps"",createHashMapFromArray[]],[""prob"",81],[""class"",""SmallBackpack""]]}";
+										init="{createHashMapFromArray[[""customProps"",createHashMapFromArray[]],[""prob"",81],[""class"",""LeatherBackpackBrown""]]}";
 									};
 									id=5400;
 									type="DeconKit_01_F";
@@ -29744,7 +29744,7 @@ class Mission
 									side="Empty";
 									class Attributes
 									{
-										init="{createHashMapFromArray[[""customProps"",createHashMapFromArray[]],[""class"",""SmallBackpack""]]}";
+										init="{createHashMapFromArray[[""customProps"",createHashMapFromArray[]],[""class"",""LeatherBackpackBrown""]]}";
 									};
 									id=5403;
 									type="DeconKit_01_F";
@@ -29761,7 +29761,7 @@ class Mission
 									side="Empty";
 									class Attributes
 									{
-										init="{createHashMapFromArray[[""customProps"",createHashMapFromArray[]],[""class"",""SmallBackpack""]]}";
+										init="{createHashMapFromArray[[""customProps"",createHashMapFromArray[]],[""class"",""LeatherBackpackBrown""]]}";
 									};
 									id=5404;
 									type="DeconKit_01_F";
@@ -29778,7 +29778,7 @@ class Mission
 									side="Empty";
 									class Attributes
 									{
-										init="{createHashMapFromArray[[""customProps"",createHashMapFromArray[]],[""class"",""SmallBackpack""]]}";
+										init="{createHashMapFromArray[[""customProps"",createHashMapFromArray[]],[""class"",""LeatherBackpackBrown""]]}";
 									};
 									id=5405;
 									type="DeconKit_01_F";
@@ -29795,7 +29795,7 @@ class Mission
 									side="Empty";
 									class Attributes
 									{
-										init="{createHashMapFromArray[[""customProps"",createHashMapFromArray[]],[""class"",""SmallBackpack""]]}";
+										init="{createHashMapFromArray[[""customProps"",createHashMapFromArray[]],[""class"",""LeatherBackpackBrown""]]}";
 									};
 									id=5406;
 									type="DeconKit_01_F";
@@ -29812,7 +29812,7 @@ class Mission
 									side="Empty";
 									class Attributes
 									{
-										init="{createHashMapFromArray[[""customProps"",createHashMapFromArray[]],[""prob"",71],[""class"",""SmallBackpack""]]}";
+										init="{createHashMapFromArray[[""customProps"",createHashMapFromArray[]],[""prob"",71],[""class"",""LeatherBackpackBrown""]]}";
 									};
 									id=5407;
 									type="DeconKit_01_F";
@@ -38870,7 +38870,7 @@ class Mission
 									side="Empty";
 									class Attributes
 									{
-										init="{createHashMapFromArray[[""customProps"",createHashMapFromArray[[""countslots"",100]]],[""class"",""BigClothCabinet""],[""containerContent"",[[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""TacticalVest""""]]}"",1],[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""ArmorLite""""]]}"",1],[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""ArmorMedium""""]]}"",1],[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""ArmorHeavy""""]]}"",1],[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""Hat""""]]}"",1],[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""Hat1""""]]}"",1],[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""Hat2""""]]}"",1],[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""CombatHat""""]]}"",1],[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""HatOldUshanka""""]]}"",1],[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""HatBeret""""]]}"",1],[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""HatBandana""""]]}"",1],[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""HatBandana1""""]]}"",1],[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""HatUshankaUp""""]]}"",1],[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""HatShemag""""]]}"",1]]]]}";
+										init="{createHashMapFromArray[[""customProps"",createHashMapFromArray[[""countslots"",100]]],[""class"",""BigClothCabinet""],[""containerContent"",[[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""TacticalVest""""]]}"",1],[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""ArmorLite""""]]}"",1],[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""ArmorMedium""""]]}"",1],[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""ArmorHeavy""""]]}"",1],[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""Hat""""]]}"",1],[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""Hat1""""]]}"",1],[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""Hat2""""]]}"",1],[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""CombatHat""""]]}"",1],[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""HatUshankaUp2""""]]}"",1],[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""HatBeret""""]]}"",1],[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""HatBandana""""]]}"",1],[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""HatBandana1""""]]}"",1],[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""HatUshankaUp""""]]}"",1],[""{createHashMapFromArray[[""""customProps"""",createHashMapFromArray[]],[""""class"""",""""HatShemag""""]]}"",1]]]]}";
 									};
 									id=4919;
 									type="CUP_Dhangar_borwnskrin";

@@ -1,5 +1,5 @@
 // ======================================================
-// Copyright (c) 2017-2024 the ReSDK_A3 project
+// Copyright (c) 2017-2026 the ReSDK_A3 project
 // sdk.relicta.ru
 // ======================================================
 
@@ -74,6 +74,10 @@ atmos_getNextRandAroundChunks = {
 atmos_tryIgnite = {
     params ["_obj"];
 	
+	#ifdef SP_MODE
+		sp_checkWSim("atmos");
+	#endif
+
 	ASP_REGION("atmos_tryIgnite: "+(str _obj))
 
     ignite_info("Check process from >>>>>>>>>>>>>>>" + str _obj + "; deleted: " + str isdeleted(_obj))
